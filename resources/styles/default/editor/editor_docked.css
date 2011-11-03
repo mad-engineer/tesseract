@@ -1,0 +1,10 @@
+QToolBar
+{
+	height: 10px;
+	margin-left: 5px;
+	padding-left: 7px;
+	margin-right: 5px;
+	/*background-color: rgb(174,185,205); */
+	background-color: red;
+}
+

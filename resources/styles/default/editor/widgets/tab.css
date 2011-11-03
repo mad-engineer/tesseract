@@ -1,0 +1,76 @@
+/* The tab widget frame */ 
+
+QTabWidget::pane 
+{ 
+ 	border-top: 2px solid #C2C7CB;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+} 
+
+/* move to the right by 5px */ 
+QTabWidget::tab-bar 
+{ 
+	left: 5px; 
+} 
+ 
+ /* Style the tab using the tab sub-control. Note that 
+	 it reads QTabBar _not_ QTabWidget 
+*/ 
+QTabBar::tab 
+{
+	padding: 2px;
+	min-width: 50px;
+
+	border-top-left-radius: 3px;  
+	border-top-right-radius: 3px; 
+} 
+
+QTabBar::tab:selected, QTabBar::tab:hover 
+{
+	color: rgb( 0 , 0 , 0 );
+
+	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(251,252,252) , stop:1 rgb(206,212,223) ); 
+} 
+ 
+/* same as pane color */  
+QTabBar::tab:selected 
+{ 
+	border-color: #9B9B9B;  
+	border-bottom-color: #C2C7CB; 
+} 
+
+/* make non-selected tabs look smaller */  
+QTabBar::tab:!selected 
+{ 
+	margin-top: 2px; 
+}
+
+QTabBar::close-button
+{	
+	image: url(styles/default/images/closetab.png);
+	margin-right: -7px;
+	padding-right: 0px;
+	background-color; red;
+}
+
+QDockWidget::title 
+{
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 2px;
+
+	padding-top: 5px;
+	padding-left: 5px;
+	
+	border-top-left-radius: 3px;  
+	border-top-right-radius: 3px; 
+
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(202,211,226), stop:1 rgb(174,185,205) ); 
+}
+
+QFrame
+{
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+	background-color: rgb( 244 , 244 , 244 );
+}

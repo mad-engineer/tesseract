@@ -1,0 +1,21 @@
+QMenuBar
+{
+	padding: 0px;
+	margin-left: 5px;
+	margin-right: 2px;
+
+	background-color: rgb(174,185,205);
+}
+
+QMenuBar::item 
+{
+	padding-top: 0px;
+	padding-left: 10px;
+	
+	background-color: rgb(174,185,205);
+}
+
+QMenu 
+{
+	background-color: rgb(174,185,205);
+}

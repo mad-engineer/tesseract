@@ -1,0 +1,20 @@
+QToolBar
+{
+	padding: 0px;
+	padding-right: 0px;
+	border-radius: 3px;
+	border : 1px solid rgb( 201 , 210 , 225 );
+	background-color: rgb( 188 , 199 , 216 ); 
+}
+
+QFrame
+{
+	color: red;
+	background-color: red;
+}
+
+QMainWindow
+{
+	color: green;
+	background-color: blue;
+}

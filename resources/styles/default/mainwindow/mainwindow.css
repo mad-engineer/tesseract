@@ -1,0 +1,44 @@
+QDockWidget::title 
+{
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 2px;
+
+	padding-top: 5px;
+	padding-left: 5px;
+	
+	border-top-left-radius: 3px;  
+	border-top-right-radius: 3px; 
+
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(202,211,226), stop:1 rgb(174,185,205) ); 
+}
+
+QDockWidget::float-button
+{
+	/*margin-right: 5px;*/
+}
+
+QDockWidget::close-button
+{
+	/*margin-right: 15px;*/
+}
+
+QDockWidget::close-button:hover, QDockWidget::float-button:hover 
+{
+	/*background: gray;*/
+}
+
+QDockWidget::close-button:pressed, QDockWidget::float-button:pressed 
+{
+	padding: 1px -1px -1px 1px;
+}
+
+QToolBar
+{
+	icon-size: 16px;
+}
+
+QMainWindow
+{
+	background-color: rgb( 41 , 57 , 85 );
+}

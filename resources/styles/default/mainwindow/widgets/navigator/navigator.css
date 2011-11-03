@@ -1,0 +1,80 @@
+QMenuBar
+{
+	margin-left: 5px;
+	margin-right: 2px;
+	background-color: rgb(174,185,205); 
+}
+
+QMenuBar::item 
+{
+	padding: 5px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	background-color: rgb(174,185,205); 
+}
+
+QMenu 
+{
+	color: black;
+	background-color: rgb(231,234,237); 
+}
+
+QListView
+{
+	border: 0px;
+	margin: 0px;
+	margin-left: 11px;
+	margin-right: 7px;
+	margin-bottom: 7px;
+	background-color: white; 
+}
+
+QMainWindow
+{
+	padding: 0px;
+	margin-top: 0px;
+	margin-left: 5px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	background-color: rgb(174,185,205); 
+	
+	border-bottom-left-radius: 3px;  
+	border-bottom-right-radius: 3px; 
+}
+
+QToolBar
+{
+	margin: 1px;
+	margin-left: 8px;
+	margin-right: 5px;	
+
+	padding: 1px;
+	padding-left: 10px;
+	padding-right: 5px;
+	border-radius: 3px;
+	border : 1px solid rgb( 201 , 210 , 225 );
+	background-color: rgb( 188 , 199 , 216 ); 
+}
+
+QComboBox
+{
+	margin-left: 8px;
+	margin-right: 6px;
+	margin-bottom: 2px;
+}
+
+QLabel
+{
+	padding-left: 8px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+QTreeView
+{
+	padding-right: 0px;
+	margin-bottom: 5px;
+	margin-left: 8px;
+	margin-right: 5px;
+	background-color: rgb(255,255,255); 
+}

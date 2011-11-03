@@ -1,0 +1,7 @@
+QToolBar
+{
+	padding: 0px;
+	border-radius: 3px;
+	background-color: rgb( 188 , 199 , 216 );
+	border : 1px solid rgb( 201 , 210 , 225 );
+}

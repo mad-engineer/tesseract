@@ -1,0 +1,11 @@
+QListView
+{
+	border: 0px;
+	margin-left: 5px;
+	margin-right: 2px;
+	padding: 10px;
+	background-color: rgb(174,185,205);
+	
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+}

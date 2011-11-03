@@ -1,0 +1,1 @@
+xcopy "../../../../resources/images" "../../../../bin/msw/vc9/x86/images" /Y /E /S
