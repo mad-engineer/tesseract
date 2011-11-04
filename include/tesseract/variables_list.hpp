@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_VARIABLES_LIST_H
-#define TESSERACT_TESSERACT_VARIABLES_LIST_H
+#ifndef TESSERACT_TESSERACT_VARIABLES_LIST_HPP
+#define TESSERACT_TESSERACT_VARIABLES_LIST_HPP
 
 #include <QMenuBar>
 #include <QLineEdit>
@@ -29,8 +29,8 @@
 #include <QTreeWidget>
 #include <QContextMenuEvent>
 
-#include "basewidget.h"
-#include "octave_connection.h"
+#include "basewidget.hpp"
+#include "octave_connection.hpp"
 
 /** Shows variables list. It uses whos command.
 */

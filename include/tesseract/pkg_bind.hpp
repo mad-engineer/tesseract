@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_PKG_BIND_H
-#define TESSERACT_TESSERACT_PKG_BIND_H
+#ifndef TESSERACT_TESSERACT_PKG_BIND_HPP
+#define TESSERACT_TESSERACT_PKG_BIND_HPP
 
 #include <QSet>
 #include <QString>

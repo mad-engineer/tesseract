@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <QApplication>
 
-#include "search_dialog.h"
+#include "search_dialog.hpp"
 
 SearchDialog::SearchDialog(QWidget *parent): QDialog(parent)
 {

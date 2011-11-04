@@ -42,7 +42,7 @@
 #pragma once
 
 #ifdef USER_CONFIG
-#include "configure.h"
+#include "configure.hpp"
 #endif
 
 #ifndef HELP_PATH
@@ -67,15 +67,17 @@
 
 #define PKG_ENABLED
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef TESSERACT_TESSERACT_CONFIG_HPP
+#define TESSERACT_TESSERACT_CONFIG_HPP
 
 //#undef QT_NO_DEBUG
 
-#include <QString>
+#include <cstdio>
+
 #include <QMap>
-#include "session.h"
-#include <stdio.h>
+#include <QString>
+
+#include "session.hpp"
 
 /**Gets config of parameter.
  * @param parameter Parameter name.

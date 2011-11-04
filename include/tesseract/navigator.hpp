@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_NAVIGATOR_H
-#define TESSERACT_TESSERACT_NAVIGATOR_H
+#ifndef TESSERACT_TESSERACT_NAVIGATOR_HPP
+#define TESSERACT_TESSERACT_NAVIGATOR_HPP
 
 #include <QWidget>
 #include <QVector>
@@ -34,9 +34,10 @@
 #include <QTreeView>
 #include <QTextEdit>
 #include <QProgressBar>
-#include "octave_connection.h"
-#include "basewidget.h"
-#include "projects.h"
+
+#include "projects.hpp"
+#include "basewidget.hpp"
+#include "octave_connection.hpp"
 
 #define QFileSystemNewModel QFileSystemModel
 

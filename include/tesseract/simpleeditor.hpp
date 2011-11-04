@@ -17,14 +17,14 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_SIMPLEEDITOR_H
-#define TESSERACT_TESSERACT_SIMPLEEDITOR_H
+#ifndef TESSERACT_TESSERACT_SIMPLEEDITOR_HPP
+#define TESSERACT_TESSERACT_SIMPLEEDITOR_HPP
 
 #include <QCompleter>
 #include <QPlainTextEdit>
 #include <QStringListModel>
 
-#include "syntax.h"
+#include "syntax.hpp"
 
 class SimpleEditor:public QPlainTextEdit
 {

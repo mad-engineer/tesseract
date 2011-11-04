@@ -235,7 +235,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lines_in_history_lineEdit"/>
+          <widget class="QLineEdit" name="lines_in_HPPPPistory_lineEdit"/>
          </item>
         </layout>
        </item>

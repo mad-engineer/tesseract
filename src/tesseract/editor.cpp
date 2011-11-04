@@ -18,28 +18,29 @@
 
 
 // loading files for stylesheets
+
 #include <fstream>
 #include <cassert>
 
-#include <QBoxLayout>
-#include <QToolBar>
 #include <QIcon>
+#include <QToolBar>
 #include <QMdiArea>
+#include <QMenuBar>
+#include <QPrinter>
+#include <QBoxLayout>
+#include <QClipboard>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTextCursor>
-#include <QMenuBar>
-#include <QPrinter>
 #include <QPrintDialog>
-#include <QClipboard>
-#include "editor.h"
-#include "config.h"
-#include "search_dialog.h"
-#include "numberedtextview.h"
-#include "navigator.h"
-#include "projects.h"
 
-#include "main.h"
+#include "main.hpp"
+#include "editor.hpp"
+#include "config.hpp"
+#include "projects.hpp"
+#include "navigator.hpp"
+#include "search_dialog.hpp"
+#include "numberedtextview.hpp"
 
 // Constructor
 Editor::Editor(QWidget *parent): BaseWidget(parent)

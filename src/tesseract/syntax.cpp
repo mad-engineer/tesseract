@@ -24,7 +24,7 @@
 
 #include <boost/static_assert.hpp>
 
-#include "syntax.h"
+#include "syntax.hpp"
 
 Syntax::Syntax(QObject * parent):QSyntaxHighlighter(parent)
 {

@@ -16,21 +16,29 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "main.h"
-#include "help.h"
-#include "table.h"
-#include "splash.h"
-#include "editor.h"
-#include "terminal.h"
-#include "projects.h"
-#include "svgcanvas.h"
-#include "basewidget.h"
-#include "mainwindow.h"
-#include "operations.h"
-#include "window_list.h"
-#include "generate_menu.h"
-#include "variables_list.h"
-#include "octave_connection.h"
+#include <QMdiArea>
+#include <QTextCodec>
+#include <QFileDialog>
+#include <QTranslator>
+#include <QInputDialog>
+#include <QLibraryInfo>
+#include <QMdiSubWindow>
+
+#include "main.hpp"
+#include "help.hpp"
+#include "table.hpp"
+#include "splash.hpp"
+#include "editor.hpp"
+#include "terminal.hpp"
+#include "projects.hpp"
+#include "svgcanvas.hpp"
+#include "basewidget.hpp"
+#include "mainwindow.hpp"
+#include "operations.hpp"
+#include "window_list.hpp"
+#include "generate_menu.hpp"
+#include "variables_list.hpp"
+#include "octave_connection.hpp"
 
 extern QString syntaxPath();
 

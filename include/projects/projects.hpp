@@ -17,11 +17,11 @@
  */
 
 #pragma once
-#ifndef TESSERACT_PROJECTS_PROJECTS_H
-#define TESSERACT_PROJECTS_PROJECTS_H
+#ifndef TESSERACT_PROJECTS_PROJECTS_HPP
+#define TESSERACT_PROJECTS_PROJECTS_HPP
 
-#include "config.h"
-#include "ui_projects.h"
+#include "config.hpp"
+#include "ui_projects.hpp"
 
 using namespace Ui;
 

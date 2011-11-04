@@ -21,8 +21,8 @@ INCLUDEPATH  = 	$$PROJECT_INCLUDE_PATH \
 				../../../../include/projects \
 				../../../../include/tesseract
 
-HEADERS += $$PROJECT_INCLUDE_PATH/general_menu.h \
-           $$PROJECT_INCLUDE_PATH/table_plot.h
+HEADERS += $$PROJECT_INCLUDE_PATH/general_menu.hpp \
+           $$PROJECT_INCLUDE_PATH/table_plot.hpp \
 		   
 FORMS +=   $$PROJECT_FORMS_PATH/general_menu.ui
 			

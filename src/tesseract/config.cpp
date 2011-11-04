@@ -1,12 +1,13 @@
-#include "config.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <QString>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+
 #include <QMap>
 #include <QDir>
+#include <QString>
 
-#include "projects.h"
+#include "config.hpp"
+#include "projects.hpp"
 
 static QMap<QString, QString> config;
 

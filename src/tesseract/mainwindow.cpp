@@ -27,11 +27,11 @@
 #include <QMdiSubWindow>
 #include <QXmlStreamReader>
 
-#include "editor.h"
-#include "config.h"
-#include "terminal.h"
-#include "navigator.h"
-#include "mainwindow.h"
+#include "editor.hpp"
+#include "config.hpp"
+#include "terminal.hpp"
+#include "navigator.hpp"
+#include "mainwindow.hpp"
 
 MainWindow::MainWindow(OctaveConnection *oc, Session *session, QWidget *parent):BaseWidget(parent)
 {

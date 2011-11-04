@@ -17,17 +17,17 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_COMMAND_LIST
-#define TESSERACT_TESSERACT_COMMAND_LIST
+#ifndef TESSERACT_TESSERACT_COMMAND_LIST_HPP
+#define TESSERACT_TESSERACT_COMMAND_LIST_HPP
 
+#include <QMenu>
+#include <QMenuBar>
 #include <QLineEdit>
 #include <QListView>
 #include <QStringListModel>
-#include <QMenu>
-#include <QMenuBar>
-#include "basewidget.h"
-#include "config.h"
 
+#include "config.hpp"
+#include "basewidget.hpp"
 
 /**Model for non editable QStringListModel*/
 class StringListModel: public QStringListModel

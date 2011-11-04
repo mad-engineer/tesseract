@@ -25,7 +25,7 @@
 #include <QMessageBox>
 #include <QTextStream>
 
-#include "table.h"
+#include "table.hpp"
 
 Table::Table(QWidget * parent):BaseWidget(parent)
 {

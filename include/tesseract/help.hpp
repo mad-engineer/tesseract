@@ -16,16 +16,18 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#ifndef __HELP_H__
-#define __HELP_H__
+#pragma once
+#ifndef TESSERACT_TESSERACT_HELP_HPP
+#define TESSERACT_TESSERACT_HELP_HPP
 
-#include "basewidget.h"
-#include <qtextbrowser.h>
-#include <qlineedit.h>
-#include <qcheckbox.h>
-#include <qtoolbar.h>
+#include <QToolbar>
+#include <QLineEdit>
+#include <QCheckBox>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QTextBrowser>
+
+#include "basewidget.hpp"
 
 /**Shows help in simple html. Users can do searches.
 */

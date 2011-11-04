@@ -26,7 +26,7 @@
 #include <QTextStream>
 #include <QStringList>
 
-#include "autocomplete.h"
+#include "autocomplete.hpp"
 
 using namespace std;
 

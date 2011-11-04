@@ -17,7 +17,7 @@ PROJECT_SOURCE_PATH = ../../../../src/$$PROJECT_NAME
 INCLUDEPATH  = ../../../../include/projects \
                ../../../../include/tesseract
 
-HEADERS = 	$$PROJECT_INCLUDE_PATH/projects.h
+HEADERS = 	$$PROJECT_INCLUDE_PATH/projects.hpp
 		   
 FORMS = 	$$PROJECT_FORMS_PATH/projects.ui \
 			$$PROJECT_FORMS_PATH/newprojectdialog.ui

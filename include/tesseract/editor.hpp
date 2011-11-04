@@ -16,23 +16,26 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __EDITOR_H__
-#define __EDITOR_H__
+#pragma once
+#ifndef TESSERACT_TESSERACT_EDITOR_HPP
+#define TESSERACT_TESSERACT_EDITOR_HPP
+
 #include <QAction>
 #include <QToolBar>
 #include <QTabWidget>
 #include <QDropEvent>
 #include <QDockWidget>
-#include <QAbstractListModel>
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
-#include "basewidget.h"
-#include "syntax.h"
-#include "octave_connection.h"
-#include "search_dialog.h"
-#include "simpleeditor.h"
-#include "numberedtextview.h"
-#include "projects.h"
+#include <QAbstractListModel>
+
+#include "syntax.hpp"
+#include "projects.hpp"
+#include "basewidget.hpp"
+#include "simpleeditor.hpp"
+#include "search_dialog.hpp"
+#include "numberedtextview.hpp"
+#include "octave_connection.hpp"
 
 class ClipboardListView;
 

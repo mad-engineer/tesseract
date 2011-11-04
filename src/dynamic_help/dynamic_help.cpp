@@ -1,4 +1,3 @@
-
 #include <QIcon>
 #include <QFile>
 #include <QVBoxLayout>
@@ -6,7 +5,7 @@
 #include <QTextCursor>
 #include <QApplication>
 
-#include "dynamic_help.h"
+#include "dynamic_help.hpp"
 
 Dynamic_help::Dynamic_help(QString octave_path, QWidget *parent):BaseWidget(parent)
 {

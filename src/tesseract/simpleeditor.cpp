@@ -22,9 +22,9 @@
 #include <QTextBlock>
 #include <QTextStream>
 
-#include "config.h"
-#include "projects.h"
-#include "simpleeditor.h"
+#include "config.hpp"
+#include "projects.hpp"
+#include "simpleeditor.hpp"
 
 extern QString syntaxPath();
 

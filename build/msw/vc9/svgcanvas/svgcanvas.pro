@@ -23,9 +23,10 @@ INCLUDEPATH += 	$(QTDIR2008)/include/QtXml \
 				$(QTDIR2008)/include/QtSvg \
 				$(QTDIR2008)/include/QtCore \
 				$(QTDIR2008)/include/QtGui \
-				../../../../include/tesseract
+				../../../../include/tesseract \
+				../../../../include/$(ProjectName)
 
-HEADERS = $$PROJECT_INCLUDE_PATH/svgcanvas.h
+HEADERS = $$PROJECT_INCLUDE_PATH/svgcanvas.hpp
 		   
 FORMS = $$PROJECT_FORMS_PATH/export_to_dialog.ui
 			

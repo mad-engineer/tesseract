@@ -14,6 +14,8 @@ TRANSLATIONS += $$PROJECT_LANG_PATH/tesseract_es.ts \
 
 DEFINES += COMPILE_PORTABLE
 
+QMAKE_CXXFLAGS_RELEASE += -MP[processMax]
+
 PROJECT_SOURCE_PATH = ../../../../src/$$PROJECT_NAME
 PROJECT_FORMS_PATH = ../../../../forms/$$PROJECT_NAME
 PROJECT_INCLUDE_PATH = ../../../../include/$$PROJECT_NAME
@@ -46,29 +48,29 @@ INCLUDEPATH = 	$$PROJECT_INCLUDE_PATH \
 				$(BOOST)/
 
 # Input
-HEADERS = $$PROJECT_INCLUDE_PATH/autocomplete.h \
-           $$PROJECT_INCLUDE_PATH/basewidget.h \
-           $$PROJECT_INCLUDE_PATH/command_list.h \
-           $$PROJECT_INCLUDE_PATH/config.h \
-           $$PROJECT_INCLUDE_PATH/editor.h \
-           $$PROJECT_INCLUDE_PATH/generate_menu.h \
-           $$PROJECT_INCLUDE_PATH/help.h \
-           $$PROJECT_INCLUDE_PATH/main.h \
-           $$PROJECT_INCLUDE_PATH/mainwindow.h \
-           $$PROJECT_INCLUDE_PATH/navigator.h \
-           $$PROJECT_INCLUDE_PATH/numberedtextview.h \
-           $$PROJECT_INCLUDE_PATH/octave_connection.h \
-           $$PROJECT_INCLUDE_PATH/operations.h \
-		   $$PROJECT_INCLUDE_PATH/pkg_bind.h \
-           $$PROJECT_INCLUDE_PATH/search_dialog.h \
-           $$PROJECT_INCLUDE_PATH/session.h \
-		   $$PROJECT_INCLUDE_PATH/simpleeditor.h \
-		   $$PROJECT_INCLUDE_PATH/splash.h \
-           $$PROJECT_INCLUDE_PATH/syntax.h \
-           $$PROJECT_INCLUDE_PATH/table.h \
-           $$PROJECT_INCLUDE_PATH/terminal.h \
-           $$PROJECT_INCLUDE_PATH/variables_list.h \
-           $$PROJECT_INCLUDE_PATH/window_list.h
+HEADERS = $$PROJECT_INCLUDE_PATH/autocomplete.hpp \
+           $$PROJECT_INCLUDE_PATH/basewidget.hpp \
+           $$PROJECT_INCLUDE_PATH/command_list.hpp \
+           $$PROJECT_INCLUDE_PATH/config.hpp \
+           $$PROJECT_INCLUDE_PATH/editor.hpp \
+           $$PROJECT_INCLUDE_PATH/generate_menu.hpp \
+           $$PROJECT_INCLUDE_PATH/help.hpp \
+           $$PROJECT_INCLUDE_PATH/main.hpp \
+           $$PROJECT_INCLUDE_PATH/mainwindow.hpp \
+           $$PROJECT_INCLUDE_PATH/navigator.hpp \
+           $$PROJECT_INCLUDE_PATH/numberedtextview.hpp \
+           $$PROJECT_INCLUDE_PATH/octave_connection.hpp \
+           $$PROJECT_INCLUDE_PATH/operations.hpp \
+		   $$PROJECT_INCLUDE_PATH/pkg_bind.hpp \
+           $$PROJECT_INCLUDE_PATH/search_dialog.hpp \
+           $$PROJECT_INCLUDE_PATH/session.hpp \
+		   $$PROJECT_INCLUDE_PATH/simpleeditor.hpp \
+		   $$PROJECT_INCLUDE_PATH/splash.hpp \
+           $$PROJECT_INCLUDE_PATH/syntax.hpp \
+           $$PROJECT_INCLUDE_PATH/table.hpp \
+           $$PROJECT_INCLUDE_PATH/terminal.hpp \
+           $$PROJECT_INCLUDE_PATH/variables_list.hpp \
+           $$PROJECT_INCLUDE_PATH/window_list.hpp
 
 FORMS  = 	$$PROJECT_FORMS_PATH/table_ui.ui
 

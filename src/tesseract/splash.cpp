@@ -1,4 +1,4 @@
-#include "splash.h"
+#include "splash.hpp"
 
 #include <QPainter>
 #include <QPaintEvent>

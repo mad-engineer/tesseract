@@ -17,23 +17,23 @@
  */
 
 //#include <QFileSystemModel>
+
+#include <QDrag>
+#include <QAction>
+#include <QToolBar>
+#include <QMimeData>
 #include <QDirModel>
 #include <QListView>
 #include <QLineEdit>
+#include <QCompleter>
 #include <QVBoxLayout>
-#include <QAction>
-#include <QToolBar>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QModelIndex>
-#include <QDrag>
-#include <QMimeData>
 #include <QMessageBox>
-#include <QCompleter>
 
-#include "navigator.h"
-#include "config.h"
-
+#include "config.hpp"
+#include "navigator.hpp"
 
 Navigator::Navigator(QWidget *parent) : BaseWidget(parent) 
 {

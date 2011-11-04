@@ -34,8 +34,8 @@
 #include <QTextDocument>
 #include <QAbstractTextDocumentLayout>
 
-#include "config.h"
-#include "numberedtextview.h"
+#include "config.hpp"
+#include "numberedtextview.hpp"
 
 NumberBar::NumberBar( QWidget *parent ) : 
 QWidget( parent ), 

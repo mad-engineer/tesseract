@@ -7,7 +7,7 @@
 #include <QColorDialog>
 
 
-#include "general_menu.h"
+#include "general_menu.hpp"
 
 inline QString CHECK_TO_STRING(Qt::CheckState s)
 {

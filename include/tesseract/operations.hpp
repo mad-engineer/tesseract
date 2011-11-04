@@ -17,19 +17,19 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_OPERATIONS_H
-#define TESSERACT_TESSERACT_OPERATIONS_H
+#ifndef TESSERACT_TESSERACT_OPERATIONS_HPP
+#define TESSERACT_TESSERACT_OPERATIONS_HPP
 
-#include "mainwindow.h"
-#include "octave_connection.h"
-#include "basewidget.h"
-#include "table.h"
 #include <QDialog>
 #include <QLineEdit>
-#include <QTreeWidget>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QTreeWidget>
 
+#include "table.hpp"
+#include "mainwindow.hpp"
+#include "basewidget.hpp"
+#include "octave_connection.hpp"
 
 /**This class is used to show plots menus.
  */

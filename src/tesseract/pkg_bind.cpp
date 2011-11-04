@@ -1,7 +1,8 @@
 #include <QFile>
 #include <QMessageBox>
-#include "pkg_bind.h"
-#include "config.h"
+
+#include "config.hpp"
+#include "pkg_bind.hpp"
 
 PkgBind *PkgBind::instance = NULL;
 

@@ -2,9 +2,9 @@
 #include <QXmlSimpleReader>
 #include <QXmlDefaultHandler>
 
-#include "svgcanvas.h"
-#include "octave_connection.h"
-#include "ui_export_to_dialog.h"
+#include "svgcanvas.hpp"
+#include "octave_connection.hpp"
+#include "ui_export_to_dialog.hpp"
 
 enum ExportFormat 
 {

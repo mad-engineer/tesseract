@@ -1,5 +1,4 @@
-#include "session.h"
-
+#include "session.hpp"
 
 QString widgetName(WidgetType type)
 {

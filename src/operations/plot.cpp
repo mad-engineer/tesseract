@@ -1,8 +1,8 @@
 #include <QGroupBox>
-#include <QTextStream>
 #include <QClipboard>
+#include <QTextStream>
 
-#include "operations.h"
+#include "operations.hpp"
 
 
 Plot::Plot(QWidget *parent, Plot::Type type):QDialog(parent)

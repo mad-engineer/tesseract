@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_BASEWIDGET_H
-#define TESSERACT_TESSERACT_BASEWIDGET_H
+#ifndef TESSERACT_TESSERACT_BASEWIDGET_HPP
+#define TESSERACT_TESSERACT_BASEWIDGET_HPP
 
 #include <QMenu>
 #include <QWidget>
@@ -26,7 +26,7 @@
 #include <QDockWidget>
 #include <QXmlStreamWriter>
 
-#include "session.h"
+#include "session.hpp"
 
 
 /** This class is base class for windows of Tesseract.

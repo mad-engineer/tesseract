@@ -1,10 +1,10 @@
 #pragma once
-#ifndef TESSERACT_SVGCANVAS_SVGCANVAS_H
-#define TESSERACT_SVGCANVAS_SVGCANVAS_H
+#ifndef TESSERACT_SVGCANVAS_SVGCANVAS_HPP
+#define TESSERACT_SVGCANVAS_SVGCANVAS_HPP
 
 #include <QRegExp>
 
-#include "basewidget.h"
+#include "basewidget.hpp"
 
 class QSvgWidget;
 class OctaveConnection;

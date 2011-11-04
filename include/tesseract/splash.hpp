@@ -1,6 +1,6 @@
 #pragma once
-#ifndef TESSERACT_TESSERACT_SPLASH_H
-#define TESSERACT_TESSERACT_SPLASH_H
+#ifndef TESSERACT_TESSERACT_SPLASH_HPP
+#define TESSERACT_TESSERACT_SPLASH_HPP
 
 #include <QFrame>
 #include <QColor>

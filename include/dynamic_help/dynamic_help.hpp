@@ -1,6 +1,6 @@
 #pragma once
-#ifndef TESSERACT_DYNAMIC_HELP_DYNAMIC_HELP_H
-#define TESSERACT_DYNAMIC_HELP_DYNAMIC_HELP_H
+#ifndef TESSERACT_DYNAMIC_HELP_DYNAMIC_HELP_HPP
+#define TESSERACT_DYNAMIC_HELP_DYNAMIC_HELP_HPP
 
 #include <QTime>
 #include <QTimer>
@@ -9,9 +9,9 @@
 #include <QLineEdit>
 
 // qtoctave project
-#include "config.h"
-#include "basewidget.h"
-#include "octave_connection.h"
+#include "config.hpp"
+#include "basewidget.hpp"
+#include "octave_connection.hpp"
 
 /**
  * If you write a command in Terminal's command line, DynamicHelp shows help of commands.

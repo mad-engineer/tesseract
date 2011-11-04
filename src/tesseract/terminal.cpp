@@ -16,22 +16,23 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#include "terminal.h"
-#include "config.h"
+#include <QDir>
+#include <QMap>
+#include <QIcon>
+#include <QLabel>
+#include <QRegExp>
+#include <QFileInfo>
+#include <QDateTime>
+#include <QLineEdit>
+#include <QTextStream>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QTextCursor>
-#include <QLineEdit>
-#include <QIcon>
-#include <QTextStream>
-#include <QMap>
-#include <QLabel>
-#include <QFileInfo>
-#include <QDir>
-#include <QDateTime>
-#include <QRegExp>
-#include "projects.h"
-#include "pkg_bind.h"
+
+#include "config.hpp"
+#include "projects.hpp"
+#include "pkg_bind.hpp"
+#include "terminal.hpp"
 
 QString projectsPath();
 

@@ -22,9 +22,9 @@
 #include <QMessageBox>
 #include <QTextCursor>
 
-#include "config.h"
-#include "projects.h"
-#include "octave_connection.h"
+#include "config.hpp"
+#include "projects.hpp"
+#include "octave_connection.hpp"
 
 extern QString configPath();
 extern QString projectsPath();

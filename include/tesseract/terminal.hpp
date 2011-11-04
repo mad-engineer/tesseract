@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_TERMINAL_H
-#define TESSERACT_TESSERACT_TERMINAL_H
+#ifndef TESSERACT_TESSERACT_TERMINAL_HPP
+#define TESSERACT_TESSERACT_TERMINAL_HPP
 
 #include <QFile>
 #include <QMdiArea>
@@ -26,11 +26,11 @@
 #include <QPushButton>
 #include <QCloseEvent>
 
-#include "basewidget.h"
-#include "dynamic_help.h"
-#include "autocomplete.h"
-#include "command_list.h"
-#include "octave_connection.h"
+#include "basewidget.hpp"
+#include "dynamic_help.hpp"
+#include "autocomplete.hpp"
+#include "command_list.hpp"
+#include "octave_connection.hpp"
 
 /** Builds windows with QtextEdit and QLineEdit. QTextEdit shows OctaveConnection output.
  * QLineEdit is used to write commands.

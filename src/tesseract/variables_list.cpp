@@ -1,10 +1,11 @@
-#include <QInputDialog>
 #include <QMenu>
-#include <QFileDialog>
 #include <QMenuBar>
+#include <QFileDialog>
+#include <QInputDialog>
 
-#include "variables_list.h"
-#include "main.h"
+#include "main.hpp"
+#include "variables_list.hpp"
+
 
 VariableList::VariableList(QWidget * parent):BaseWidget(parent)
 {

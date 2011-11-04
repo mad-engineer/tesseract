@@ -16,18 +16,19 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#include <qaction.h>
-#include <qlabel.h>
-#include <qdir.h>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+
+#include <QDir>
 #include <QFile>
+#include <QLabel>
+#include <QAction>
 #include <QFileInfo>
 #include <QApplication>
 
-#include "help.h"
-#include "config.h"
+#include "help.hpp"
+#include "config.hpp"
 
 Help::Help( QWidget * parent):BaseWidget(parent)
 {

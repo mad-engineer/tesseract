@@ -17,18 +17,18 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_TABLE_H
-#define TESSERACT_TESSERACT_TABLE_H
+#ifndef TESSERACT_TESSERACT_TABLE_HPP
+#define TESSERACT_TESSERACT_TABLE_HPP
 
 #include <QTableWidget>
 #include <QItemDelegate>
 #include <QContextMenuEvent>
 #include <QAbstractTableModel>
 
-#include "basewidget.h"
-#include "table_plot.h"
-#include "ui_table_ui.h"
-#include "octave_connection.h"
+#include "basewidget.hpp"
+#include "table_plot.hpp"
+#include "ui_table_ui.hpp"
+#include "octave_connection.hpp"
 
 using namespace Ui;
 

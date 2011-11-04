@@ -1,11 +1,11 @@
 #pragma once
-#ifndef TESSERACT_OPERATIONS_GENERAL_MENU_H
-#define TESSERACT_OPERATIONS_GENERAL_MENU_H
+#ifndef TESSERACT_OPERATIONS_GENERAL_MENU_HPP
+#define TESSERACT_OPERATIONS_GENERAL_MENU_HPP
 
 #include <QFont>
 
-#include "config.h"
-#include "ui_general_menu.h"
+#include "config.hpp"
+#include "ui_general_menu.hpp"
 
 using namespace Ui;
 

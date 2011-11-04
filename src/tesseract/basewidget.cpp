@@ -19,8 +19,8 @@
 #include <QMenuBar>
 #include <QMdiSubWindow>
 
-#include "basewidget.h"
-#include "mainwindow.h"
+#include "basewidget.hpp"
+#include "mainwindow.hpp"
 
 
 BaseWidget::BaseWidget(QWidget *parent):QMainWindow(parent)

@@ -1,11 +1,12 @@
-#include "generate_menu.h"
 #include <QDir>
-#include<QRegExp>
-#include <QTextStream>
+#include <QRegExp>
 #include <QClipboard>
+#include <QTextStream>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QTranslator>
+
+#include "generate_menu.hpp"
 
 GenerateMenu::GenerateMenu(MainWindow *mainwindow, Operations *operations):QObject(mainwindow)
 {

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef TESSERACT_TESSERACT_GENERATE_MENU_H
-#define TESSERACT_TESSERACT_GENERATE_MENU_H
+#ifndef TESSERACT_TESSERACT_GENERATE_MENU_HPP
+#define TESSERACT_TESSERACT_GENERATE_MENU_HPP
 
 #include <QProcess>
 #include <QGroupBox>
@@ -8,9 +8,9 @@
 #include <QScrollArea>
 #include <QTextBrowser>
 
-#include "operations.h"
-#include "mainwindow.h"
-#include "octave_connection.h"
+#include "operations.hpp"
+#include "mainwindow.hpp"
+#include "octave_connection.hpp"
 
 #define MENU_TRANSLATE(s) QCoreApplication::translate("", s.toLocal8Bit().data()).toLocal8Bit().data()
 

@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_MAIN_H
-#define TESSERACT_TESSERACT_MAIN_H
+#ifndef TESSERACT_TESSERACT_MAIN_HPP
+#define TESSERACT_TESSERACT_MAIN_HPP
 
 #include <memory>
 
@@ -26,7 +26,7 @@
 #include <QVector>
 #include <QApplication>
 
-#include "session.h"
+#include "session.hpp"
 
 class QMdiArea;
 class MainWindow;

@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_AUTOCOMPLETE_H
-#define TESSERACT_TESSERACT_AUTOCOMPLETE_H
+#ifndef TESSERACT_TESSERACT_AUTOCOMPLETE_HPP
+#define TESSERACT_TESSERACT_AUTOCOMPLETE_HPP
 
 #include <memory>
 
@@ -30,8 +30,8 @@
 #include <QStringList>
 #include <QStringListModel>
 
-#include "projects.h"
-#include "octave_connection.h"
+#include "projects.hpp"
+#include "octave_connection.hpp"
 
 using std::tr1::shared_ptr;
 

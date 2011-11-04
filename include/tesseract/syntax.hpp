@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_SYNTAX_H
-#define TESSERACT_TESSERACT_SYNTAX_H
+#ifndef TESSERACT_TESSERACT_SYNTAX_HPP
+#define TESSERACT_TESSERACT_SYNTAX_HPP
 
 #include <QVector>
 #include <QPlainTextEdit>

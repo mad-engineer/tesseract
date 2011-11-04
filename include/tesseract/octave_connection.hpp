@@ -17,15 +17,15 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_OCTAVE_CONNECTION_H
-#define TESSERACT_TESSERACT_OCTAVE_CONNECTION_H
+#ifndef TESSERACT_TESSERACT_OCTAVE_CONNECTION_HPP
+#define TESSERACT_TESSERACT_OCTAVE_CONNECTION_HPP
 
 #include <QBuffer>
 #include <QThread>
 #include <QProcess>
 #include <QTextEdit>
 
-#include "config.h"
+#include "config.hpp"
 
 
 /** This class build QProcess and exec Octave. Octave input and output are controlled by this class.

@@ -16,10 +16,11 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#include "window_list.h"
-#include <QMdiSubWindow>
-#include "basewidget.h"
 #include <QMenuBar>
+#include <QMdiSubWindow>
+
+#include "basewidget.hpp"
+#include "window_list.hpp"
 
 WindowList::WindowList(QMdiArea *work_space, QWidget * parent ):QComboBox(parent)
 {

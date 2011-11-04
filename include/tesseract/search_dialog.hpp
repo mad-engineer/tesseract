@@ -17,17 +17,18 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_SEARCH_DIALOG_H
-#define TESSERACT_TESSERACT_SEARCH_DIALOG_H
+#ifndef TESSERACT_TESSERACT_SEARCH_DIALOG_HPP
+#define TESSERACT_TESSERACT_SEARCH_DIALOG_HPP
 
 #include <QDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QCheckBox>
-#include <QBoxLayout>
 #include <QGroupBox>
+#include <QBoxLayout>
 #include <QPushButton>
-#include "config.h"
+
+#include "config.hpp"
 
 class SearchDialog: public QDialog
 {

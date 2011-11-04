@@ -16,13 +16,14 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#include "command_list.h"
-#include "projects.h"
+#include <QClipboard>
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QApplication>
-#include <QClipboard>
-#include "terminal.h"
+
+#include "terminal.hpp"
+#include "projects.hpp"
+#include "command_list.hpp"
 
 CommandList::CommandList( QWidget * parent ):BaseWidget(parent)
 {

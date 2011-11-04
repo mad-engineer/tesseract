@@ -30,9 +30,10 @@
 #include <QPointer>
 #include <QDockWidget>
 
-#include "operations.h"
-#include "editor.h"
-#include "projects.h"
+#include "editor.hpp"
+#include "projects.hpp"
+#include "operations.hpp"
+#include "general_menu.hpp"
 
 Operations::Operations(QObject *parent, BaseWidget **active_widget, MainWindow *main_window):QObject(parent)
 {
@@ -1278,10 +1279,6 @@ void Operations::show_projects_dialog()
 	}
 }
 
-
-
-#include "general_menu.h"
-
 void Operations::general_config_callback()
 {
 	General_Menu dialog(main_window);
@@ -1399,25 +1396,29 @@ void Operations::exit_callback()
 
 void Operations::cd_callback()
 {
-	QString dir=QFileDialog::getExistingDirectory ( main_window, "Select dir");
-	if(dir.isEmpty()) return;
+	QString dir=QFileDialog::getExistingDirectory ( main_window, "Select dir" );
 	
-	QString command("cd \"");
-	command+=dir+"\"";
-	octave_connection->command_enter(command);
+	if( dir.isEmpty( ) ) 
+	{
+		return;
+	}
+
+	octave_connection->command_enter( "cd \"" + dir + "\"" );
 }
 
 void Operations::qtoctave_pkg_callback()
 {
 	QStringList arguments;
 	QString working_directory;
-	bool ok=QProcess::startDetached("qtoctave_pkg", arguments, working_directory);
-	if(!ok)
+	
+	if( ! QProcess::startDetached("qtoctave_pkg", arguments, working_directory) )
 	{
-		QMessageBox::critical(main_window, 
-				tr("qtoctave_pkg not found"), 
-				tr("qtoctave_pkg can not be executed. Please, install qtoctave_pkg or put it in PATH") 
-				);
+		QMessageBox::critical
+		(
+			main_window, 
+			tr("qtoctave_pkg not found"), 
+			tr("qtoctave_pkg can not be executed. Please, install qtoctave_pkg or put it in PATH") 
+		);
 	}
 }
 

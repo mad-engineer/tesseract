@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_MAINWINDOW_H
-#define TESSERACT_TESSERACT_MAINWINDOW_H
+#ifndef TESSERACT_TESSERACT_MAINWINDOW_HPP
+#define TESSERACT_TESSERACT_MAINWINDOW_HPP
 
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
@@ -34,11 +34,11 @@
 #include <QMdiArea>
 #include <QMessageBox>
 #include <QMap>
-#include "config.h"
-#include "octave_connection.h"
-#include "variables_list.h"  
-#include "navigator.h"
 
+#include "config.hpp"
+#include "navigator.hpp"
+#include "variables_list.hpp"  
+#include "octave_connection.hpp"
 /*
  * Represents and creates main window. This class is only for creates main window interface, 
  * menus and menus actions. Menus callbacks are implemented in Operations class.<br>

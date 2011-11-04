@@ -1,12 +1,12 @@
-#ifndef __SVGCANVAS_H__
-#define __SVGCANVAS_H__
+#ifndef TESSERACT_SVGCANVAS_SVGCANVAS_HPP
+#define TESSERACT_SVGCANVAS_SVGCANVAS_HPP
 
 #include <QtSvg>
 #include <QRegExp>
 #include <QXmlSimpleReader>
 
-#include "basewidget.h"
-#include "octave_connection.h"
+#include "basewidget.hpp"
+#include "octave_connection.hpp"
 
 /**Creates a simple canvas to plot svg files.
 */
