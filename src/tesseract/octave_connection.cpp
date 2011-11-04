@@ -235,6 +235,7 @@ void OctaveConnection::command_enter (const QString &command, bool show)
 void OctaveConnection::octaveOutputSlot()
 {
 	QString buffer=QString::fromLocal8Bit( readAllStandardOutput().data() );
+	buffer.replace('\t',"    ");
 	//QRegExp regexp_octave_prompt("octave:[0-9]+>");
 	//QRegExp regexp_octave_prompt2("octave:[0-9]+\\+>");
 	//QRegExp regexp_actual_debug_line_column("^([a-zA-Z_]\\w*:)+ line ([0-9]+), column ([0-9]+)$");
