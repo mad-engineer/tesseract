@@ -202,41 +202,46 @@ class ListModel: public QAbstractListModel
 	QList <ListItem> list;
 };
 
-
-
 class ClipboardListView : public QListView
 {
-Q_OBJECT
-QMenu *popup;
-QStringListModel *_stringModel;
-QAction *stopAction;
+	Q_OBJECT
 
-public:
-ClipboardListView(QWidget *parent = 0);
-~ClipboardListView();
-QStringListModel *stringModel();
-/**Saves state of ClipboardListView in xml.
- * @param partOk if true, xml is part of other xml file*/
-void saveStateXML(QXmlStreamWriter &out, bool partOk = false);
-void loadStateXML(QXmlStreamReader &in, bool partOk = false);
+	QMenu *popup;
+	QAction *stopAction;
+	QStringListModel *_stringModel;
 
-protected:
-void contextMenuEvent ( QContextMenuEvent * event );
 
-public slots:
-void edit_callback();
-void remove_callback();
-void remove_all_callback();
-void sort_ascending_callback();
-void sort_descending_callback();
-void up_callback();
-void down_callback();
-void top_callback();
-void bottom_callback();
-/**Text in clipboard has been selected.*/
-void clipboard_selected(const QModelIndex &);
-/**New clipboard data*/
-void clipboard_new_data_callback();
+	protected:
+		void contextMenuEvent ( QContextMenuEvent * event );
+
+
+	public:
+		ClipboardListView(QWidget *parent = 0);
+		~ClipboardListView();
+		QStringListModel *stringModel();
+
+		/**Saves state of ClipboardListView in xml.
+		 * @param partOk if true, xml is part of other xml file*/
+		void saveStateXML(QXmlStreamWriter &out, bool partOk = false);
+		void loadStateXML(QXmlStreamReader &in, bool partOk = false);
+
+
+	public slots:
+		void edit_callback();
+		void remove_callback();
+		void remove_all_callback();
+		void sort_ascending_callback();
+		void sort_descending_callback();
+		void up_callback();
+		void down_callback();
+		void top_callback();
+		void bottom_callback();
+
+		/**Text in clipboard has been selected.*/
+		void clipboard_selected(const QModelIndex &);
+
+		/**New clipboard data*/
+		void clipboard_new_data_callback();
 };
 
 #endif

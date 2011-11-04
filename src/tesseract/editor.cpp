@@ -39,6 +39,8 @@
 #include "navigator.h"
 #include "projects.h"
 
+#include "main.h"
+
 // Constructor
 Editor::Editor(QWidget *parent): BaseWidget(parent)
 {
@@ -1252,8 +1254,8 @@ QStringList ListModel::mimeTypes() const
 
 ////////////////////////////////////////////////////////////////////
 
-ClipboardListView::ClipboardListView(QWidget *parent)
-:QListView(parent)
+ClipboardListView::ClipboardListView(QWidget *parent):
+QListView(parent)
 {
 	_stringModel = new QStringListModel();
 	setModel(_stringModel);
