@@ -96,7 +96,7 @@ Main::Main(QObject * parent ):QObject (parent)
 		oc->setOctavePath(get_config("octave_path"));
 	}
 
-	Terminal *terminal = (Terminal*)createTool(TERMINAL, work_space);
+	Terminal *terminal = static_cast<Terminal*>( createTool( TERMINAL , work_space ) );
 	terminal->work_space=work_space;
 	terminal->setOctaveConnection(oc.get());
 
@@ -221,24 +221,28 @@ void Main::widget_activated(BaseWidget *w)
 	active_widget=w;
 }
 
-void Main::line_ready(QString line)
+void Main::line_ready(const QString &line )
 {
 	//Builds SvgCanvas if it's needed.
 	QRegExp re("~~svgcanvas: *(\\d+) +(.+)\n");
-	if( re.exactMatch(line) )
+
+	if( re.exactMatch( line ) )
 	{
-		int number=re.cap(1).toInt();
+		const int number = re.cap(1).toInt();
 
 		QVector<QObject*> tools=session.getTools(SVGCANVAS);
-		int num;
+
 		for(int i=0;i<tools.size();i++)
 		{
-			num=((SvgCanvas*)tools[i])->getCanvasNumber();
-			if(num==number) return;
+			if( static_cast<SvgCanvas*>(tools[i])->getCanvasNumber() == number ) 
+			{
+				return;
+			}
 		}
 
 		//SvgCanvas needed
-		SvgCanvas *svgcanvas=(SvgCanvas*)createTool(SVGCANVAS, work_space);
+		SvgCanvas *svgcanvas = static_cast<SvgCanvas*>( createTool( SVGCANVAS , work_space ) );
+
 		svgcanvas->show();
 		svgcanvas->setCanvasNumber(number);
 		svgcanvas->line_ready(line);
@@ -253,50 +257,72 @@ void Main::help_octave()
 	}
 	else
 	{
-		Help *help=(Help*)createTool(HELP,work_space);
+		Help *help = static_cast<Help*>( createTool( HELP , work_space) );
 	
-		if(get_config("help_path").isEmpty()) help->setSource( HELP_PATH );
-		else help->setSource(get_config("help_path"));
-		//printf("[Main::help_octave] %s\n", HELP_PATH);
+		if(get_config("help_path").isEmpty())
+		{
+			help->setSource( HELP_PATH );
+		}
+		else 
+		{
+			help->setSource(get_config("help_path"));
+		}
+
 		help->show();
 	}
 }
 
 void Main::help_qtoctave()
 {
-	Help *help=(Help*)createTool(HELP,work_space);
+	Help *help  =static_cast<Help*>( createTool( HELP , work_space) );
 
-	if(get_config("qtoctave_help_path").isEmpty()) help->setSource( QTOCTAVE_HELP_PATH );
-	else help->setSource(get_config("qtoctave_help_path"));
+	if(get_config("qtoctave_help_path").isEmpty())
+	{
+		help->setSource( QTOCTAVE_HELP_PATH );
+	}
+	else
+	{
+		help->setSource(get_config("qtoctave_help_path"));
+	}
+
 	help->setWindowTitle("QtOctave Help");
 	help->show();
 }
 
 void Main::help_qtoctave_about()
 {
-	Help *help=(Help*)createTool(HELP,work_space);
+	Help *help=static_cast<Help*>( createTool( HELP , work_space) );
 
 	QFileInfo path(QTOCTAVE_HELP_PATH);
-	if(get_config("qtoctave_help_path").isEmpty()) help->setSource( path.absoluteDir().path()+QDir::separator()+"about.html");
-	else help->setSource(get_config("qtoctave_help_path"),"about");
+
+	if(get_config("qtoctave_help_path").isEmpty())
+	{
+		help->setSource( path.absoluteDir().path()+QDir::separator()+"about.html");
+	}
+	else
+	{
+		help->setSource(get_config("qtoctave_help_path"),"about");
+	}
+
 	help->setWindowTitle("QtOctave About");
 	help->show();
 }
 
-
-void Main::table(QString text)
+void Main::table( QString text )
 {
 	bool ok=true;
-	if(text.isEmpty())
+
+	if( text.isEmpty() )
 	{
-		text = QInputDialog::getText(main_window, tr("Select table"),
-			tr("Matrix name:"), QLineEdit::Normal, "", &ok);
+		text = QInputDialog::getText(main_window, tr("Select table"),tr("Matrix name:"), QLineEdit::Normal, "", &ok);
 	}
-	if (ok && !text.isEmpty())
+
+	if ( ok && ( ! text.isEmpty() ) )
 	{
-		Table *table=(Table*)createTool(TABLE, work_space);
+		Table *table = static_cast<Table*>( createTool( TABLE , work_space ) );
 
 		table->setMatrix(text);
+
 		table->show();
 		table->windowActivated();
 	}
@@ -304,84 +330,87 @@ void Main::table(QString text)
 
 void Main::run_file()
 {
-  QFileDialog openDialog(NULL, tr("Open"), ".");
-  QStringList filters;
+	QFileDialog openDialog(NULL, tr("Open"), ".");
+	QStringList filters;
 
-  filters << "Octave (*.m; *.M)";
+	filters << "Octave (*.m; *.M)";
 
-  openDialog.setFilters(filters);
-  openDialog.setAcceptMode(QFileDialog::AcceptOpen);
-  openDialog.setDefaultSuffix("m");
+	openDialog.setFilters(filters);
+	openDialog.setAcceptMode(QFileDialog::AcceptOpen);
+	openDialog.setDefaultSuffix("m");
 
-  if(openDialog.exec() == QDialog::Accepted)
-  {
-    QFileInfo fileInfo(openDialog.selectedFiles().first());
-    QString cmd;
-    //OctaveConnection *oc = terminal->getOctaveConnection();
+	if( openDialog.exec() == QDialog::Accepted )
+	{
+		QFileInfo fileInfo(openDialog.selectedFiles().first());
+		QString cmd;
+		//OctaveConnection *oc = terminal->getOctaveConnection();
 
-    // Change dir
-    cmd = QString("cd \"") + fileInfo.dir().absolutePath() + QString("\"");
-    oc->command_enter(cmd);
+		// Change dir
+		cmd = QString("cd \"") + fileInfo.dir().absolutePath() + QString("\"");
+		oc->command_enter(cmd);
 
-    // Execute file
-    cmd = fileInfo.baseName();
-    oc->command_enter(cmd);
-  }
+		// Execute file
+		cmd = fileInfo.baseName();
+		oc->command_enter(cmd);
+	}
 }
 
 void Main::variable_list()
 {
-	VariableList *variableList=(VariableList*)createTool(VARIABLESLIST, work_space);
+	VariableList *variableList = static_cast<VariableList*>( createTool( VARIABLESLIST , work_space ) );
 	variableList->show();
 }
 
 void Main::dynamic_help()
 {
-	Dynamic_help *dynamic_help=(Dynamic_help *)createTool(DYNAMIC_HELP, work_space);
+	Dynamic_help *dynamic_help = static_cast<Dynamic_help*>( createTool( DYNAMIC_HELP , work_space ) );
 	dynamic_help->show();
 }
 
 void Main::commands_list()
 {
-	CommandList *command_list=(CommandList*)createTool(COMMANDLIST, work_space);
+	CommandList *command_list = static_cast<CommandList*>( createTool( COMMANDLIST , work_space) );
 	command_list->show();
 }
 
 void Main::editor_callback()
 {
-  if( get_config("external_editor") != "true")
-  {
-	Editor *editor=(Editor*)createTool(EDITOR, work_space);
-	editor->show();
-  }
-  else
-  {
-    const QString editor=get_config("editor");
-    if(editor.isEmpty()) return;
+	if( get_config("external_editor") != "true")
+	{
+		Editor *editor = static_cast<Editor*>( createTool( EDITOR , work_space ) );
+		editor->show();
+	}
+	else
+	{
+		const QString editor = get_config( "editor" );
 
-    QString ed(editor);
+		if( editor.isEmpty( ) )
+		{
+			return;
+		}
 
-    QProcess::startDetached (ed);
-  }
+		QString ed( editor );
+
+		QProcess::startDetached( ed );
+	}
 }
 
 void Main::svgcanvas_callback()
 {
-	SvgCanvas *svgcanvas=(SvgCanvas*)createTool(SVGCANVAS, work_space);
+	SvgCanvas *svgcanvas = static_cast<SvgCanvas*>( createTool( SVGCANVAS , work_space ) );
 	svgcanvas->show();
 }
 
 /** set visible or not the dock of var list*/
 void Main::setVisibleVarList()
 {
-	main_window->dockListVar->
-		setVisible(!main_window->dockListVar->isVisible());
+	main_window->dockListVar->setVisible(!main_window->dockListVar->isVisible());
 }
 
 /**this function show or not the Navigator dock*/
 void Main::setVisibleNavigator()
 {
-	Navigator *nav=(Navigator *)createTool(NAVIGATOR, work_space);
+	Navigator *nav = static_cast<Navigator*>( createTool( NAVIGATOR , work_space ) );
 	nav->show();
 }
 
@@ -392,7 +421,7 @@ QWidget *Main::mainWindowWidget()
 
 void Main::clear_terminal()
 {
-	Terminal *terminal = (Terminal*)(session.getFirstTool(TERMINAL));
+	Terminal *terminal = static_cast<Terminal*>( session.getFirstTool( TERMINAL ) );
 	terminal->clear_callback();
 }
 
@@ -511,7 +540,7 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 	return w;
 }
 
-void Main::openTools(QXmlStreamReader &xml, QString config_name)
+void Main::openTools(QXmlStreamReader &xml, const QString &config_name )
 {
 	QList<BaseWidget*> tools;
 	QHash<QString, WidgetType> tools_type;
@@ -532,6 +561,7 @@ void Main::openTools(QXmlStreamReader &xml, QString config_name)
 	while ( ! xml.atEnd() )
 	{
 		xml.readNext();
+
 		if( xml.isStartElement() )
 		{
 			if(xml.name()=="tool")
@@ -736,6 +766,7 @@ void Main::openTools(QXmlStreamReader &xml, QString config_name)
 			}
 		}
 	}
+
 	connect(&timer, SIGNAL(timeout()), this, SLOT(initialPosition_callback()));
 	timer.setSingleShot(true);
 	timer.start(5000);
@@ -748,18 +779,35 @@ void Main::initialPosition_callback()
 	{
 		/*i.widget->move(i.x,i.y);
 		i.widget->resize(i.width, i.height);*/
-		if(i.maximized) i.widget->showMaximized();
-		if(i.minimized) i.widget->showMinimized();
+		if(i.maximized)
+		{
+			i.widget->showMaximized();
+		}
+		
+		if(i.minimized) 
+		{
+			i.widget->showMinimized();
+		}
 	}
 }
 
 
 void Main::openFilesToEdit(QStringList files)
 {
-	if(files.isEmpty()) return;
-	BaseWidget *bw=(BaseWidget*)session.getFirstTool(EDITOR);
-	if(bw==NULL) bw=createTool(EDITOR, NULL);
-	Editor *editor=(Editor*)bw;
+	if( files.isEmpty() )
+	{
+		return;
+	}
+
+	BaseWidget *bw = static_cast<BaseWidget*>( session.getFirstTool(EDITOR) );
+
+	if( bw == NULL )
+	{
+		bw = createTool( EDITOR , NULL );
+	}
+
+	Editor *editor = static_cast<Editor*>( bw );
+
 	editor->loadFiles(files);
 	editor->show();
 }
