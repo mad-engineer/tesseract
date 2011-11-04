@@ -406,8 +406,9 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 			Terminal *terminal=new Terminal(parent);
 			terminal->setSession(&session);
 			w=terminal;
+			break;
 		}
-		break;
+
 		case HELP:
 		{
 			Help *help=new Help(parent);
@@ -415,6 +416,7 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 			w=help;
 			break;
 		}
+
 		case TABLE:
 		{
 			Table *table=new Table(parent);
@@ -423,6 +425,7 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 			w=table;
 			break;
 		}
+
 		case VARIABLESLIST:
 		{
 			VariableList *variableList=new VariableList(parent);
@@ -433,6 +436,7 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 			w=variableList;
 			break;
 		}
+
 		case DYNAMIC_HELP:
 		{
 			Dynamic_help *dynamic_help=new Dynamic_help(oc->getOctavePath(), parent);
@@ -440,6 +444,7 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 			w=dynamic_help;
 			break;
 		}
+
 		case EDITOR:
 		{
 			//if( get_config("external_editor") != "true")
@@ -451,6 +456,7 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 			//}
 			break;
 		}
+
 		case NAVIGATOR:
 		{
 			Navigator *nav=new Navigator(parent);
@@ -459,6 +465,7 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 			w=nav;
 			break;
 		}
+
 		case COMMANDLIST:
 		{
 			CommandList *command_list=new CommandList(parent);
@@ -470,6 +477,7 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 			w=command_list;
 			break;
 		}
+
 		case SVGCANVAS:
 		{
 			SvgCanvas *svgcanvas = new SvgCanvas(parent);

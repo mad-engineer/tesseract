@@ -77,11 +77,11 @@ void NumberBar::setBugLine( int lineno )
 
 void NumberBar::toggleBreakpoint( int lineno )
 {
-	if(lineno > 0)
+	if( lineno )
 	{
 		int i = breakpoints.indexOf(lineno);
 
-		if(i > -1)
+		if( i > -1 )
 		{
 			breakpoints.removeAt(i);
 		}

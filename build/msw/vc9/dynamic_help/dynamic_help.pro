@@ -28,8 +28,8 @@ win32 {
 	CONFIG(Debug):TARGET = $$PROJECT_NAME_D
 	CONFIG(Release):TARGET = $$PROJECT_NAME
 		
-	CONFIG(Debug):DESTDIR = ../../../../lib/mswd/vc9/x86/$$PROJECT_NAME/$$PROJECT_NAMED
-	CONFIG(Release):DESTDIR = ../../../../lib/msw/vc9/x86/$$PROJECT_NAME/$$PROJECT_NAME
+	CONFIG(Debug):DESTDIR = ../../../../lib/mswd/vc9/x86/$$PROJECT_NAME
+	CONFIG(Release):DESTDIR = ../../../../lib/msw/vc9/x86/$$PROJECT_NAME
 
 	CONFIG(Debug):OBJECTS_DIR = ../../../../tmp/mswd/vc9/x86/$$PROJECT_NAME
 	CONFIG(Release):OBJECTS_DIR = ../../../../tmp/mswd/vc9/x86/$$PROJECT_NAME		
