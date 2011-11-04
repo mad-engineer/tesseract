@@ -1,5 +1,6 @@
 QToolBar
 {
+	margin-top: 1px;
 	padding: 0px;
 	padding-right: 5px;
 	border-radius: 3px;

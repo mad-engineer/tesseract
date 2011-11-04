@@ -1,10 +1,23 @@
 QToolBar
 {
 	height: 10px;
-	margin-left: 5px;
 	padding-left: 7px;
-	margin-right: 5px;
+	margin-top: 5px;
 	/*background-color: rgb(174,185,205); */
 	background-color: red;
 }
 
+
+/* Editors widgets */
+QDockWidget::title 
+{
+	margin-top: 5px;
+	margin-left: 0px;
+	padding-top: 5px;
+	padding-left: 5px;
+	
+	border-top-left-radius: 3px;  
+	border-top-right-radius: 3px; 
+
+	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgb(202,211,226), stop:1 rgb(174,185,205) ); 
+}

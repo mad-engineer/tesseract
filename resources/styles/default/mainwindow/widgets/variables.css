@@ -1,3 +1,10 @@
+QMenu 
+{
+	margin: 5px;
+	min-width: 50px;
+	background-color: rgb(231,234,237); 
+}
+
 QMenuBar
 {
 	margin-left: 5px;
@@ -8,7 +15,7 @@ QMenuBar
 QMenuBar::item 
 {
 	height: 0px;
-	padding-left: 5px;
+	padding-left: 0px;
 	margin-top: 0px;
 	margin-bottom: 0px;
 

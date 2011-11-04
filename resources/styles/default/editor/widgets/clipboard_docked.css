@@ -1,10 +1,14 @@
+QFrame
+{
+	padding: 50px;
+	background-color: red;
+}
+
 QListView
 {
-	border: 0px;
-	margin-left: 5px;
-	margin-right: 2px;
-	padding: 10px;
-	background-color: rgb(174,185,205);
+	margin: 0px;
+	padding: 5px;
+	background-color: rgb( 240 , 240 , 240 );
 	
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;

@@ -46,7 +46,7 @@ QTabBar::tab:!selected
 
 QDockWidget::title 
 {
-	margin-top: 5px;
+	margin-top:0px;
 	margin-left: 5px;
 	margin-right: 2px;
 

@@ -1,16 +1,13 @@
 QMenuBar
 {
-	padding: 0px;
-	margin-left: 5px;
-	margin-right: 2px;
-
+	padding-right: 5px;
 	background-color: rgb(174,185,205);
 }
 
 QMenuBar::item 
 {
 	padding-top: 0px;
-	padding-left: 10px;
+	padding-left: 7px;
 	
 	background-color: rgb(174,185,205);
 }
