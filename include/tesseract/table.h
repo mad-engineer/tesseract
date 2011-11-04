@@ -16,17 +16,19 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#ifndef __TABLE_H__
-#define __TABLE_H__
+#pragma once
+#ifndef TESSERACT_TESSERACT_TABLE_H
+#define TESSERACT_TESSERACT_TABLE_H
 
 #include <QTableWidget>
+#include <QItemDelegate>
 #include <QContextMenuEvent>
 #include <QAbstractTableModel>
-#include <QItemDelegate>
-#include "octave_connection.h"
-#include "ui_table_ui.h"
+
 #include "basewidget.h"
 #include "table_plot.h"
+#include "ui_table_ui.h"
+#include "octave_connection.h"
 
 using namespace Ui;
 

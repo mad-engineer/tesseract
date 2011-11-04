@@ -16,8 +16,9 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#ifndef TESSERACT_TESSERACT_PROJECTS_H
-#define TESSERACT_TESSERACT_PROJECTS_H
+#pragma once
+#ifndef TESSERACT_PROJECTS_PROJECTS_H
+#define TESSERACT_PROJECTS_PROJECTS_H
 
 #include "config.h"
 #include "ui_projects.h"
@@ -70,13 +71,14 @@ class Projects: public QDialog
 		static QStringList listCommandHistory( const QString &project_name );
 		
 		/**Save history of commands of project project_name.*/
-		static void saveListCommandHistory(const QString & project_name, const QStringList & command_history);
+		static void saveListCommandHistory(const QString & project_name, const QStringList & command_history );
 		
 		/**Name of selected project.*/
 		QString projectName();
 	
 
 	public slots:
+
 		/**Show dialog for a new project.*/
 		void new_button_callback();
 		
@@ -93,7 +95,7 @@ class Projects: public QDialog
 		void show_description_callback(QListWidgetItem * current, QListWidgetItem * previous );
 		
 		/**Show context menu.*/
-		void contextMenu_cb( const QPoint & pos);
+		void contextMenu_cb( const QPoint & pos );
 };
 
 #endif

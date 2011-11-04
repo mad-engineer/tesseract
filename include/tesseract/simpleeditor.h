@@ -1,4 +1,3 @@
-#ifndef __SIMPLEEDITOR_H__
 /* Copyright (C) 2010 P.L. Lucas
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,12 +16,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#pragma once
+#ifndef TESSERACT_TESSERACT_SIMPLEEDITOR_H
+#define TESSERACT_TESSERACT_SIMPLEEDITOR_H
 
-#define __SIMPLEEDITOR_H__
-
-#include <QPlainTextEdit>
 #include <QCompleter>
+#include <QPlainTextEdit>
 #include <QStringListModel>
+
 #include "syntax.h"
 
 class SimpleEditor:public QPlainTextEdit

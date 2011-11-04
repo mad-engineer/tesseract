@@ -15,11 +15,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, 
  * Boston, MA 02111-1307, USA. 
  */
-#ifndef PKG_BIND_H
-#define PKG_BIND_H
 
-#include <QString>
+#pragma once
+#ifndef TESSERACT_TESSERACT_PKG_BIND_H
+#define TESSERACT_TESSERACT_PKG_BIND_H
+
 #include <QSet>
+#include <QString>
 
 class PkgBind: private QObject
 {

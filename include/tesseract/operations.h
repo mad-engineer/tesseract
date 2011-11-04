@@ -16,8 +16,10 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#ifndef __OPERATIONS_H__
-#define __OPERATIONS_H__
+#pragma once
+#ifndef TESSERACT_TESSERACT_OPERATIONS_H
+#define TESSERACT_TESSERACT_OPERATIONS_H
+
 #include "mainwindow.h"
 #include "octave_connection.h"
 #include "basewidget.h"

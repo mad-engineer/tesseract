@@ -1,16 +1,27 @@
-#ifndef __SESSION_H__
-#define __SESSION_H__
+#pragma once
+#ifndef TESSERACT_TESSERACT_SESSION_H
+#define TESSERACT_TESSERACT_SESSION_H
 
+#include <QHash>
 #include <QObject>
 #include <QVector>
-#include <QHash>
+
 
 /**Types of widgets.*/
 enum WidgetType
 {
-MAIN,MAINWINDOW,TERMINAL,TABLE,HELP,DYNAMIC_HELP,
-EDITOR,NAVIGATOR,VARIABLESLIST,COMMANDLIST,SVGCANVAS,
-NONE
+	MAIN,
+	MAINWINDOW,
+	TERMINAL,
+	TABLE,
+	HELP,
+	DYNAMIC_HELP,
+	EDITOR,
+	NAVIGATOR,
+	VARIABLESLIST,
+	COMMANDLIST,
+	SVGCANVAS,
+	NONE
 };
 
 QString widgetName(WidgetType type);

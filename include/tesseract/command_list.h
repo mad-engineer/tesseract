@@ -16,8 +16,9 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#ifndef __COMMAND_LIST_H__
-#define __COMMAND_LIST_H__
+#pragma once
+#ifndef TESSERACT_TESSERACT_COMMAND_LIST
+#define TESSERACT_TESSERACT_COMMAND_LIST
 
 #include <QLineEdit>
 #include <QListView>

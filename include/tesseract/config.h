@@ -39,6 +39,7 @@
 /** @file config.h
  * This file contains application's config parameters. Configuration is automaticly load and save from CONFIG_PATH/config.rc and from user home/.qtoctave.rc
  */
+#pragma once
 
 #ifdef USER_CONFIG
 #include "configure.h"

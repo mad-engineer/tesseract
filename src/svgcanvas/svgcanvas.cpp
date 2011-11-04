@@ -1,6 +1,21 @@
-#include "svgcanvas.h"
+#include <QtSvg>
 #include <QXmlSimpleReader>
 #include <QXmlDefaultHandler>
+
+#include "svgcanvas.h"
+#include "octave_connection.h"
+#include "ui_export_to_dialog.h"
+
+enum ExportFormat 
+{
+	PIXMAP, 
+	PICTURE, 
+	PRINTER, 
+	PDF, 
+	SVG
+};
+
+using namespace Ui;
 
 void SvgCanvas::setCanvasNumber(int n)
 {
@@ -22,8 +37,8 @@ void SvgCanvas::setOctaveConnection(OctaveConnection *oc)
 	}
 }
 
-
-SvgCanvas::SvgCanvas(QWidget *parent):BaseWidget(parent)
+SvgCanvas::SvgCanvas(QWidget *parent):
+BaseWidget(parent)
 {
 	widget_type=SVGCANVAS;
 	setWindowTitle("SvgCanvas");
@@ -110,8 +125,7 @@ public:
 	}
 };
 
-
-void SvgCanvas::load_file(QString svg_file_name)
+void SvgCanvas::load_file( const QString &svg_file_name )
 {
 	statusBar()->clearMessage();
 	
@@ -137,8 +151,7 @@ void SvgCanvas::load_file(QString svg_file_name)
 	}
 }
 
-
-void SvgCanvas::line_ready(QString line)
+void SvgCanvas::line_ready( const QString &line )
 {
 	if( re.exactMatch(line) )
 	{
@@ -193,8 +206,6 @@ void SvgCanvas::line_ready(QString line)
 	}
 }
 
-
-
 BaseWidget *SvgCanvas::copyBaseWidget( QWidget * parent )
 {
 	SvgCanvas *bw = new SvgCanvas(parent);
@@ -207,7 +218,6 @@ BaseWidget *SvgCanvas::copyBaseWidget( QWidget * parent )
 	return bw;
 }
 
-
 void SvgCanvas::export_to_png_jpg( int width , int height , const QString &filename )
 {
 	QPainter plot;
@@ -217,7 +227,6 @@ void SvgCanvas::export_to_png_jpg( int width , int height , const QString &filen
 	plot.end();
 	image.save(filename);
 }
-
 
 void SvgCanvas::export_to_pdf_ps(int width , int height , const QString &filename )
 {
@@ -234,12 +243,6 @@ void SvgCanvas::export_to_pdf_ps(int width , int height , const QString &filenam
 	svg_plot->renderer()->render(&plot);
 	plot.end();
 }
-
-#include "ui_export_to_dialog.h"
-
-enum ExportFormat {PIXMAP, PICTURE, PRINTER, PDF, SVG};
-
-using namespace Ui;
 
 void SvgCanvas::actionExport_to_callback()
 {
@@ -350,4 +353,3 @@ void SvgCanvas::actionExport_to_callback()
 		}
 	}
 }
-

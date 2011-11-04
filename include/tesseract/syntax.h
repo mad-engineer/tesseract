@@ -16,13 +16,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __SYNTAX_H__
-#define __SYNTAX_H__
+#pragma once
+#ifndef TESSERACT_TESSERACT_SYNTAX_H
+#define TESSERACT_TESSERACT_SYNTAX_H
 
-#include <QSyntaxHighlighter>
-#include <QTextBlockUserData>
 #include <QVector>
 #include <QPlainTextEdit>
+#include <QSyntaxHighlighter>
+#include <QTextBlockUserData>
 
 class BlockData:public QTextBlockUserData
 {

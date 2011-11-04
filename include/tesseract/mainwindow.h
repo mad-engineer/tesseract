@@ -16,6 +16,7 @@
  * Boston, MA 02111-1307, USA. 
  */
 
+#pragma once
 #ifndef TESSERACT_TESSERACT_MAINWINDOW_H
 #define TESSERACT_TESSERACT_MAINWINDOW_H
 

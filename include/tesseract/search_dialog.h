@@ -16,8 +16,10 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#ifndef __SEARCH_DIALOG_H__
-#define __SEARCH_DIALOG_H__
+#pragma once
+#ifndef TESSERACT_TESSERACT_SEARCH_DIALOG_H
+#define TESSERACT_TESSERACT_SEARCH_DIALOG_H
+
 #include <QDialog>
 #include <QLabel>
 #include <QLineEdit>

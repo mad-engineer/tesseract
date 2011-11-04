@@ -1,15 +1,21 @@
-#include "table_plot.h"
+#include <QLabel>
+#include <QVector>
+#include <QDialog>
+#include <QVariant>
 #include <QGroupBox>
-#include <QTextStream>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QTableView>
 #include <QClipboard>
 #include <QBoxLayout>
-#include <QLabel>
-#include <QVariant>
 #include <QPushButton>
-#include <QVector>
 #include <QMessageBox>
-#include "config.h"
+#include <QTextStream>
+#include <QRadioButton>
+
 #include "table.h"
+#include "config.h"
+#include "table_plot.h"
 
 TablePlot::TablePlot(QWidget *parent, QTableView *table, ComplexNumberTableModel *model, Type type):
   QDialog(parent), table(table), model(model)

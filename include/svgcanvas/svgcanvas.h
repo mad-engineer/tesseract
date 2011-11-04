@@ -1,19 +1,20 @@
-#ifndef __SVGCANVAS_H__
-#define __SVGCANVAS_H__
+#pragma once
+#ifndef TESSERACT_SVGCANVAS_SVGCANVAS_H
+#define TESSERACT_SVGCANVAS_SVGCANVAS_H
 
-#include <QtSvg>
 #include <QRegExp>
-#include <QXmlSimpleReader>
 
 #include "basewidget.h"
-#include "octave_connection.h"
 
-/**Creates a simple canvas to plot svg files.
+class QSvgWidget;
+class OctaveConnection;
+
+/*
+	Creates a simple canvas to plot svg files.
 */
 class SvgCanvas: public BaseWidget
 {
 	Q_OBJECT
-	private:
 	QSvgWidget *svg_plot;
 	int canvas_number;
 	QRegExp re, re_save, re_delete_on_load;
@@ -23,20 +24,20 @@ class SvgCanvas: public BaseWidget
 	QMenu *menuFile;
 	QAction *actionExportTo;
 	
-	void export_to_png_jpg(int width, int height, QString filename);
-	void export_to_pdf_ps(int width, int height, QString filename);
+	void export_to_png_jpg( int width , int height , const QString &filename );
+	void export_to_pdf_ps( int width , int height , const QString &filename );
 	
 	public:
-	SvgCanvas(QWidget *parent=0);
-	void setOctaveConnection(OctaveConnection *oc);
-	void setCanvasNumber(int n);
-	int getCanvasNumber();
-	BaseWidget *copyBaseWidget( QWidget * parent = 0 );
-	
-	public slots:
-	void line_ready(QString line);
-	void actionExport_to_callback();
-	void load_file(QString file);
+		SvgCanvas( QWidget *parent=0 );
+		void setOctaveConnection( OctaveConnection *oc );
+		void setCanvasNumber( int n );
+		int getCanvasNumber();
+		BaseWidget *copyBaseWidget( QWidget * parent = 0 );
+		
+		public slots:
+		void line_ready( const QString &line );
+		void actionExport_to_callback();
+		void load_file( const QString &file );
 };
 
 

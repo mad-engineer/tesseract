@@ -16,20 +16,21 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#ifndef __VARIABLES_LIST_H__
-#define __VARIABLES_LIST_H__
+#pragma once
+#ifndef TESSERACT_TESSERACT_VARIABLES_LIST_H
+#define TESSERACT_TESSERACT_VARIABLES_LIST_H
 
+#include <QMenuBar>
+#include <QLineEdit>
 #include <QTextEdit>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QTreeWidget>
 #include <QContextMenuEvent>
-#include <QMenuBar>
-#include <QLineEdit>
-#include "octave_connection.h"
-#include "basewidget.h"
 
+#include "basewidget.h"
+#include "octave_connection.h"
 
 /** Shows variables list. It uses whos command.
 */

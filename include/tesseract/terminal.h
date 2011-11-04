@@ -16,19 +16,21 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#ifndef __TERMINAL_H__
-#define __TERMINAL_H__
+#pragma once
+#ifndef TESSERACT_TESSERACT_TERMINAL_H
+#define TESSERACT_TESSERACT_TERMINAL_H
 
+#include <QFile>
+#include <QMdiArea>
 #include <QTextEdit>
 #include <QPushButton>
-#include <QMdiArea>
 #include <QCloseEvent>
-#include <QFile>
+
 #include "basewidget.h"
-#include "octave_connection.h"
 #include "dynamic_help.h"
 #include "autocomplete.h"
 #include "command_list.h"
+#include "octave_connection.h"
 
 /** Builds windows with QtextEdit and QLineEdit. QTextEdit shows OctaveConnection output.
  * QLineEdit is used to write commands.

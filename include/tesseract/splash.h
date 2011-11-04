@@ -1,3 +1,6 @@
+#pragma once
+#ifndef TESSERACT_TESSERACT_SPLASH_H
+#define TESSERACT_TESSERACT_SPLASH_H
 
 #include <QFrame>
 #include <QColor>
@@ -21,3 +24,5 @@ private:
 	int itsAlignment;
 	QColor itsColor;
 };
+
+#endif

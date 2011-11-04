@@ -1,6 +1,11 @@
-#include "ui_general_menu.h"
-#include "config.h"
+#pragma once
+#ifndef TESSERACT_OPERATIONS_GENERAL_MENU_H
+#define TESSERACT_OPERATIONS_GENERAL_MENU_H
+
 #include <QFont>
+
+#include "config.h"
+#include "ui_general_menu.h"
 
 using namespace Ui;
 
@@ -10,12 +15,6 @@ class General_Menu: public QDialog
 {
 	Q_OBJECT
 	
-	public:
-	General_Menu(QWidget *parent=0);
-	Ui_GeneralMenu ui;
-	void apply_config();
-	
-	private:
 	QFont config_font;
 	QColor foreground_color;
 	QColor background_color;
@@ -23,17 +22,26 @@ class General_Menu: public QDialog
 	QFont text_edit_font;
 	void set_font_label();
 	void set_color_label();
+
+	public:
+
+		General_Menu(QWidget *parent=0);
+		Ui_GeneralMenu ui;
+		void apply_config();
 	
 	public slots:
-	void editor_select_button_callback();
-	void help_path_select_pushButton_callback();
-	void font_button_callback();
-	void foreground_button_callback();
-	void background_button_callback();
-	void error_button_callback();
-	void octaveDirRem_button_callback();
-	void octaveDirAdd_button_callback();
-	void octave_path_button_callback();
-	void textEditFont_pushButton_callback();
-	void easy_plot_path_button_callback();
+
+		void editor_select_button_callback();
+		void help_path_select_pushButton_callback();
+		void font_button_callback();
+		void foreground_button_callback();
+		void background_button_callback();
+		void error_button_callback();
+		void octaveDirRem_button_callback();
+		void octaveDirAdd_button_callback();
+		void octave_path_button_callback();
+		void textEditFont_pushButton_callback();
+		void easy_plot_path_button_callback();
 };
+
+#endif

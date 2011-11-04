@@ -18,8 +18,10 @@
     Boston, MA 02110-1301, USA.
 */
 // -*- c++ -*-
-#ifndef NUMBERED_TEXT_VIEW_H
-#define NUMBERED_TEXT_VIEW_H
+
+#pragma once
+#ifndef TESSERACT_TESSERACT_NUMBEREDTEXTVIEW_H
+#define TESSERACT_TESSERACT_NUMBEREDTEXTVIEW_H
 
 #include <QLabel>
 #include <QFrame>
