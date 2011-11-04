@@ -16,13 +16,15 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#ifndef __OCTAVE_CONNECTION_H__
-#define __OCTAVE_CONNECTION_H__
+#pragma once
+#ifndef TESSERACT_TESSERACT_OCTAVE_CONNECTION_H
+#define TESSERACT_TESSERACT_OCTAVE_CONNECTION_H
 
-#include <QProcess>
-#include <QTextEdit>
 #include <QBuffer>
 #include <QThread>
+#include <QProcess>
+#include <QTextEdit>
+
 #include "config.h"
 
 

@@ -1,13 +1,16 @@
-#ifndef __GENERATE_MENU_H__
-#define __GENERATE_MENU_H__
-#include "mainwindow.h"
-#include "octave_connection.h"
-#include "operations.h"
+#pragma once
+#ifndef TESSERACT_TESSERACT_GENERATE_MENU_H
+#define TESSERACT_TESSERACT_GENERATE_MENU_H
+
 #include <QProcess>
 #include <QGroupBox>
-#include <QTextBrowser>
-#include <QScrollArea>
 #include <QComboBox>
+#include <QScrollArea>
+#include <QTextBrowser>
+
+#include "operations.h"
+#include "mainwindow.h"
+#include "octave_connection.h"
 
 #define MENU_TRANSLATE(s) QCoreApplication::translate("", s.toLocal8Bit().data()).toLocal8Bit().data()
 
@@ -23,26 +26,26 @@ class GenerateMenu:public QObject
 	/** Set path to read menus entries.
 	 * @param path path to menus.
 	 */
-	void setPath(QString path);
+	void setPath(const QString &path);
 	/** Load menus. Menus are read from path.
 	 */
 	void load_menu();
 	private:
-	void load_menu(QString dir_name, QMenu *parent_menu);
+	void load_menu(const QString &dir_name, QMenu *parent_menu);
 		
 	//Directorio en el que se encuentran los mens
 	QString path;
 	Operations *operations;
 	MainWindow *mainwindow;
 	/**Parse files with .menu extension.*/
-	bool process_menu_file(QString _file,  QStringList &  input_labels,  QStringList &  input_parameters, QStringList & output_labels, QStringList & output_parameters, QString & command, QString & menu_name, QString & help, bool & accept_blank_parameters, bool & auto_exec);
+	bool process_menu_file(const QString &file,  QStringList &  input_labels,  QStringList &  input_parameters, QStringList & output_labels, QStringList & output_parameters, QString & command, QString & menu_name, QString & help, bool & accept_blank_parameters, bool auto_exec);
 	
 	MenuExtCallBack *process_menu_file(QString _file);
 	
 	/**Removes path from file_path.*/
 	QString menu_path(QString file_path);
 	/**Finds icon for given menu.*/
-	QString find_icon(QString file_path, QString menu);
+	QString find_icon(const QString &file_path, const QString &menu);
 };
 
 /**Simple Callback for menus genetates using GenerateMenu. This callback is used when menu file is executable. When menu item is selected, menu file is executed and result is sent to OctaveConnection.*/
@@ -50,7 +53,7 @@ class MenuCallBack:public QObject
 {
 	Q_OBJECT
 	public:
-	MenuCallBack(QString menu_name, OctaveConnection *oc);
+	MenuCallBack(const QString &menu_name, OctaveConnection *oc);
 	private:
 	QProcess process;
 	QString menu_name;
@@ -67,7 +70,7 @@ class MenuFileCallBack: public QObject
 {
 	Q_OBJECT
 	public:
-		MenuFileCallBack(QString menu_name, OctaveConnection *oc, Operations *operations, QStringList &  input_labels,  QStringList &  input_parameters, QStringList & output_labels, QStringList & output_parameters, QString & command, QString & help, bool & accept_blank_parameters);
+		MenuFileCallBack(const QString &menu_name, OctaveConnection *oc, Operations *operations, QStringList &  input_labels,  QStringList &  input_parameters, QStringList & output_labels, QStringList & output_parameters, QString & command, QString & help, bool accept_blank_parameters);
 	private:
 		Operations *operations;
 		QString menu_name;
@@ -97,11 +100,11 @@ class LineEdit:public InputWidget
 {
 	Q_OBJECT
 	public:
-	LineEdit(QString label, QWidget *parent=0);
+	LineEdit(const QString &label, QWidget *parent=0);
 	QLabel *label;
 	QLineEdit *lineedit;
 	QString parameter();
-	void setParameter(QString _parameter);
+	void setParameter( const QString &param );
 };
 
 /**Simple line edit and select file dialog for menus.*/
@@ -109,12 +112,12 @@ class FileEdit:public InputWidget
 {
 	Q_OBJECT
 	public:
-	FileEdit(QString label, QWidget *parent=0);
+	FileEdit(const QString &label, QWidget *parent=0);
 	QLabel *label;
 	QLineEdit *lineedit;
 	QPushButton *file_button;
 	QString parameter();
-	void setParameter(QString _parameter);
+	void setParameter( const QString &param );
 	public slots:
 	void file_button_callback();
 };
@@ -124,11 +127,11 @@ class ComboBox:public InputWidget
 {
 	Q_OBJECT
 	public:
-	ComboBox(QString label, QWidget *parent=0);
+	ComboBox(const QString &label, QWidget *parent=0);
 	QLabel *label;
 	QComboBox *combobox;
 	QString parameter();
-	void setParameter(QString _parameter);
+	void setParameter( const QString &param );
 };
 
 
@@ -141,8 +144,8 @@ class MenuExtCallBack: public QWidget
 		void setOctaveConnection(OctaveConnection *oc);
 		void addInput(InputWidget *input);
 		void addOutput(InputWidget *output);
-		void addHelp(QString help);
-		void addCommand(QString command);
+		void addHelp(const QString &help );
+		void addCommand( const QString &command );
 		void setAcceptBlankParameters(bool accept_blank_parameters);
 		void setAutoExec(bool auto_exec_ok);
 	private:

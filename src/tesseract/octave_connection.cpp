@@ -374,10 +374,23 @@ void OctaveConnection::octaveErrorOutputSlot()
 			if(line.startsWith("~~"))
 			{
 				// Code of clc (clean screen)
-				if(line=="~~ClearScreen\n") emit clearScreen();
-				else emit line_ready(line);
+				if(line=="~~ClearScreen\n")
+				{
+					emit clearScreen();
+				}
+				else
+				{
+					emit line_ready(line);
+				}
 			}
-			else error+=line;
+			else if(line.startsWith("warning"),false)
+			{
+				
+			}
+			else
+			{
+				error+=line;
+			}
 			
 			if( regexp_actual_debug_line_column.exactMatch(line.trimmed()) )
 			 {

@@ -13,38 +13,45 @@ GenerateMenu::GenerateMenu(MainWindow *mainwindow, Operations *operations):QObje
 	this->operations=operations;
 }
 
-void GenerateMenu::setPath(QString path)
+void GenerateMenu::setPath(const QString &newPath)
 {
-	this->path=path;
+	path=newPath;
 }
 
-QString GenerateMenu::menu_path(QString file_path)
+QString GenerateMenu::menu_path( QString file_path )
 {
-	if(file_path.startsWith(path))
+	if( file_path.startsWith( path ) )
 	{
-		QString r(file_path);
-		r.remove(0,path.size());
-		return r;
+		file_path.remove( 0,path.size() );
 	}
+
 	return file_path;
 }
 
-QString GenerateMenu::find_icon(QString file_path, QString menu)
+QString GenerateMenu::find_icon( const QString &file_path, const QString &menu )
 {
 	QDir dir(file_path);
-	if(!dir.exists())
+
+	if( ! dir.exists() )
 	{
 		printf("[GenerateMenu::find_icon] Error: %s not found\n", path.toLocal8Bit().data() );
 		return QString();
 	}
+
 	QFileInfoList list=dir.entryInfoList( QDir::NoFilter, QDir::Name );
+
 	for (int i = 0; i < list.size(); ++i)
 	{
 		QFileInfo fileInfo = list.at(i);
+
 		QString file_name=fileInfo.fileName();
-		if(!fileInfo.isDir() && !file_name.startsWith(".") && file_name.endsWith(".png"))
+
+		if( ! fileInfo.isDir() && !file_name.startsWith(".") && file_name.endsWith(".png"))
 		{
-			if(  (menu+QString(".png")) == file_name ) return fileInfo.filePath();
+			if(  (menu+QString(".png") ) == file_name )
+			{
+				return fileInfo.filePath();
+			}
 		}
 	}
 	
@@ -56,12 +63,13 @@ void GenerateMenu::load_menu()
 	load_menu(path,NULL);
 }
 
-void GenerateMenu::load_menu(QString dir_name, QMenu *parent_menu)
+void GenerateMenu::load_menu(const QString &dir_name, QMenu *parent_menu)
 {
 	QDir dir(dir_name);
+
 	QTranslator *qTranslator; // For all translation files founded
 
-	if(!dir.exists())
+	if( ! dir.exists() )
 	{
 		printf("[GenerateMenu::load_menu] Error: %s not found\n", path.toLocal8Bit().data());
 		return;
@@ -75,72 +83,83 @@ void GenerateMenu::load_menu(QString dir_name, QMenu *parent_menu)
 					      
 	for(int i = 0; i < list.size(); ++i)
 	{
-	  QFileInfo fileInfo;
-	  QString   tName;
+		QFileInfo fileInfo;
+		QString   tName;
 
-	  fileInfo    = list.at(i);
-	  tName       = fileInfo.fileName().split("_").first();
+		fileInfo    = list.at(i);
+		tName       = fileInfo.fileName().split("_").first();
 
-	  if(loadedTranslations.indexOf(tName) == -1)
-	  {
-	    qTranslator = new QTranslator(this);
-	    loadedTranslations.append(tName);
-	  
-	    if(!qTranslator->load(tName + "_" + QLocale::system().name(), fileInfo.absolutePath()))
-	    {
-	      delete qTranslator;
-	      printf("[GenerateMenu::load_menu] Unknow error loading translation file '%s'\n",
-		     tName.toLocal8Bit().data());
-	    }else
-	    {
-	      QCoreApplication::instance()->installTranslator(qTranslator);
-	      printf("[GenerateMenu::load_menu] Translation file founded: '%s'\n",
-		     tName.toLocal8Bit().data());
-	    }
-	  }
+		if( loadedTranslations.indexOf(tName) == -1 )
+		{
+			qTranslator = new QTranslator(this);
+
+			loadedTranslations.append(tName);
+
+			if( ! qTranslator->load(tName + "_" + QLocale::system().name(), fileInfo.absolutePath()) )
+			{
+				delete qTranslator;
+				printf("[GenerateMenu::load_menu] Unknow error loading translation file '%s'\n",
+				tName.toLocal8Bit().data());
+			}
+			else
+			{
+				QCoreApplication::instance()->installTranslator(qTranslator);
+				printf("[GenerateMenu::load_menu] Translation file founded: '%s'\n",tName.toLocal8Bit().data());
+			}
+		}
 	}
 
 	// Process
 	list = dir.entryInfoList( QDir::NoFilter, QDir::Name );
-	for (int i = 0; i < list.size(); ++i) {
+
+	for (int i = 0; i < list.size(); ++i)
+	{
 		QFileInfo fileInfo = list.at(i);
 		QString menu_name=fileInfo.fileName();
+
 		//printf("Procesando: %s\n",menu_name.toLocal8Bit().data());
 		if(fileInfo.isDir() && !menu_name.startsWith("."))
 		{
 			//printf("Icono encontrado %s\n",find_icon(dir_name,menu_name).toLocal8Bit().data());
 			//printf("Menu path %s\n",menu_path(dir_name+"/"+menu_name).toLocal8Bit().data());
-			QMenu *menu=mainwindow->createMenu(menu_path(dir_name+"/"+menu_name),
-							   MENU_TRANSLATE(menu_name),
-							   find_icon(dir_name,menu_name));
-			if(parent_menu==NULL) mainwindow->menubar->addAction(menu->menuAction());
-			else parent_menu->addAction(menu->menuAction());
+
+			QMenu *menu=mainwindow->createMenu(menu_path(dir_name+"/"+menu_name),MENU_TRANSLATE(menu_name), find_icon(dir_name,menu_name));
+			
+			if(parent_menu==NULL)
+			{
+				mainwindow->menubar->addAction(menu->menuAction());
+			}
+			else
+			{
+				parent_menu->addAction(menu->menuAction());
+			}
+
 			load_menu(dir_name+"/"+menu_name,menu);
 		}
 		else if(fileInfo.isExecutable() && !menu_name.startsWith("."))
 		{
-			QAction *action = mainwindow->createAction(menu_path(dir_name+"/"+menu_name),
-								   MENU_TRANSLATE(menu_name),
-								   find_icon(dir_name,menu_name));
+			QAction *action = mainwindow->createAction(menu_path(dir_name+"/"+menu_name), MENU_TRANSLATE(menu_name), find_icon(dir_name,menu_name));
 
 			mainwindow->menus[menu_path(dir_name)]->addAction(action);
+
 			MenuCallBack *callback=new MenuCallBack(dir_name+"/"+menu_name, mainwindow->octave_connection);
+
 			connect(action, SIGNAL(triggered()), callback, SLOT(actions_callback()));
 		}
 		else if(!fileInfo.isExecutable()  && !menu_name.startsWith(".") && menu_name.endsWith(".menu"))
 		{	
 			MenuExtCallBack *wizard=process_menu_file(fileInfo.filePath());
 			
-			if( wizard==NULL ) return;
+			if( wizard==NULL )
+			{
+				return;
+			}
 			
 			QString _menu_name=wizard-> windowTitle();
 			
-			QAction *action = mainwindow->createAction( menu_path(dir_name+"/"+_menu_name),
-								    MENU_TRANSLATE(_menu_name),
-								    find_icon(dir_name, menu_name) );
+			QAction *action = mainwindow->createAction( menu_path(dir_name+"/"+_menu_name), MENU_TRANSLATE(_menu_name), find_icon(dir_name, menu_name) );
 
-			printf("%s / %s\n", _menu_name.toLocal8Bit().data(),
-			       QCoreApplication::translate("", "Load matrix from file").toLocal8Bit().data());
+			printf("%s / %s\n", _menu_name.toLocal8Bit().data(),   QCoreApplication::translate("", "Load matrix from file").toLocal8Bit().data());
 			
 			mainwindow->menus[menu_path(dir_name)]->addAction(action);
 			
@@ -158,10 +177,14 @@ void GenerateMenu::load_menu(QString dir_name, QMenu *parent_menu)
 
 enum ParseState {PARAMETER,BLOCK};
 
-bool GenerateMenu::process_menu_file(QString _file,  QStringList &  input_labels,  QStringList &  input_parameters, QStringList & output_labels, QStringList & output_parameters, QString & command, QString & menu_name, QString & help, bool & accept_blank_parameters, bool & auto_exec)
+bool GenerateMenu::process_menu_file(const QString &newFile,  QStringList &  input_labels,  QStringList &  input_parameters, QStringList & output_labels, QStringList & output_parameters, QString & command, QString & menu_name, QString & help, bool & accept_blank_parameters, bool auto_exec)
 {
-	QFile file(_file);
-	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return false;
+	QFile file(newFile);
+	
+	if ( ! file.open(QIODevice::ReadOnly | QIODevice::Text)) 
+	{
+		return false;
+	}
 	
 	accept_blank_parameters=false;
 	auto_exec=false;
@@ -259,14 +282,14 @@ bool GenerateMenu::process_menu_file(QString _file,  QStringList &  input_labels
 	
 	if(input_parameters.size()!=input_labels.size())
 	{
-		printf("Error in %s\n", _file.toLocal8Bit().data());
+		printf("Error in %s\n", newFile.toLocal8Bit().data());
 		printf("input must have same size than input_labels\n");
 		return false;
 	}
 	
 	if(output_parameters.size()!=output_labels.size())
 	{
-		printf("Error in %s\n", _file.toLocal8Bit().data());
+		printf("Error in %s\n", newFile.toLocal8Bit().data());
 		printf("output must have same size than output_parameters\n");
 		return false;
 	}
@@ -405,19 +428,28 @@ MenuExtCallBack *GenerateMenu::process_menu_file(QString _file)
 
 
 
-MenuFileCallBack::MenuFileCallBack(QString menu_name, OctaveConnection *oc, Operations *operations, QStringList &  input_labels,  QStringList &  input_parameters, QStringList & output_labels, QStringList & output_parameters, QString & command, QString & help, bool & accept_blank_parameters)
+MenuFileCallBack::MenuFileCallBack(const QString &newMenuName, 
+								   OctaveConnection *newOc, 
+								   Operations *newOperations, 
+								   QStringList & newInput_labels,  
+								   QStringList & newInput_parameters, 
+								   QStringList & newOutput_labels, 
+								   QStringList & newOutput_parameters, 
+								   QString & newCommand, 
+								   QString & newHelp, 
+								   bool newAccept_blank_parameters):
+menu_name(newMenuName),
+oc(newOc),
+input_labels(newInput_labels),
+input_parameters(newInput_parameters),
+output_labels(newOutput_labels),
+output_parameters(newOutput_parameters),
+command(newCommand),
+help(newHelp),
+accept_blank_parameters(newAccept_blank_parameters),
+operations(newOperations)
 {
-	this->menu_name=menu_name;
-	this->oc=oc;
-	this->input_labels=input_labels;
-	this->input_parameters=input_parameters;
-	this->output_labels=output_labels;
-	this->output_parameters=output_parameters;
-	this->command=command;
-	this->menu_name=menu_name;
-	this->help=help;
-	this->accept_blank_parameters=accept_blank_parameters;
-	this->operations=operations;
+
 }
 
 void MenuFileCallBack::actions_callback()
@@ -459,10 +491,11 @@ void MenuFileCallBack::actions_callback()
 	}
 }
 
-MenuCallBack::MenuCallBack(QString menu_name, OctaveConnection *oc)
+MenuCallBack::MenuCallBack(const QString &newMenuName, OctaveConnection *oc)
 {
-	this->menu_name=menu_name;
-	this->octave_connection=oc;
+	octave_connection=oc;
+	menu_name=newMenuName;
+
 	connect(&process, SIGNAL(readyReadStandardOutput()), this, SLOT(readyReadStandardOutput()));
 	connect(&process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finished(int, QProcess::ExitStatus)));
 }
@@ -494,17 +527,17 @@ InputWidget::InputWidget(QWidget *parent):QWidget(parent)
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-LineEdit::LineEdit(QString label, QWidget *parent):InputWidget(parent)
+LineEdit::LineEdit(const QString &newLabel, QWidget *parent):InputWidget(parent)
 {
-	this->label=new QLabel(label, this);
-	lineedit=new QLineEdit(this);
+	label = new QLabel(newLabel, this);
+	lineedit = new QLineEdit(this);
 	
 	QHBoxLayout *hbox=new QHBoxLayout;
 	
-	hbox->addWidget(this->label);
+	hbox->addWidget(label);
 	hbox->addWidget(lineedit);
 	
-	this->label->show();
+	label->show();
 	lineedit->show();
 	
 	setLayout(hbox);
@@ -519,26 +552,27 @@ QString LineEdit::parameter()
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void LineEdit::setParameter(QString _parameter)
+void LineEdit::setParameter(const QString &param)
 {
-	lineedit->setText(_parameter);
+	lineedit->setText(param);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-FileEdit::FileEdit(QString label, QWidget *parent):InputWidget(parent)
+FileEdit::FileEdit(const QString &newLabel, QWidget *parent):InputWidget(parent)
 {
-	this->label=new QLabel(label, this);
+	label=new QLabel(newLabel, this);
+
 	lineedit=new QLineEdit(this);
 	file_button=new QPushButton(tr("File..."),this);
 	
 	QHBoxLayout *hbox=new QHBoxLayout;
 	
-	hbox->addWidget(this->label);
+	hbox->addWidget(label);
 	hbox->addWidget(lineedit);
 	hbox->addWidget(file_button);
 	
-	this->label->show();
+	label->show();
 	lineedit->show();
 	file_button->show();
 	
@@ -556,16 +590,16 @@ QString FileEdit::parameter()
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FileEdit::setParameter(QString _parameter)
+void FileEdit::setParameter(const QString &param)
 {
-	lineedit->setText(_parameter);
+	lineedit->setText(param);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FileEdit::file_button_callback()
 {
-	QString s ;
+	QString s;
 	QFileDialog dialog(this);
 	dialog.setFileMode(QFileDialog::AnyFile);
 	dialog.selectFile(lineedit->text());
@@ -589,19 +623,19 @@ void FileEdit::file_button_callback()
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-ComboBox::ComboBox(QString label, QWidget *parent):InputWidget(parent)
+ComboBox::ComboBox(const QString &newLabel, QWidget *parent):InputWidget(parent)
 {
-	this->label=new QLabel(label, this);
+	label=new QLabel(newLabel, this);
 	combobox=new QComboBox(this);
 	
 	QHBoxLayout *hbox=new QHBoxLayout;
 	
-	hbox->addWidget(this->label);
+	hbox->addWidget(label);
 	hbox->addWidget(combobox);
 	
 	combobox->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 	
-	this->label->show();
+	label->show();
 	combobox->show();
 	
 	setLayout(hbox);
@@ -616,9 +650,9 @@ QString ComboBox::parameter()
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ComboBox::setParameter(QString _parameter)
+void ComboBox::setParameter(const QString &param)
 {
-	QStringList list=_parameter.split("\n");
+	QStringList list=param.split("\n");
 	
 	combobox->insertItems(0,list);
 }
@@ -698,10 +732,7 @@ MenuExtCallBack::MenuExtCallBack(QWidget *parent):QWidget(parent)
 
 void MenuExtCallBack::ok_button_callback()
 {
-	QString _command=generate_command();
-	
-	oc->command_enter( _command.trimmed() );
-	
+	oc->command_enter( generate_command().trimmed() );
 	hide();
 }
 
@@ -709,10 +740,8 @@ void MenuExtCallBack::ok_button_callback()
 
 void MenuExtCallBack::copy_clipboard_button_callback()
 {
-	QString _command=generate_command();
-	
 	QClipboard *clipboard = QApplication::clipboard();
-	clipboard->setText(_command);
+	clipboard->setText( generate_command() );
 	
 	hide();
 }
@@ -807,17 +836,17 @@ void MenuExtCallBack::addOutput(InputWidget *input)
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void MenuExtCallBack::addHelp(QString help)
+void MenuExtCallBack::addHelp(const QString &newHelp)
 {
 	//help_widget->setHtml(help);
-	this->help=help;
+	help=newHelp;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void MenuExtCallBack::addCommand(QString command)
+void MenuExtCallBack::addCommand(const QString &newCommand)
 {
-	this->command=command;
+	command=newCommand;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

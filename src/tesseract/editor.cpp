@@ -334,12 +334,10 @@ void Editor::resizeEvent( QResizeEvent * event )
 	if( notDocked )
 	{
 		file.setFileName(QApplication::applicationDirPath()+"/styles/default/editor/menubar.css");
-		menuBar()->setMaximumHeight(21);
 	}
 	else
 	{
 		file.setFileName(QApplication::applicationDirPath()+"/styles/default/editor/menubar_docked.css");
-		menuBar()->setMaximumHeight(25);
 	}
 
 	if( file.open( QFile::ReadOnly ) )
