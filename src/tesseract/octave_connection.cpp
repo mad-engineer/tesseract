@@ -231,21 +231,72 @@ void OctaveConnection::command_enter (const QString &command, bool show)
 	write(_command.toLocal8Bit() );
 }
 
+/*
+	The main problem is that the '\t' symbol is not portable.
+	As i found no option to set a specific tab size this hack
+	iterates through the output and replaces all '\t' characters
+	with 'tabsize' empty spaces.
+
+	TODO: Find away to avoid this ugly hack
+*/
+void OctaveConnection::tabHack( QString &buffer, QStringList &lines )
+{
+	std::size_t tabsize = 4;
+
+	for( QStringList::iterator i = lines.begin() ; i != lines.end() ; i++ )
+	{
+		// Not every line has '\t' characters.
+		// This should avoid unnecessary copies.
+		bool changedSomething = false;
+
+		QString tmpstr( *i );
+
+		// Find the first index of the '\t' character
+		std::size_t found = tmpstr.indexOf('\t');
+
+		/*
+			If at least one '\t' character is found.
+			Find and replace all '\t' characters in
+			this line with 'tabsize' empty spaces.
+		*/
+		while( found != std::string::npos )
+		{
+			std::size_t left = tabsize - found % tabsize;
+
+			tmpstr.replace( found , 1 , QString( left ? left : tabsize , ' ' ) );
+
+			changedSomething = true;
+			found = tmpstr.indexOf('\t');
+		}
+
+		if( changedSomething )
+		{
+			(*i) = tmpstr;
+		}
+	}
+
+	buffer.clear();
+
+	for(QStringList::const_iterator i = lines.begin() ; i != lines.end() ; i++ )
+	{
+		buffer.append(*i + '\n');
+	}
+}
 
 void OctaveConnection::octaveOutputSlot()
 {
-	QString buffer=QString::fromLocal8Bit( readAllStandardOutput().data() );
-	buffer.replace('\t',"    ");
 	//QRegExp regexp_octave_prompt("octave:[0-9]+>");
 	//QRegExp regexp_octave_prompt2("octave:[0-9]+\\+>");
 	//QRegExp regexp_actual_debug_line_column("^([a-zA-Z_]\\w*:)+ line ([0-9]+), column ([0-9]+)$");
 
-	Sleep::micro_sleep(200);
+	QString buffer = QString::fromLocal8Bit( readAllStandardOutput().data() );	
+	QStringList lines = buffer.split('\n');
+
+	tabHack( buffer , lines );
 
 	emit output_ready(buffer);
 
-	// Partir en líneas
-	QStringList lines = buffer.split("\n", QString::SkipEmptyParts);
+	Sleep::micro_sleep(200);
 
 	if( lines.empty() )
 	{

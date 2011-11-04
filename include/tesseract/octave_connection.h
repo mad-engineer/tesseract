@@ -33,62 +33,68 @@
 class OctaveConnection : public QProcess
 {
 	Q_OBJECT
-	public:
-	OctaveConnection(QObject * parent = 0);
-	/** Sets octave path.
-	 * @param path path to Octave.
-	 */
-	void setOctavePath(const QString &path);
-	QString getOctavePath();
-	void startOctave(bool quiet=false);
-	//void setTextEdit(QTextEdit *text);
-	/** Sends command to Octave.
-	 * @param text Command to send.
-	 * @param show Shows command in Terminal or not.
-	 */
-	void command_enter(const QString &text, bool show=true);
-	/**Reset number of instrucions left to send signal command_finished.
-	 */
-	void reset_instrutions_left() {instructions_left_no=0;};
-	private:
+
 	int lineno, colno;
+
 	/**Number of instructions left to end actual octave command.*/
 	int instructions_left_no;
 	bool debugging;
 	QString octave_path;
 	QString line_buffer;
 	QBuffer error_buffer;
+
 	/**Load scripts from qtoctave/scripts.*/
 	void loadScripts();
-	
+
 	/**Regular expresions:*/
-	
+
 	QRegExp regexp_octave_prompt; //Used in octaveOutputSlot
 	QRegExp regexp_octave_prompt2; //Used in octaveOutputSlot
 	QRegExp regexp_actual_debug_line_column; //Used in octaveOutputSlot
-	
+
 	/**Init most used regular expresions*/
 	void init_regular_expresions();
+
+	// Tab Hack to convert '\t' to x-empty spaces
+	void tabHack( QString &buffer , QStringList &lines );
+
+	public:
+		OctaveConnection(QObject * parent = 0);
+		/** Sets octave path.
+		 * @param path path to Octave.
+		 */
+		void setOctavePath(const QString &path);
+		QString getOctavePath();
+		void startOctave(bool quiet=false);
+		//void setTextEdit(QTextEdit *text);
+		/** Sends command to Octave.
+		 * @param text Command to send.
+		 * @param show Shows command in Terminal or not.
+		 */
+		void command_enter(const QString &text, bool show=true);
+		/**Reset number of instrucions left to send signal command_finished.
+		 */
+		void reset_instrutions_left() {instructions_left_no=0;};
 	
 	public slots:
-	void octaveOutputSlot();
-	void octaveErrorOutputSlot();
-	void octaveFinished(int, QProcess::ExitStatus);
+		void octaveOutputSlot();
+		void octaveErrorOutputSlot();
+		void octaveFinished(int, QProcess::ExitStatus);
 	
 	signals:
-	/**Emits this signal when line is available from stderr of Octave.*/
-	void line_ready(const QString &line);
-	void output_ready(const QString &output);
-	void error_ready(const QString &error);
-	void command_ready(const QString &command);
-	void ide_command_ready(const QString &command);
+		/**Emits this signal when line is available from stderr of Octave.*/
+		void line_ready(const QString &line);
+		void output_ready(const QString &output);
+		void error_ready(const QString &error);
+		void command_ready(const QString &command);
+		void ide_command_ready(const QString &command);
 
-	void debug(int lineno, int colno);
-	void endDebug();
-	
-	void clearScreen();
-	
-	void command_finished();
+		void debug(int lineno, int colno);
+		void endDebug();
+		
+		void clearScreen();
+		
+		void command_finished();
 };
 
 /**This class is for usleep doesn't depend on OS*/
