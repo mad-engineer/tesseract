@@ -224,8 +224,8 @@ QString TablePlot::command()
       //Get
       for(i = 0;i < model->rowCount(); i++)
       {
-	x_values_stream << model->data(i, j) << ",";
-	y_values_stream << model->data(i, k) << ",";
+	x_values_stream << model->data(i, j) << ',';
+	y_values_stream << model->data(i, k) << ',';
       }
 
       //Errors
@@ -235,9 +235,9 @@ QString TablePlot::command()
 	k = y_error_lineedit->text().toInt() - 1;
 
 	for(i = 0; j > -1 && i < model->rowCount(); i++)
-	  x_error_values_stream << model->data(i, j) << ",";
+	  x_error_values_stream << model->data(i, j) << ',';
 	for(i = 0; k > -1 && i < model->rowCount(); i++)
-	  y_error_values_stream << model->data(i, k) << ",";
+	  y_error_values_stream << model->data(i, k) << ',';
       }
     }else{
       QString a, r;
@@ -265,8 +265,8 @@ QString TablePlot::command()
       //Get
       for(i = 0; i < model->columnCount(); i++)
       {
-	x_values_stream << model->data(j, i) << ",";
-	y_values_stream << model->data(k, i) << ",";
+	x_values_stream << model->data(j, i) << ',';
+	y_values_stream << model->data(k, i) << ',';
       }
 
       //Errors
@@ -275,9 +275,9 @@ QString TablePlot::command()
 	j = x_error_lineedit->text().toInt() - 1;
 	k = y_error_lineedit->text().toInt() - 1;
 	for(i = 0; j > -1 && i < model->columnCount(); i++)
-	  x_error_values_stream << model->data(j, i) << ",";
+	  x_error_values_stream << model->data(j, i) << ',';
 	for(i = 0; k > -1 && i < model->columnCount(); i++)
-	  y_error_values_stream << model->data(k, i) << ",";
+	  y_error_values_stream << model->data(k, i) << ',';
       }
     }else{
       QString a, r;

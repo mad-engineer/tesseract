@@ -558,10 +558,10 @@ void NumberedTextView::cursor_moved_cb()
 
 static QString startLineInsertText(QString str, const QString &textToInsert)
 {
-	str.replace(QChar(0x2029), "\n");
+	str.replace(QChar(0x2029), '\n');
 	//printf("str=%s\n", str.toLocal8Bit().data() );
 	
-	QStringList list = str.split("\n");
+	QStringList list = str.split('\n');
 	
 	for(int i=0;i<list.size();i++)
 	{
@@ -580,15 +580,15 @@ static QString startLineInsertText(QString str, const QString &textToInsert)
 		list[i]=s1+textToInsert+s2;
 	}
 	
-	return list.join("\n");
+	return list.join( "\n" );
 }
 
 static QString startLineRemoveText(QString str, const  QStringList &textToRemove)
 {
-	str.replace(QChar(0x2029), "\n");
+	str.replace(QChar(0x2029), '\n');
 	//printf("str=%s\n", str.toLocal8Bit().data() );
 	
-	QStringList list = str.split("\n");
+	QStringList list = str.split('\n');
 	
 	for(int i=0;i<list.size();i++)
 	{
@@ -622,7 +622,7 @@ static QString startLineRemoveText(QString str, const  QStringList &textToRemove
 		list[i]=s1+s2;
 	}
 	
-	return list.join("\n");
+	return list.join( "\n" );
 }
 
 void NumberedTextView::indent()
@@ -638,7 +638,7 @@ void NumberedTextView::indent()
 	
 	QString str=cursor.selectedText();
 	
-	str=startLineInsertText(str, "\t");
+	str=startLineInsertText( str , "\t" );
 	
 	cursor.insertText(str);
 	cursor.setPosition(cursor.position()-str.size(), QTextCursor::KeepAnchor);

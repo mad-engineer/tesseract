@@ -118,13 +118,13 @@ class Editor: public BaseWidget
   void file_selected(const QModelIndex & index);
 
    /**Open file.*/
-  void openFile(QString file=QString());
+  void openFile( const QString &file=QString() );
 
   /**Emits dynamic_help_required*/
-  void emit_dynamic_help_required(const QString &text);
+  void emit_dynamic_help_required( const QString &text );
 
   /**Sets active project name.*/
-  void setProject(QString name);
+  void setProject( const QString &name );
 
   /**Indent text.*/
   void indent_callback();

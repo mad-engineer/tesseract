@@ -787,25 +787,29 @@ int main(int argn, char *argv[])
 
 #	ifndef DEBUG
 
-	class SleeperThread : public QThread
 	{
-	public:
-		static void msleep(unsigned long msecs) {QThread::msleep(msecs);}
-	};
+		class SleeperThread : public QThread
+		{
+		public:
+			static void msleep(unsigned long msecs) 
+			{
+				QThread::msleep(msecs);
+			}
+		};
 
-	QPixmap aSplashImage(QApplication::applicationDirPath() + "/styles/default/images/splash.png");
+		QPixmap aSplashImage(QApplication::applicationDirPath() + "/styles/default/images/splash.png");
 
-	CSplashScreen* aSplashScreen = new CSplashScreen(aSplashImage);
-	aSplashScreen->show();
+		CSplashScreen aSplashScreen(aSplashImage);
+		aSplashScreen.show();
 
-	for (int i = 1; i <= 5; i++)
-	{
-		aSplashScreen->showMessage(QString("Processing %1...").arg(i), Qt::AlignTop | Qt::AlignLeft, Qt::white);
-	
-		SleeperThread::msleep(1000);
+		for (int i = 1; i <= 5; i++)
+		{
+			aSplashScreen.showMessage(QString("Processing %1...").arg(i), Qt::AlignTop | Qt::AlignLeft, Qt::white);
+
+			SleeperThread::msleep(500);
+		}
 	}
 
-	delete aSplashScreen;
 #	endif
 
 	// Translations

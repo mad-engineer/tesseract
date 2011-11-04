@@ -98,7 +98,7 @@ General_Menu::General_Menu(QWidget *parent):QDialog(parent)
 	// Octave
 	ui.octave_path_lineEdit->setText(get_config("octave_path"));
 	ui.octaveArgs_lineEdit->setText(get_config("octave_arguments"));
-	QStringList dirList = get_config("octave_folders").split(",", QString::SkipEmptyParts);
+	QStringList dirList = get_config("octave_folders").split(',', QString::SkipEmptyParts);
 	QString aux;
 
 	for(QStringList::const_iterator i = dirList.begin(); 
@@ -180,7 +180,7 @@ void General_Menu::set_font_label()
 	
 	QString font;
 	
-	font+=config_font.family()+" "+QString().setNum(config_font.pointSize())+" ";
+	font+=config_font.family()+' '+QString().setNum(config_font.pointSize())+' ';
 	int weight=config_font.weight();
 	switch(weight)
 	{
@@ -216,22 +216,22 @@ void General_Menu::font_button_callback()
 
 void General_Menu::editor_select_button_callback()
 {
-	QString file = QFileDialog::getOpenFileName(this,"Choose a file", ".","*");
+	QString file = QFileDialog::getOpenFileName(this,"Choose a file", ".','*");
 	
 	if(file.isEmpty()) return;
 	
-	file.replace(" ","\\ ");
+	file.replace(' ',"\\ ");
 	
 	ui.editor_lineEdit->setText(file);
 }
 
 void General_Menu::help_path_select_pushButton_callback()
 {
-	QString file = QFileDialog::getOpenFileName(this,"Choose a file", ".","*");
+	QString file = QFileDialog::getOpenFileName(this,"Choose a file", ".','*");
 	
 	if(file.isEmpty()) return;
 	
-	//file.replace(" ","\\ ");
+	//file.replace(" ','\\ ");
 	
 	ui.help_path_lineEdit->setText(file);
 }
@@ -313,6 +313,7 @@ void General_Menu::apply_config()
 	  tmp.replace('"', "\\\"");
 	  str += "\"" + tmp + "\",";
 	}
+
 	config["octave_folders"] = str;
 	
 	config["easy_plot_active"] = CHECK_TO_STRING(ui.easy_plot_checkBox->checkState());

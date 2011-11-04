@@ -42,7 +42,7 @@ class Table:public BaseWidget
 	public:
 	Table( QWidget * parent = 0 );
 	void setOctaveConnection(OctaveConnection *octave_connection);
-	void setMatrix(QString matrix);
+	void setMatrix( QString matrix );
 	QString getMatrix();
 	BaseWidget *copyBaseWidget( QWidget * parent = 0 );
 	void toXML(QXmlStreamWriter &xml);
@@ -61,7 +61,7 @@ class Table:public BaseWidget
 	
 	void reloadCell(int row, int col);
 	
-	/**Returns matrix name and change : by row and col. Per example, if we are editing matrix a(1,2,:,2,:), matrix_row_col("2","2")==a(1,2,2,2,2). If ranges==true, then show 1:size(a)(#dimension) in other dimensions. For example,  matrix_row_col("2","2", true)==a(1:size(a)(1),1:size(a)(2),2,1:size(a)(4),2).
+	/**Returns matrix name and change : by row and col. Per example, if we are editing matrix a(1,2,:,2,:), matrix_row_col("2','2")==a(1,2,2,2,2). If ranges==true, then show 1:size(a)(#dimension) in other dimensions. For example,  matrix_row_col("2','2", true)==a(1:size(a)(1),1:size(a)(2),2,1:size(a)(4),2).
 	% is changed for column number.
 	*/
 	QString matrix_row_col(QString row, QString col, bool ranges=false);

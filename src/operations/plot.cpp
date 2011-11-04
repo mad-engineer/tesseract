@@ -323,7 +323,7 @@ QString Plot::command()
 				command_stream << item->text(0);
 			if(!item->text(1).isEmpty())
 			{
-				command_stream << "," << item->text(1);
+				command_stream << ',' << item->text(1);
 			}
 			
 			for(int j=4;j<7;j++)
@@ -338,11 +338,11 @@ QString Plot::command()
 			//Put error lines
 			if(!item->text(2).isEmpty())
 			{
-				command_stream << ",[" << item->text(0) << "-" << item->text(2) << ","
+				command_stream << ",[" << item->text(0) << "-" << item->text(2) << ','
 					<< item->text(0) << "+" << item->text(2) << "]'";
 				if(!item->text(1).isEmpty())
 				{
-					command_stream << ",[" << item->text(1) << "," << item->text(1)
+					command_stream << ",[" << item->text(1) << ',' << item->text(1)
 						<< "]'";
 				}
 				//Plot Style
@@ -359,9 +359,9 @@ QString Plot::command()
 			{
 				if(!item->text(0).isEmpty())
 				{
-					command_stream << ",[" << item->text(0) << "," << item->text(0) << "]'";
+					command_stream << ",[" << item->text(0) << ',' << item->text(0) << "]'";
 				}
-				command_stream << ",[" << item->text(1) << "-" << item->text(3) << ","
+				command_stream << ",[" << item->text(1) << "-" << item->text(3) << ','
 						<< item->text(1) << "+" << item->text(3) << "]'";
 				
 				//Plot Style
@@ -375,7 +375,7 @@ QString Plot::command()
 			}
 			
 			if( (i+1)<list.size() )
-				command_stream << ",";
+				command_stream << ',';
 		}
 		else
 		{
@@ -392,7 +392,7 @@ QString Plot::command()
 			if( !style.isEmpty() || !title.isEmpty() )
 				command_stream << ",\"" << style << ";" << title << ";\"";
 			if( (i+1)<list.size() )
-				command_stream << ",";
+				command_stream << ',';
 		}
 		
 	}

@@ -285,7 +285,7 @@ void Terminal::remove_lines(QTextCursor &cursor)
 		{
 			cursor.movePosition(QTextCursor::StartOfBlock);
 			cursor.movePosition(QTextCursor::Right,QTextCursor::MoveAnchor,cols_in_terminal-1);
-			cursor.insertText("\n");
+			cursor.insertText( "\n" );
 		}
 		else
 		{
@@ -296,11 +296,11 @@ void Terminal::remove_lines(QTextCursor &cursor)
 		cursor.movePosition(QTextCursor::EndOfBlock);
 		lines++;
 
-		if(cursor.atEnd())
+		if( cursor.atEnd( ) )
 		{
 			QTextBlock block=cursor.block();
 			
-			if(block.length()<cols_in_terminal)
+			if( block.length() < cols_in_terminal )
 			{
 				break;
 			}
@@ -311,7 +311,7 @@ void Terminal::remove_lines(QTextCursor &cursor)
 	//printf("lines=%d %d\n",lines,lines_in_terminal);
 	lines=text->toPlainText().count('\n');
 
-	while(lines>lines_in_terminal)
+	while( lines > lines_in_terminal )
 	{
 		cursor.movePosition(QTextCursor::Start);
 		cursor.movePosition(QTextCursor::EndOfBlock,QTextCursor::KeepAnchor);

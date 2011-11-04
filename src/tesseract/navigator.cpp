@@ -199,7 +199,7 @@ void Navigator::createLayout()
 	QString paths=get_config("navigator_start_path"), path = QDir::currentPath();
 	if(!paths.isEmpty())
 	{
-		QStringList values=paths.split("\n");
+		QStringList values=paths.split('\n');
 		url->addItems(values);
 	}
 	QModelIndex root = listmodel->index(path);
@@ -256,7 +256,7 @@ Navigator::~Navigator()
 		QDir dir(url->itemText(i));
 		if(!repetidos.contains(url->itemText(i)) && dir.exists())
 		{
-			values+="\n"+url->itemText(i);
+			values+='\n'+url->itemText(i);
 			repetidos << url->itemText(i);
 		}
 	}

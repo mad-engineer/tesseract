@@ -637,7 +637,7 @@ void Editor::toolbar_action(QAction *action)
 	search_dialog->show();
 	}else if(action == actionSendToOctave){
 	QTextCursor cursor=currentNtv->textEdit()->textCursor();
-	if(cursor.hasSelection()) octave_connection->command_enter(cursor.selectedText().replace(QChar(0x2029), "\n"));
+	if(cursor.hasSelection()) octave_connection->command_enter(cursor.selectedText().replace(QChar(0x2029), '\n'));
 	else octave_connection->command_enter( currentNtv->textEdit()->document()->toPlainText() );
 	}else if(action == actionStep){
 	octave_connection->command_enter( "dbstep" );
@@ -650,7 +650,7 @@ void Editor::toolbar_action(QAction *action)
 }
 
 
-void Editor::openFile(QString file)
+void Editor::openFile( const QString &file )
 {
 	/** Open **/
 	QString path;
@@ -660,34 +660,40 @@ void Editor::openFile(QString file)
 		QFileDialog openDialog(this, tr("Open") /*Qt::Dialog*/);
 
 		QStringList filters;
-		filters << "Octave (*.m; *.M)"
-			<< "Plain text (*.txt)"
-			<< "All files (*)";
+		filters << "Octave (*.m; *.M)" << "Plain text (*.txt)" << "All files (*)";
 
 		openDialog.setAcceptMode(QFileDialog::AcceptOpen);
 		openDialog.setDefaultSuffix("m");
 		openDialog.setFilters(filters);
+
 		//openDialog.setViewMode(QFileDialog::Detail);
 		QFileInfo current_file(currentNtv->path());
 		openDialog.setDirectory(current_file.absolutePath());
 		openDialog.selectFile(current_file.baseName());
 
 		if(openDialog.exec() == QDialog::Accepted)
+		{
 			path = openDialog.selectedFiles().first();
-		else return;
+		}
+		else
+		{
+			return;
+		}
 	}
 	else
+	{
 		path=file;
+	}
 
-	loadFiles(QStringList() << path);
+	loadFiles( QStringList() << path );
 }
 
-void Editor::setProject(QString name)
+void Editor::setProject( const QString &name )
 {
 	project_name=name;
 	closeTabs(true);
-	QStringList files=Projects::listFiles(project_name);
-	loadFiles(files);
+
+	loadFiles( Projects::listFiles(project_name) );
 }
 
 QString Editor::getProject()
@@ -814,7 +820,7 @@ void Editor::textModified(bool ok)
 	}
 }
 
-/////////////////////////////////////////////////////////////
+
 
 void Editor::closeEvent ( QCloseEvent * event )
 {
@@ -839,7 +845,7 @@ void Editor::closeEvent ( QCloseEvent * event )
 	}
 }
 
-/////////////////////////////////////////////////////////////
+
 
 void Editor::closeTabs(bool close_all_tabs)
 {
@@ -935,7 +941,7 @@ void Editor::closeTabs(bool close_all_tabs)
 	updateFileList();
 }
 
-/////////////////////////////////////////////////////////////
+
 
 void Editor::newEditorTab()
 {
@@ -953,12 +959,13 @@ void Editor::newEditorTab()
 	updateFileList();
 }
 
-/////////////////////////////////////////////////////////////
+
 
 void Editor::loadFiles(const QStringList &files)
 {
 	QString path;
-	foreach(path, files)
+
+	foreach( path , files )
 	{
 		if( path.isEmpty() ) continue;
 		
@@ -992,7 +999,7 @@ void Editor::loadFiles(const QStringList &files)
 	}
 }
 
-/////////////////////////////////////////////////////////////
+
 
 void Editor::close_editor()
 {
@@ -1143,14 +1150,14 @@ void Editor::toggleBreakPoint_callback()
 	currentNtv->toggleBreakpoint(lineno);
 }
 
-////////////////////////////////////////////////////////////////
+///
 
 void Editor::clipboard_double_clicked(const QModelIndex &index)
 {
 	QString text=index.data().toString();
 	currentNtv->textEdit()->textCursor().insertText(text);
 }
-////////////////////////////////////////////////////////////////
+///
 
 ListModel::ListModel(QObject *parent, Editor *editor):QAbstractListModel(parent)
 {
@@ -1250,7 +1257,7 @@ QStringList ListModel::mimeTypes() const
 	return types;
 }
 
-////////////////////////////////////////////////////////////////////
+///////
 
 ClipboardListView::ClipboardListView(QWidget *parent):
 QListView(parent)

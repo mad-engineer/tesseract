@@ -141,7 +141,7 @@ void CommandList::copy_clipboard_callback()
 	{
 		QModelIndex item=model->index(i);
 		if( list->selectionModel()->isSelected(item) )
-			history += item.data().toString()+"\n";
+			history += item.data().toString()+'\n';
 	}
 	clipboard->setText(history);
 }

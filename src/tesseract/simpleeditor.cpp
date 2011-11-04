@@ -212,7 +212,7 @@ void SimpleEditor::keyPressEvent(QKeyEvent * e)
 			{
 				if(line[i]!=' ' && line[i]!='\t') { line.resize(i); break;}
 			}
-			cursor.insertText("\n"+line);
+			cursor.insertText('\n'+line);
 			if( automatic_indention_statement_ok )
 			{
 				
@@ -240,22 +240,30 @@ void SimpleEditor::keyPressEvent(QKeyEvent * e)
 		QTextCursor cursor=textCursor();
 		int start=cursor.selectionStart();
 		int end=cursor.selectionEnd();
-		if(start==end)
+
+		if( start == end )
 		{
 			QPlainTextEdit::keyPressEvent(e);
 			return;
 		}
+
 		cursor.beginEditBlock();
 		cursor.setPosition(end);
 		end=cursor.blockNumber();
 		cursor.setPosition(start);
 		cursor.movePosition(QTextCursor::StartOfBlock);
+
 		while(true)
 		{
 			cursor.insertText("\t");
-			if(cursor.blockNumber()>=end) break;
+
+			if(cursor.blockNumber() >= end )
+			{
+				break;
+			}
 			cursor.movePosition(QTextCursor::NextBlock);
 		}
+
 		cursor.endEditBlock();
 	}
 	else if(e->key()==Qt::Key_Backtab )
@@ -344,7 +352,7 @@ void SimpleEditor::autoComplete(int size)
 	
 	//printf("[SimpleEditor::autoComplete] >%s<\n", cursor.selectedText().toLocal8Bit().data());
 	
-	if( cursor.selectedText().endsWith(" ") || cursor.selectedText().trimmed().length()<size ) return;
+	if( cursor.selectedText().endsWith(' ') || cursor.selectedText().trimmed().length()<size ) return;
 	
 	QStringList list=toPlainText().split(QRegExp("\\W+"));
 	

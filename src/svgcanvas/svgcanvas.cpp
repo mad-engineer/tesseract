@@ -92,7 +92,7 @@ public:
 		int line, col;
 		line=exception.lineNumber();
 		col=exception.columnNumber();
-		QString _error="Line "+QString::number(line)+" Col "+QString::number(col)+": "+exception.message()+" "+svg_file_name;
+		QString _error="Line "+QString::number(line)+" Col "+QString::number(col)+": "+exception.message()+' '+svg_file_name;
 		
 		statusBar->showMessage(_error);
 		

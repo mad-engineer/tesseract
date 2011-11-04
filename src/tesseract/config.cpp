@@ -38,7 +38,7 @@ static QMap<QString, QString> load_config(const QString file)
 			if(config.value(parameter).isEmpty())
 				config[qparameter]=qvalue;
 			else
-				config[qparameter]=config[qparameter]+"\n"+qvalue;
+				config[qparameter]=config[qparameter]+'\n'+qvalue;
 		}
 	}
 	
@@ -109,7 +109,7 @@ void set_config(QMap<QString,QString> configuration)
 			&& global_config[i.key()]!=i.value()
 		)
 		{
-			QStringList values=i.value().split("\n");
+			QStringList values=i.value().split('\n');
 			QString item;
 			foreach(item, values)
 			{

@@ -201,7 +201,7 @@ void OctaveConnection::loadScripts()
 
 void OctaveConnection::command_enter (const QString &command, bool show)
 {
-	QString _command(command+"\n");
+	QString _command(command+'\n');
 	
 	if(show)
 	{
@@ -221,11 +221,11 @@ void OctaveConnection::command_enter (const QString &command, bool show)
 
 		//printf("instructions_left_no=%d añadida\n",instructions_left_no);
 
-		emit command_ready(" "+_command);
+		emit command_ready(' '+_command);
 	}
 	else
 	{
-		emit ide_command_ready(" "+_command);
+		emit ide_command_ready(' '+_command);
 	}
 
 	write(_command.toLocal8Bit() );
@@ -241,7 +241,7 @@ void OctaveConnection::command_enter (const QString &command, bool show)
 */
 void OctaveConnection::tabHack( QString &buffer, QStringList &lines )
 {
-	std::size_t tabsize = 4;
+	const std::size_t tabsize = 4;
 
 	for( QStringList::iterator i = lines.begin() ; i != lines.end() ; i++ )
 	{
@@ -261,7 +261,7 @@ void OctaveConnection::tabHack( QString &buffer, QStringList &lines )
 		*/
 		while( found != std::string::npos )
 		{
-			std::size_t left = tabsize - found % tabsize;
+			const std::size_t left = tabsize - found % tabsize;
 
 			tmpstr.replace( found , 1 , QString( left ? left : tabsize , ' ' ) );
 
@@ -401,7 +401,7 @@ void OctaveConnection::octaveOutputSlot()
 
 	// Meter en el buffer de línea el último elemento si la cadena
 	// no terminaba en \n
-	if(!buffer.endsWith("\n"))
+	if(!buffer.endsWith('\n'))
 	{
 		line_buffer = lines.last();
 	}
@@ -421,7 +421,7 @@ void OctaveConnection::octaveErrorOutputSlot()
 	{
 		line=error_buffer.readLine();
 
-		if(line.endsWith("\n") )
+		if(line.endsWith('\n') )
 		{
 			if(line.startsWith("~~"))
 			{
@@ -492,16 +492,16 @@ void OctaveConnection::octaveErrorOutputSlot()
 	}
 
 	//Se procesa el buffer para buscar las líneas diponibles
-	//QStringList lines=buffer.split("\n");
+	//QStringList lines=buffer.split('\n');
 	//QStringList::const_iterator i;
 	//for (i = lines.constBegin(); i != lines.constEnd();)
 	//{
 	//	QString line=*i;
 	//	++i;
-	//	if(i==lines.constEnd() && !buffer.endsWith("\n"))
+	//	if(i==lines.constEnd() && !buffer.endsWith('\n'))
 	//		emit error_ready(line);
 	//	else
-	//		emit error_ready(line+"\n");
+	//		emit error_ready(line+'\n');
 	//	emit line_ready(line);
 	//}
 }

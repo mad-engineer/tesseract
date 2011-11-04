@@ -11,8 +11,6 @@
 #include "projects.h"
 #include "ui_newprojectdialog.h"
 
-/////////////////////////////////////////////////////////////
-
 struct Project
 {
 	QStringList files;
@@ -21,7 +19,6 @@ struct Project
 	QStringList command_history;
 };
 
-/////////////////////////////////////////////////////////////
 // Utils
 QString homePath()
 {
@@ -51,8 +48,6 @@ QString syntaxPath()
 {
 	return homePath() + "syntax/";
 }
-
-/////////////////////////////////////////////////////////////
 
 /**Load projects.xml*/
 static QHash<QString, Project> load_projects()
@@ -104,46 +99,51 @@ static QHash<QString, Project> load_projects()
 	//if (xml.hasError()){ }
 
 	file.close();
+
 	return projects;
 }
 
-/////////////////////////////////////////////////////////////
-
 /**Save projects.xml*/
-static void _save_projects(QHash<QString, Project> projects)
+static void _save_projects( const QHash<QString, Project> &projects )
 {
 	QFile file(projectsPath());
 	
-	if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-		return ;
+	if ( ! file.open( QIODevice::WriteOnly | QIODevice::Text ) )
+	{
+		return;
+	}
 	
 	QXmlStreamWriter xml(&file);
+
 	xml.setAutoFormatting(true);
-	
 	xml.writeStartDocument();
-	
-	xml.writeStartElement("","projects");
+	xml.writeStartElement("','projects");
 	
 	QString key;
+
 	foreach(key, projects.keys())
 	{
-		xml.writeStartElement("","project");
+		xml.writeStartElement("','project");
 		xml.writeAttribute("", "name", key);
 		xml.writeTextElement("", "description", projects[key].description);
 		xml.writeTextElement("", "last_navigator_path", projects[key].last_navigator_path);
 		xml.writeTextElement("", "variables_list_path", projects[key].variables_list_path);
+		
 		QString path; QStringList files=projects[key].files;
+		
 		foreach(path,files)
 		{
 			xml.writeTextElement("", "file", path);
-			//xml.writeStartElement("","file");
+			//xml.writeStartElement("','file");
 			//xml.writeAttribute("", "name", path);
 			//xml.writeEndElement();
 		}
+		
 		foreach(QString command, projects[key].command_history)
 		{
 			xml.writeTextElement("", "command_history", command);
 		}
+
 		xml.writeEndElement();
 	}
 	
@@ -152,8 +152,6 @@ static void _save_projects(QHash<QString, Project> projects)
 	
 	file.close();
 }
-
-/////////////////////////////////////////////////////////////
 
 Projects::Projects(QWidget *parent):QDialog(parent)
 {
@@ -196,15 +194,11 @@ Projects::Projects(QWidget *parent):QDialog(parent)
 	fill_projects_list();
 }
 
-/////////////////////////////////////////////////////////////
-
 Projects::~Projects()
 {
 	//delete context_menu;
 	//delete new_project;
 }
-
-/////////////////////////////////////////////////////////////
 
 void Projects::fill_projects_list()
 {
@@ -212,6 +206,7 @@ void Projects::fill_projects_list()
 	
 	QString key;
 	QStringList list;
+
 	foreach(key, projects.keys())
 	{
 		list << key;
@@ -230,32 +225,23 @@ void Projects::fill_projects_list()
 	ui.projects_listWidget->addItems(list);
 }
 
-/////////////////////////////////////////////////////////////
-
-QStringList Projects::listFiles(QString project_name)
+QStringList Projects::listFiles(const QString &project_name )
 {
-	QHash<QString, Project> projects=load_projects();
-	return projects[project_name].files;
+	return load_projects()[project_name].files;
 }
 
-/////////////////////////////////////////////////////////////
-
-void Projects::saveListFiles(const QString & project_name, const QStringList & files)
+void Projects::saveListFiles( const QString & project_name , const QStringList & files )
 {
 	QHash<QString, Project> projects=load_projects();
 	projects[project_name].files=files;
 	_save_projects(projects);
 }
 
-/////////////////////////////////////////////////////////////
-
-QStringList Projects::listCommandHistory(QString project_name)
+QStringList Projects::listCommandHistory( const QString &project_name )
 {
 	QHash<QString, Project> projects=load_projects();
 	return projects[project_name].command_history;
 }
-
-/////////////////////////////////////////////////////////////
 
 void Projects::saveListCommandHistory(const QString & project_name, const QStringList & command_history)
 {
@@ -264,25 +250,18 @@ void Projects::saveListCommandHistory(const QString & project_name, const QStrin
 	_save_projects(projects);
 }
 
-/////////////////////////////////////////////////////////////
-
-QString Projects::navigatorPath(QString project_name)
+QString Projects::navigatorPath(const QString &project_name )
 {
-	QHash<QString, Project> projects=load_projects();
-	return projects[project_name].last_navigator_path;
+	return load_projects()[project_name].last_navigator_path;
 }
 
-/////////////////////////////////////////////////////////////
 
-QString Projects::variablesListPath(QString project_name)
+QString Projects::variablesListPath( const QString &project_name )
 {
-	QHash<QString, Project> projects=load_projects();
-	return projects[project_name].variables_list_path;
+	return load_projects()[project_name].variables_list_path;
 }
 
-/////////////////////////////////////////////////////////////
-
-void Projects::saveVariablesListPath(QString project_name, QString path)
+void Projects::saveVariablesListPath( const QString &project_name , const QString &path )
 {
 	QHash<QString, Project> projects=load_projects();
 	projects[project_name].variables_list_path=path;
@@ -301,61 +280,70 @@ void Projects::saveVariablesListPath(QString project_name, QString path)
 		bool delete_ok=true;
 		
 		Project p;
+
 		foreach(p, projects)
 		{
-			if( p.variables_list_path==file ) delete_ok=false;
+			if( p.variables_list_path==file ) 
+			{
+				delete_ok=false;
+			}
 		}
 		
-		if(delete_ok)
+		if( delete_ok )
+		{
 			dir.remove(file);
+		}
 	}
 }
 
-/////////////////////////////////////////////////////////////
-
-void Projects::saveNavigatorPath(QString project_name, QString path)
+void Projects::saveNavigatorPath( const QString &project_name , const QString &path )
 {
 	QHash<QString, Project> projects=load_projects();
 	projects[project_name].last_navigator_path=path;
 	_save_projects(projects);
 }
 
-/////////////////////////////////////////////////////////////
-
 QString Projects::projectName()
 {
 	return project_name;
 }
 
-/////////////////////////////////////////////////////////////
-
 void Projects::new_button_callback()
 {
 	QDialog dialog(this);
 	Ui_NewProjectDialog ui_np;
+
 	ui_np.setupUi(&dialog);
 	
 	if( QDialog::Accepted==dialog.exec() )
 	{
 		QString name=ui_np.name_lineEdit->text();
-		if(name.isEmpty()) return;
+
+		if( name.isEmpty() )
+		{
+			return;
+		}
+
 		QString description=ui_np.description_textEdit->toPlainText();
 		QHash<QString, Project> projects=load_projects();
+
 		projects[name].description=description;
+
 		_save_projects(projects);
+
 		project_name=name;
+
 		accept();
 	}
 }
-
-/////////////////////////////////////////////////////////////
 
 void Projects::modify_project_callback()
 {
 	QDialog dialog(this);
 	Ui_NewProjectDialog ui_np;
+
 	ui_np.setupUi(&dialog);
-	dialog.setWindowTitle(tr("Modify Project"));
+	dialog.setWindowTitle( tr("Modify Project") );
 	
 	QHash<QString, Project> projects=load_projects();
 	QString name=ui.projects_listWidget->currentItem()->text();
@@ -366,11 +354,17 @@ void Projects::modify_project_callback()
 	if( QDialog::Accepted==dialog.exec() )
 	{
 		QString name2=ui_np.name_lineEdit->text().trimmed();
-		if(name2.isEmpty()) return;
+
+		if( name2.isEmpty() ) 
+		{
+			return;
+		}
+
 		projects[name2]=projects[name];
 		QString description=ui_np.description_textEdit->toPlainText();
 		projects[name2].description=description;
-		if(name2!=name)
+
+		if( name2 != name )
 		{
 			projects.remove(name);
 		}
@@ -381,29 +375,26 @@ void Projects::modify_project_callback()
 	}
 }
 
-/////////////////////////////////////////////////////////////
-
 void Projects::delete_project_callback()
 {
 	QString name=ui.projects_listWidget->currentItem()->text();
 	
 	QString message="Project "+name+" will be erased. Continue?" ;
 	
-	 int ret = QMessageBox::warning(this, tr("Delete Project"),
-		tr( message.toLocal8Bit().data() ),
-		QMessageBox::Yes | QMessageBox::No,
-		QMessageBox::No);
+	int ret = QMessageBox::warning(this, tr("Delete Project"),tr( message.toLocal8Bit().data() ),QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
 	
-	if(ret!=QMessageBox::Yes) return;
+	if( ret != QMessageBox::Yes ) 
+	{
+		return;
+	}
 	
 	QHash<QString, Project> projects=load_projects();
+
 	projects.remove(name);
 	_save_projects(projects);
 	
 	fill_projects_list();
 }
-
-/////////////////////////////////////////////////////////////
 
 void Projects::activate_project_callback(QListWidgetItem * item)
 {
@@ -418,16 +409,12 @@ void Projects::activate_project_callback(QListWidgetItem * item)
 	accept();
 }
 
-/////////////////////////////////////////////////////////////
-
 void Projects::show_description_callback(QListWidgetItem * current, QListWidgetItem * /*previous*/ )
 {
 	QString name=current->text();
 	QHash<QString, Project> projects=load_projects();
 	ui.description_textEdit->setPlainText(projects[name].description);
 }
-
-/////////////////////////////////////////////////////////////
 
 void Projects::contextMenu_cb( const QPoint & /*pos*/)
 {

@@ -116,11 +116,11 @@ void Dynamic_help::textChanged ( const QString & text )
 	
 	int separator,pos=-1;
 	input_text=text.trimmed();
-	separator=input_text.indexOf(" ");
+	separator=input_text.indexOf(' ');
 	if(separator>-1 && separator<pos || pos<0) pos=separator;
-	separator=input_text.indexOf("\t");
+	separator=input_text.indexOf('\t');
 	if(separator>-1 && separator<pos || pos<0) pos=separator;
-	separator=input_text.indexOf("\n");
+	separator=input_text.indexOf('\n');
 	if(separator>-1 && separator<pos || pos<0) pos=separator;
 	separator=input_text.indexOf("(");
 	if(separator>-1 && separator<pos || pos<0) pos=separator;

@@ -16,14 +16,16 @@
  * Boston, MA 02111-1307, USA. 
  */
 
-#include "table.h"
-#include <QTextStream>
-#include <QRegExp>
+#include <QTime>
 #include <QMenu>
+#include <QFile>
+#include <QRegExp>
+#include <QMenuBar>
 #include <QClipboard>
 #include <QMessageBox>
-#include <QFile>
-#include <QMenuBar>
+#include <QTextStream>
+
+#include "table.h"
 
 Table::Table(QWidget * parent):BaseWidget(parent)
 {
@@ -81,49 +83,62 @@ void Table::setOctaveConnection(OctaveConnection *octave_connection)
 	connect(octave_connection,SIGNAL(line_ready(QString)),this,SLOT(line_ready(QString)));
 }
 
-void Table::setMatrix(QString matrix)
+void Table::setMatrix( QString newMatrix )
 {
 	QRegExp re("([A-Za-z0-9_]+)\\(((:|\\d+),)+(:|\\d+)\\)");
-	matrix.remove(" ");
-	matrix.remove("\t");
-	matrix.remove("\n");
-	setWindowTitle("Table: "+matrix);
-	if(re.exactMatch(matrix))
+
+	newMatrix.remove( " "  );
+	newMatrix.remove( "\t" );
+	newMatrix.remove( "\n" );
+
+	setWindowTitle( "Table: " + newMatrix );
+
+	if( re.exactMatch( newMatrix ) )
 	{
-		this->matrix=re.cap(1);
-		matrix.remove(this->matrix);
+		matrix=re.cap(1);
+
+		newMatrix.remove(matrix);
+		
+		int pos=0;
 		QStringList dims;
 		QRegExp re_dim("(:|\\d+)");
-		int pos=0;
-		while ((pos = re_dim.indexIn(matrix, pos)) != -1)
+
+		while ( (pos = re_dim.indexIn(newMatrix, pos)) != -1 )
 		{
 			dims << re_dim.cap(0);
 			pos += re_dim.matchedLength();
 		}
+
 		dimensions=dims;
 		
 		int count_doubledot=0;
-		for(int i=0;i<dimensions.size();i++)
+
+		for( int i = 0 ; i < dimensions.size() ; i++ )
 		{
 			if(dimensions.at(i)==":")
 			{
 				count_doubledot++;
 			}
 		}
+
 		if(count_doubledot!=2)
 		{
-			for(int i=0;i<dimensions.size();i++)
+			for( int i = 0 ; i < dimensions.size() ; i++ )
 			{
 				if(i<2)
+				{
 					dimensions[i]=":";
+				}
 				else
+				{
 					dimensions[i]="1";
+				}
 			}
 		}
 	}
 	else
 	{
-		this->matrix=matrix;
+		matrix=newMatrix;
 		dimensions.clear();
 	}
 }
@@ -135,44 +150,59 @@ void Table::windowActivated()
 
 void Table::windowActivated(QWidget *w)
 {
-	if(w!=this) return;
+	if( w != this)
+	{
+		return;
+	}
 	
-	QString command;
-	
-	command+=matrix+"(";
-	for(int i=0;i<spinbox_dimensions.size();i++)
+	QString command( matrix+"(");
+
+	for( int i = 0 ; i < spinbox_dimensions.size() ; i++ )
 	{
 		int value=spinbox_dimensions.at(i)->value();
 		
-		if( value==0 )
-			command+=":";
-		else
-			command+=QString::number(value);
-		
-		if(i<(spinbox_dimensions.size()-1))
+		if( value )
 		{
-			command+=",";
+			command+=QString::number(value);
+		}
+		else
+		{
+			command+=":";
+		}
+		
+		if( i< ( spinbox_dimensions.size()-1 ) )
+		{
+			command+=',';
 		}
 	}
+
 	command+=")";
 	
-	if(spinbox_dimensions.size()>0) setMatrix(command);
-	
-	command="";
-	//Next line: If matrix doesn't exit, it will build it
-	command+="eval(\""+matrix+";\",\""+matrix+"=[0]\");";
-	command+="_ide_reload_matrix("+matrix+","+QString::number((long)this)+",";
-	if(dimensions.size()==0)
+	if( spinbox_dimensions.size() > 0 )
 	{
-			command+="resize("+matrix+"(:,:),size("+matrix+")(1),size("+matrix+")(2) ) ";
+		setMatrix(command);
+	}
+	
+	command.clear();
+
+	//Next line: If matrix doesn't exit, it will build it
+
+	command += "eval(\"" + matrix + ";\",\"" + matrix + "=[0]\");";
+	command += "_ide_reload_matrix(" + matrix + ',' + QString::number((long)this) + ',';
+
+	if( dimensions.size() == 0 )
+	{
+		command += "resize(" + matrix + "(:,:),size(" + matrix + ")(1),size(" + matrix + ")(2) ) ";
 	}
 	else
 	{
-		int x[2]; x[0]=x[1]=-1;
-		QString sub_matrix=matrix+"(";
-		for(int i=0;i<dimensions.size();i++)
+		int x[2] = { -1 , -1 };
+
+		QString sub_matrix = matrix + '(';
+
+		for( int i = 0 ; i < dimensions.size() ; i++ )
 		{
-			if(dimensions[i]==":")
+			if( dimensions[i] == ":" )
 			{
 				if(x[0]==-1)
 					x[0]=i+1;
@@ -180,7 +210,7 @@ void Table::windowActivated(QWidget *w)
 					x[1]=i+1;
 			}
 			if(i<(dimensions.size()-1))
-				sub_matrix+=dimensions[i]+",";
+				sub_matrix+=dimensions[i]+',';
 			else
 				sub_matrix+=dimensions[i]+")";
 		}
@@ -207,8 +237,8 @@ void Table::reloadCell(int row, int col)
 	
 	if(dimensions.size()==0)
 	{
-		command+= "real("+matrix+"("+QString::number(row+1)+","+QString::number(col+1)+")), "
-		"imag("+matrix+"("+QString::number(row+1)+","+QString::number(col+1)+")));";
+		command+= "real("+matrix+"("+QString::number(row+1)+','+QString::number(col+1)+")), "
+		"imag("+matrix+"("+QString::number(row+1)+','+QString::number(col+1)+")));";
 	}
 	else
 	{
@@ -219,9 +249,6 @@ void Table::reloadCell(int row, int col)
 	
 	octave_connection->command_enter(command,false);
 }
-
-
-#include <QTime>
 
 void Table::line_ready(QString line)
 {
@@ -265,7 +292,7 @@ void Table::line_ready(QString line)
 		QStringList list = mre.capturedTexts();
 		//for(int i=0;i<list.size();i++)
 		//	printf("Texto(%d): %s\n", i, list.at(i).toLocal8Bit().data());
-		QStringList numbers=list.at(3).trimmed().split(" ", QString::SkipEmptyParts);
+		QStringList numbers=list.at(3).trimmed().split(' ', QString::SkipEmptyParts);
 		
 		long thisValue=numbers.at(0).toLong();
 		if( ((long)this)!=thisValue )
@@ -489,7 +516,7 @@ void Table::change_rows()
 					command+="1:size("+matrix+")("+QString::number(i+1)+")";
 				}
 				
-				if(i<(dimensions.size()-1)) command+=",";
+				if(i<(dimensions.size()-1)) command+=',';
 				else command+=");";
 			}
 		}
@@ -552,7 +579,7 @@ void Table::change_cols()
 					command+="1:size("+matrix+")("+QString::number(i+1)+")";
 				}
 				
-				if(i<(dimensions.size()-1)) command+=",";
+				if(i<(dimensions.size()-1)) command+=',';
 				else command+=");";
 			}
 		}
@@ -652,7 +679,7 @@ void Table::insert_row_up_cb()
 	command=matrix+"="+resize_matrix("1","0", true)+";\n";
 	
 	command+=matrix_row_col(QString::number(row+1)+":size("+matrix+")(%)","1:size("+matrix+")(%)",true)
-		+"="+matrix_row_col(QString::number(row)+":(size("+matrix+")(%)-1)","1:size("+matrix+")(%)",true)+"\n";
+		+"="+matrix_row_col(QString::number(row)+":(size("+matrix+")(%)-1)","1:size("+matrix+")(%)",true)+'\n';
 	command+=matrix_row_col(QString::number(row),"1:size("+matrix+")(%)",true)
 		+"=0\n";
 	
@@ -667,12 +694,11 @@ void Table::insert_row_down_cb()
 	
 	int row=table_form->table_widget->currentIndex().row()+1;
 	
-	command=matrix+"="+resize_matrix("1","0", true)+";\n";
+	command = matrix + "=" + resize_matrix("1" , "0" , true) + ";\n";
 	
-	command+=matrix_row_col(QString::number(row+2)+":size("+matrix+")(%)","1:size("+matrix+")(%)",true)
-		+"="+matrix_row_col(QString::number(row+1)+":(size("+matrix+")(%)-1)","1:size("+matrix+")(%)",true)+"\n";
-	command+=matrix_row_col(QString::number(row+1),"1:size("+matrix+")(%)",true)
-		+"=0\n";
+	command += matrix_row_col(QString::number(row+2) + ":size(" + matrix + ")(%)" , "1:size(" + matrix + ")(%)",true)
+		    +  "=" + matrix_row_col(QString::number(row+1) + ":(size(" + matrix + ")(%)-1)" , "1:size(" + matrix + ")(%)",true) + '\n';
+	command += matrix_row_col(QString::number(row+1) , "1:size(" + matrix + ")(%)" , true) + "=0\n";
 	
 	octave_connection->command_enter(command);
 	
@@ -685,10 +711,10 @@ void Table::insert_column_left_cb()
 
 	int col=table_form->table_widget->currentIndex().column()+1;
 	
-	command=matrix+"="+resize_matrix("0","1", true)+";\n";
+	command = matrix + "=" + resize_matrix( "0" , "1" , true ) + ";\n";
 	
 	command+=matrix_row_col("1:size("+matrix+")(%)",QString::number(col+1)+":size("+matrix+")(%)",true)
-		+"="+matrix_row_col("1:size("+matrix+")(%)",QString::number(col)+":(size("+matrix+")(%)-1)",true)+"\n";
+		+"="+matrix_row_col("1:size("+matrix+")(%)",QString::number(col)+":(size("+matrix+")(%)-1)",true)+'\n';
 	command+=matrix_row_col("1:size("+matrix+")(%)",QString::number(col),true)
 		+"=0\n";
 	
@@ -703,10 +729,10 @@ void Table::insert_column_right_cb()
 	
 	int col=table_form->table_widget->currentIndex().column()+1;
 	
-	command=matrix+"="+resize_matrix("0","1", true)+";\n";
+	command = matrix + "=" + resize_matrix( "0" , "1" , true ) + ";\n";
 	
 	command+=matrix_row_col("1:size("+matrix+")(%)",QString::number(col+2)+":size("+matrix+")(%)",true)
-		+"="+matrix_row_col("1:size("+matrix+")(%)",QString::number(col+1)+":(size("+matrix+")(%)-1)",true)+"\n";
+		+"="+matrix_row_col("1:size("+matrix+")(%)",QString::number(col+1)+":(size("+matrix+")(%)-1)",true)+'\n';
 	command+=matrix_row_col("1:size("+matrix+")(%)",QString::number(col+1),true)
 		+"=0\n";
 	
@@ -728,9 +754,8 @@ void Table::delete_columns_cb()
 	command+=matrix_row_col("1:size("+matrix+")(%)",QString::number(col)+":(size("+matrix+")(%)-1)",true)
 		+"="+matrix_row_col("1:size("+matrix+")(%)",QString::number(col+1)+":(size("+matrix+")(%))",true)+";\n";
 	
-	command+=matrix+"="+resize_matrix("0","(-1)", true)+";\n";
-	
-	
+	command += matrix + "=" + resize_matrix( "0" , "(-1)" , true ) + ";\n";
+
 	octave_connection->command_enter(command);
 	
 	windowActivated();
@@ -773,6 +798,7 @@ void Table::paste_cb()
 	while ((pos = rx.indexIn(text, pos)) != -1) {
 		value=rx.cap(0);
 		pos += rx.matchedLength();
+
 		if(value=="\n") {row++;col=table_form->table_widget->currentIndex().column()+1;}
 		else
 		{
@@ -833,9 +859,9 @@ void Table::copy_cb()
 		str+=values[rows.at(i)][cols.at(0)];
 		for(int j=1;j<cols.size();j++)
 		{
-			str+=" "+values[rows.at(i)][cols.at(j)];
+			str+=' '+values[rows.at(i)][cols.at(j)];
 		}
-		str+="\n";
+		str+='\n';
 	}
 
 	QClipboard *clipboard = QApplication::clipboard();
@@ -903,6 +929,7 @@ void Table::plotBar()
 BaseWidget *Table::copyBaseWidget(QWidget * parent )
 {
 	Table *bw=new Table(parent);
+
 	bw->setSession(session);
 	bw->setOctaveConnection(octave_connection);
 	bw->setMatrix( matrix_row_col(":",":") );
@@ -914,14 +941,13 @@ void Table::toXML(QXmlStreamWriter &xml)
 {
 	xml.writeStartElement("matrix");
 	
-	xml.writeAttribute("value", matrix_row_col(":",":") );
+	xml.writeAttribute("value", matrix_row_col( ":" , ":" ) );
 	
 	xml.writeEndElement();
 }
 
 QString Table::matrix_row_col(QString row, QString col, bool ranges)
 {
-	
 	bool row_ok=true;
 	QString command(matrix+"(");
 	
@@ -929,7 +955,7 @@ QString Table::matrix_row_col(QString row, QString col, bool ranges)
 	{
 		row.replace("%", QString::number(1));
 		col.replace("%", QString::number(2));
-		command+=row+","+col+")";
+		command+=row+','+col+")";
 		return command;	
 	}
 	
@@ -958,7 +984,7 @@ QString Table::matrix_row_col(QString row, QString col, bool ranges)
 			command+=dimensions[i];
 		}
 		
-		if(i<(dimensions.size()-1)) command+=",";
+		if(i<(dimensions.size()-1)) command+=',';
 		else command+=")";
 	}
 	
@@ -995,7 +1021,7 @@ QString Table::resize_matrix(QString rows, QString cols, bool add)
 			command+="size("+matrix+")("+QString::number(i+1)+")";
 		}
 		
-		if(i<(dimensions.size()-1)) command+=",";
+		if(i<(dimensions.size()-1)) command+=',';
 		else command+="])";
 	}
 	
@@ -1003,11 +1029,11 @@ QString Table::resize_matrix(QString rows, QString cols, bool add)
 	{
 		if(add)
 		{
-			command+="size("+matrix+")(1)+"+rows+","+"size("+matrix+")(2)+"+cols+"])";
+			command+="size("+matrix+")(1)+"+rows+','+"size("+matrix+")(2)+"+cols+"])";
 		}
 		else
 		{
-			command+=rows+","+cols+"])";
+			command+=rows+','+cols+"])";
 		}
 	}
 	
@@ -1015,7 +1041,7 @@ QString Table::resize_matrix(QString rows, QString cols, bool add)
 }
 
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 ComplexNumberTableModel::ComplexNumberTableModel(QObject *parent):QAbstractTableModel(parent)
 {
@@ -1023,21 +1049,21 @@ ComplexNumberTableModel::ComplexNumberTableModel(QObject *parent):QAbstractTable
 	real=imag=NULL;
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 int ComplexNumberTableModel::rowCount ( const QModelIndex & /*parent*/ ) const
 {
 	return rows;
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 int ComplexNumberTableModel::columnCount ( const QModelIndex & /*parent*/ ) const
 {
 	return cols;
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 QVariant ComplexNumberTableModel::data ( const QModelIndex & index, int role ) const
 {
@@ -1057,7 +1083,7 @@ QVariant ComplexNumberTableModel::data ( const QModelIndex & index, int role ) c
 		return QVariant();
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 QString ComplexNumberTableModel::data(int row, int col) const
 {
@@ -1070,7 +1096,7 @@ QString ComplexNumberTableModel::data(int row, int col) const
 	return value;
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 void ComplexNumberTableModel::resize( int _rows, int _columns)
 {
@@ -1124,7 +1150,7 @@ void ComplexNumberTableModel::resize( int _rows, int _columns)
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 ComplexNumberTableModel::~ComplexNumberTableModel()
 {
@@ -1140,7 +1166,7 @@ ComplexNumberTableModel::~ComplexNumberTableModel()
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 bool ComplexNumberTableModel::setData ( const QModelIndex & index, const QVariant & value, int role )
 {
@@ -1153,14 +1179,14 @@ bool ComplexNumberTableModel::setData ( const QModelIndex & index, const QVarian
 	return false;
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 Qt::ItemFlags ComplexNumberTableModel::flags ( const QModelIndex & /*index*/ ) const
 {
 	return Qt::ItemIsEditable|Qt::ItemIsSelectable|Qt::ItemIsEnabled;
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 void ComplexNumberTableModel::update()
 {
@@ -1176,7 +1202,7 @@ void ComplexNumberTableModel::update()
 	emit dataChanged(cell0,cell1);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 void ComplexNumberTableModel::update(int row, int col) 
 {
@@ -1184,14 +1210,14 @@ void ComplexNumberTableModel::update(int row, int col)
 	emit dataChanged(cell,cell);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 LineEditDelegate::LineEditDelegate(QObject *parent ):QItemDelegate(parent)
 {
 	
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 void LineEditDelegate::setEditorData(QWidget *editor,
                                         const QModelIndex &index) const
@@ -1204,7 +1230,7 @@ void LineEditDelegate::setEditorData(QWidget *editor,
 
 #ifdef __DELEGATE_WIDGET__
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 QWidget *LineEditDelegate::createEditor(QWidget *parent,
         const QStyleOptionViewItem &/* option */,
@@ -1218,7 +1244,7 @@ QWidget *LineEditDelegate::createEditor(QWidget *parent,
 
 
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 void LineEditDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
                                        const QModelIndex &index) const
@@ -1230,7 +1256,7 @@ void LineEditDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	model->setData(index, value);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 void LineEditDelegate::updateEditorGeometry(QWidget *editor,
         const QStyleOptionViewItem &option, const QModelIndex &/* index */) const
@@ -1238,7 +1264,7 @@ void LineEditDelegate::updateEditorGeometry(QWidget *editor,
 	editor->setGeometry(option.rect);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////
 
 bool LineEditDelegate::eventFilter( QObject * object, QEvent * event )
 {

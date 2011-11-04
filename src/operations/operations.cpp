@@ -244,7 +244,7 @@ void Operations::eigenvalues_callback()
 	if (dialog.result()==QDialog::Accepted && !matrix.isEmpty() && !eigenvectors.isEmpty() && ! eigenvalues.isEmpty())
 	{
 		QString command;
-		QTextStream(&command) << "[" << eigenvectors << "," << eigenvalues << "]=eig(" << matrix << ")";
+		QTextStream(&command) << "[" << eigenvectors << ',' << eigenvalues << "]=eig(" << matrix << ")";
 		
 		if(copy_clipboard_ok)
 		{
@@ -398,7 +398,7 @@ void Operations::submatrix_callback()
 	if (dialog.result()==QDialog::Accepted && !matrix.isEmpty() && !from_row.isEmpty() && !to_row.isEmpty() && !from_col.isEmpty() && !to_col.isEmpty())
 	{
 		QString command;
-		QTextStream(&command) << matrix << "(" << from_row << ":" << to_row << "," << from_col << ":" << to_col <<")";
+		QTextStream(&command) << matrix << "(" << from_row << ":" << to_row << ',' << from_col << ":" << to_col <<")";
 		
 		if(copy_clipboard_ok)
 		{
@@ -664,7 +664,7 @@ void Operations::compex_comand(QString title, QString _command, QStringList para
 			{
 				command_stream << output.at(i);
 				++i;
-				if(i < output_labels.size()) command_stream << ",";
+				if(i < output_labels.size()) command_stream << ',';
 			}
 			command_stream << "]=";
 		}
@@ -677,9 +677,9 @@ void Operations::compex_comand(QString title, QString _command, QStringList para
 			{
 				if( !parameters.at(i).isEmpty() )
 				{
-					command_stream << "," << parameters.at(i);
+					command_stream << ',' << parameters.at(i);
 					//++i;
-					//if( i < parameters_labels.size() ) command_stream << ",";
+					//if( i < parameters_labels.size() ) command_stream << ',';
 				}
 				//else i++;
 			}
@@ -1024,15 +1024,15 @@ void Operations::axis_callback()
 		QString _axis_command;
 		QTextStream axis_stream(&_axis_command);
 		axis_stream << "axis([";
-		if( !x_min_lineedit.text().isEmpty() ) axis_stream << x_min_lineedit.text() << ",";
+		if( !x_min_lineedit.text().isEmpty() ) axis_stream << x_min_lineedit.text() << ',';
 		else axis_stream << "0,";
-		if( !x_max_lineedit.text().isEmpty() ) axis_stream << x_max_lineedit.text() << ",";
+		if( !x_max_lineedit.text().isEmpty() ) axis_stream << x_max_lineedit.text() << ',';
 		else axis_stream << "0,";
-		if( !y_min_lineedit.text().isEmpty() ) axis_stream << y_min_lineedit.text() << ",";
+		if( !y_min_lineedit.text().isEmpty() ) axis_stream << y_min_lineedit.text() << ',';
 		else axis_stream << "0,";
-		if( !y_max_lineedit.text().isEmpty() ) axis_stream << y_max_lineedit.text() << ",";
+		if( !y_max_lineedit.text().isEmpty() ) axis_stream << y_max_lineedit.text() << ',';
 		else axis_stream << "0,";
-		if( !z_min_lineedit.text().isEmpty() ) axis_stream << z_min_lineedit.text() << ",";
+		if( !z_min_lineedit.text().isEmpty() ) axis_stream << z_min_lineedit.text() << ',';
 		else axis_stream << "0,";
 		if( !z_max_lineedit.text().isEmpty() ) axis_stream << z_max_lineedit.text() << "]";
 		else axis_stream << "0]";
@@ -1194,7 +1194,7 @@ void  Operations::title_label_callback()
 		
 		if(x_label.checkState()==Qt::Checked ||  y_label.checkState()==Qt::Checked || z_label.checkState()==Qt::Checked)
 		{
-			axis_stream << "\n";
+			axis_stream << '\n';
 			if(x_label.checkState()==Qt::Checked)
 				axis_stream << "xlabel(\"" << x_label_lineedit.text() << "\");\n";
 			if(y_label.checkState()==Qt::Checked)
@@ -1223,7 +1223,7 @@ void  Operations::title_label_callback()
 
 // void Operations::to_eps_callback()
 // {
-// 	QString file = QFileDialog::getSaveFileName(main_window,"Choose a file", ".","Postscript (*.eps *.ps)");
+// 	QString file = QFileDialog::getSaveFileName(main_window,"Choose a file", ".','Postscript (*.eps *.ps)");
 // 	
 // 	if(file.isEmpty()) return;
 // 	
@@ -1237,11 +1237,11 @@ void  Operations::title_label_callback()
 // 
 // void Operations::to_pdf_callback()
 // {
-// 	QString file = QFileDialog::getSaveFileName(main_window,"Choose a file", ".","Postscript (*.pdf)");
+// 	QString file = QFileDialog::getSaveFileName(main_window,"Choose a file", ".','Postscript (*.pdf)");
 // 	
 // 	if(file.isEmpty()) return;
 // 	
-// 	file.replace(" ","\\ ");
+// 	file.replace(" ','\\ ");
 // 	
 // 	QString command;
 // 	QTextStream command_stream(&command);
@@ -1253,7 +1253,7 @@ void  Operations::title_label_callback()
 // 
 // void Operations::to_png_callback()
 // {
-// 	QString file = QFileDialog::getSaveFileName(main_window,"Choose a file", ".","Postscript (*.png)");
+// 	QString file = QFileDialog::getSaveFileName(main_window,"Choose a file", ".','Postscript (*.png)");
 // 	
 // 	if(file.isEmpty()) return;
 // 	
