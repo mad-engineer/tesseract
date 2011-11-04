@@ -1,3 +1,7 @@
+#pragma once
+#ifndef TESSERACT_DYNAMIC_HELP_DYNAMIC_HELP_H
+#define TESSERACT_DYNAMIC_HELP_DYNAMIC_HELP_H
+
 #include <QTime>
 #include <QTimer>
 #include <QCheckBox>
@@ -57,3 +61,4 @@ class Dynamic_help :public BaseWidget
 	void newTool(WidgetType type, QObject *tool);
 };
 
+#endif
