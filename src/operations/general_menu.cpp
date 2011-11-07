@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QColorDialog>
 
+extern QString homePath();
 
 #include "general_menu.hpp"
 

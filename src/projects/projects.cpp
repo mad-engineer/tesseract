@@ -8,8 +8,8 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
-#include "projects.h"
-#include "ui_newprojectdialog.h"
+#include "projects.hpp"
+#include "ui_newprojectdialog.hpp"
 
 struct Project
 {

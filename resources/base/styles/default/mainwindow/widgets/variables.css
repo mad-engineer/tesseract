@@ -1,0 +1,36 @@
+QMainWindow
+{
+	padding: 5px;
+	margin-top: 0px;
+	margin-left: 5px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	background-color: rgb(174,185,205); 
+	
+	border-bottom-left-radius: 3px;  
+	border-bottom-right-radius: 3px; 
+}
+
+/*QFrame
+{
+	margin-left: 5px;
+	background-color: green;
+}*/
+
+QMenuBar
+{
+	margin: 0px;
+	margin-right: 2px;
+	margin-left: 5px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 5px;
+	background-color: rgb(174,185,205); 
+}
+
+QMenuBar::item 
+{
+	padding: 0px;
+	padding-left: 7px;
+	background-color: rgb(174,185,205); 
+}
