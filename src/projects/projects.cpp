@@ -22,7 +22,7 @@ struct Project
 // Utils
 QString homePath()
 {
-#	ifdef COMPILE_PORTABLE_TESSERACT	
+#	ifdef TESSERACT_COMPILE_PORTABLE	
 	return 	QApplication::applicationDirPath() + "/";
 #	else
 	return QDir::home().path() + "/";		

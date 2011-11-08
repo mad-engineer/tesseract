@@ -17,14 +17,18 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_TERMINAL_HPP
-#define TESSERACT_TESSERACT_TERMINAL_HPP
+#ifndef TESSERACT_BASE_TERMINAL_HPP
+#define TESSERACT_BASE_TERMINAL_HPP
 
 #include <QFile>
 #include <QMdiArea>
 #include <QTextEdit>
 #include <QPushButton>
 #include <QCloseEvent>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "basewidget.hpp"
 #include "dynamic_help.hpp"

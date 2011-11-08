@@ -17,12 +17,19 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_SIMPLEEDITOR_HPP
-#define TESSERACT_TESSERACT_SIMPLEEDITOR_HPP
+#ifndef TESSERACT_BASE_SIMPLEEDITOR_HPP
+#define TESSERACT_BASE_SIMPLEEDITOR_HPP
+
+#include <memory>
+using std::tr1::shared_ptr;
 
 #include <QCompleter>
 #include <QPlainTextEdit>
 #include <QStringListModel>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "syntax.hpp"
 

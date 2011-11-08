@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_NAVIGATOR_HPP
-#define TESSERACT_TESSERACT_NAVIGATOR_HPP
+#ifndef TESSERACT_BASE_NAVIGATOR_HPP
+#define TESSERACT_BASE_NAVIGATOR_HPP
 
 #include <QWidget>
 #include <QVector>
@@ -34,6 +34,10 @@
 #include <QTreeView>
 #include <QTextEdit>
 #include <QProgressBar>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "projects.hpp"
 #include "basewidget.hpp"

@@ -17,14 +17,18 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_BASEWIDGET_HPP
-#define TESSERACT_TESSERACT_BASEWIDGET_HPP
+#ifndef TESSERACT_BASE_BASEWIDGET_HPP
+#define TESSERACT_BASE_BASEWIDGET_HPP
 
 #include <QMenu>
 #include <QWidget>
 #include <QMainWindow>
 #include <QDockWidget>
 #include <QXmlStreamWriter>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "session.hpp"
 

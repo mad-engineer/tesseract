@@ -46,7 +46,7 @@ SimpleEditor::SimpleEditor(QWidget *parent):QPlainTextEdit(parent)
 	}
 	
 	completerModel=new QStringListModel();
-	completer= new QCompleter(completerModel, this);
+	completer= new QCompleter( completerModel , this );
 
 	completer->setCompletionMode(QCompleter::PopupCompletion);
 	completer->setWidget(this);
@@ -72,14 +72,14 @@ SimpleEditor::SimpleEditor(QWidget *parent):QPlainTextEdit(parent)
   	QString font_name=get_config("textEditFont");
 	QString font_size=get_config("textEditFontSize");
 	
-	if(font_name.isEmpty())
+	if( font_name.isEmpty() )
 	{
-		font_name=text_edit_font.family();
+		font_name="Consolas";
 	}
 	
-	if(font_size.isEmpty())
+	if( font_size.isEmpty() )
 	{
-		font_size=QString::number(text_edit_font.pointSize());
+		font_size=QString::number( text_edit_font.pointSize() );
 	}
 	
 	text_edit_font.setFamily(font_name);

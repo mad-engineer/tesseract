@@ -1,10 +1,14 @@
 #pragma once
-#ifndef TESSERACT_TESSERACT_SESSION_HPP
-#define TESSERACT_TESSERACT_SESSION_HPP
+#ifndef TESSERACT_BASE_SESSION_HPP
+#define TESSERACT_BASE_SESSION_HPP
 
 #include <QHash>
 #include <QObject>
 #include <QVector>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 
 /**Types of widgets.*/

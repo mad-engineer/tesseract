@@ -67,8 +67,8 @@
 
 #define PKG_ENABLED
 
-#ifndef TESSERACT_TESSERACT_CONFIG_HPP
-#define TESSERACT_TESSERACT_CONFIG_HPP
+#ifndef TESSERACT_BASE_CONFIG_HPP
+#define TESSERACT_BASE_CONFIG_HPP
 
 //#undef QT_NO_DEBUG
 
@@ -76,6 +76,10 @@
 
 #include <QMap>
 #include <QString>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "session.hpp"
 

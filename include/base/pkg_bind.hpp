@@ -17,11 +17,15 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_PKG_BIND_HPP
-#define TESSERACT_TESSERACT_PKG_BIND_HPP
+#ifndef TESSERACT_BASE_PKG_BIND_HPP
+#define TESSERACT_BASE_PKG_BIND_HPP
 
 #include <QSet>
 #include <QString>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 class PkgBind: private QObject
 {

@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_VARIABLES_LIST_HPP
-#define TESSERACT_TESSERACT_VARIABLES_LIST_HPP
+#ifndef TESSERACT_BASE_VARIABLES_LIST_HPP
+#define TESSERACT_BASE_VARIABLES_LIST_HPP
 
 #include <QMenuBar>
 #include <QLineEdit>
@@ -28,6 +28,10 @@
 #include <QPushButton>
 #include <QTreeWidget>
 #include <QContextMenuEvent>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "basewidget.hpp"
 #include "octave_connection.hpp"

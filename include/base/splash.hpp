@@ -1,11 +1,15 @@
 #pragma once
-#ifndef TESSERACT_TESSERACT_SPLASH_HPP
-#define TESSERACT_TESSERACT_SPLASH_HPP
+#ifndef TESSERACT_BASE_SPLASH_HPP
+#define TESSERACT_BASE_SPLASH_HPP
 
 #include <QFrame>
 #include <QColor>
 #include <QString>
 #include <QPicture>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 
 class CSplashScreen : public QFrame

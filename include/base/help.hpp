@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_HELP_HPP
-#define TESSERACT_TESSERACT_HELP_HPP
+#ifndef TESSERACT_BASE_HELP_HPP
+#define TESSERACT_BASE_HELP_HPP
 
 #include <QToolbar>
 #include <QLineEdit>
@@ -26,6 +26,10 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QTextBrowser>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "basewidget.hpp"
 

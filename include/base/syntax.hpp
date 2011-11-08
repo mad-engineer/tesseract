@@ -17,19 +17,26 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_SYNTAX_HPP
-#define TESSERACT_TESSERACT_SYNTAX_HPP
+#ifndef TESSERACT_BASE_SYNTAX_HPP
+#define TESSERACT_BASE_SYNTAX_HPP
+
+#include <memory>
+using std::tr1::shared_ptr;
+
+#include <vector>
+using std::vector;
 
 #include <QVector>
 #include <QPlainTextEdit>
 #include <QSyntaxHighlighter>
 #include <QTextBlockUserData>
 
-class BlockData:public QTextBlockUserData
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
+
+struct BlockData:public QTextBlockUserData
 {
-	public:
-	BlockData();
-	
 	struct Bracket
 	{
 		int type;	//Type of bracket
@@ -38,7 +45,7 @@ class BlockData:public QTextBlockUserData
 		bool startBracketOk;	//Is it a start or end bracket?
 	};
 	
-	QVector <Bracket> brackets;
+	vector<Bracket> brackets;
 };
 
 class Syntax:public QSyntaxHighlighter
@@ -55,7 +62,7 @@ class Syntax:public QSyntaxHighlighter
 		int lastFound;
 	};
 	
-	QVector<HighlightingRule> highlightingRules;
+	vector<HighlightingRule> highlightingRules;
 	
 	struct HighlightingBlockRule
 	{
@@ -64,8 +71,8 @@ class Syntax:public QSyntaxHighlighter
 		int ruleOrder;
 	};
 	
-	QVector<HighlightingBlockRule> highlightingBlockRules;
-	QVector<HighlightingBlockRule> highlightingBracketsRules;
+	vector<HighlightingBlockRule> highlightingBlockRules;
+	vector<HighlightingBlockRule> highlightingBracketsRules;
 	
 	struct Rule1st
 	{
@@ -77,34 +84,37 @@ class Syntax:public QSyntaxHighlighter
 	
 	/**1st rule to apply from startIndex.
 	 */
-	Rule1st highlight1stRule(const QString & text, int startIndex);
+	shared_ptr<Rule1st> highlight1stRule(const QString & text, int startIndex );
 	
 	/**1st block rule to apply from startIndex.
 	 */
-	Rule1st highlight1stBlockRule(const QString & text, int startIndex);
+	shared_ptr<Rule1st> highlight1stBlockRule(const QString & text, int startIndex );
 	
 	/** Set format using rule.
 	 */
-	int ruleSetFormat(Rule1st rule);
+	int ruleSetFormat( const shared_ptr<Rule1st> &rule );
 	
 	/** Set format using block rule.
 	 */
-	int blockRuleSetFormat(const QString & text, Rule1st rule1st);
+	int blockRuleSetFormat(const QString & text, const shared_ptr<Rule1st> &rule1st );
 	
 	/** Finds brackets and put them in BlockData.
 	 */
-	void findBrackets(const QString & text, int start, int end, BlockData *blockData);
-	
-	public:
-	
-	Syntax(QObject * parent = 0);
-	bool load(QString file);
-	
-	/**Formats pair of brackets
-	 */
-	void setFormatPairBrackets(QPlainTextEdit *textEdit);
+	void findBrackets(const QString & text, int start, int end, BlockData *blockData );
 	
 	protected:
-	void highlightBlock ( const QString & text );
+		
+		void highlightBlock ( const QString & text );
+
+	public:
+	
+		Syntax(QObject * parent = 0);
+		bool load( const QString &file );
+		
+		/**Formats pair of brackets
+		 */
+		void setFormatPairBrackets( QPlainTextEdit *textEdit );
+	
+
 };
 #endif

@@ -20,8 +20,8 @@
 // -*- c++ -*-
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_NUMBEREDTEXTVIEW_HPP
-#define TESSERACT_TESSERACT_NUMBEREDTEXTVIEW_HPP
+#ifndef TESSERACT_BASE_NUMBEREDTEXTVIEW_HPP
+#define TESSERACT_BASE_NUMBEREDTEXTVIEW_HPP
 
 #include <QLabel>
 #include <QFrame>
@@ -29,6 +29,10 @@
 #include <QTextCursor>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "simpleeditor.hpp"
 

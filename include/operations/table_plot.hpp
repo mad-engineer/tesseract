@@ -9,6 +9,10 @@
 #include <QTableView>
 #include <QRadioButton>
 
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
+
 class ComplexNumberTableModel;
 
 class TablePlot: public QDialog

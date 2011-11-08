@@ -16,13 +16,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <cstdio>
-
 #include <QFile>
 #include <QStack>
 #include <QXmlStreamReader>
 
-#include <boost/static_assert.hpp>
+#include <boost/assert.hpp>
 
 #include "syntax.hpp"
 
@@ -30,9 +28,9 @@ Syntax::Syntax(QObject * parent):QSyntaxHighlighter(parent)
 {
 }
 
-bool Syntax::load(QString file)
+bool Syntax::load( const QString &file )
 {
-	if(xmlSyntaxFileName == file )
+	if( xmlSyntaxFileName == file )
 	{
 		return true;
 	}
@@ -41,18 +39,18 @@ bool Syntax::load(QString file)
 		xmlSyntaxFileName=file;
 	}
 
-	printf("[Syntax::load] Loading syntax\n");
-
 	QXmlStreamReader xml;
 
 	QStack <QString> stack;
 
 	QFile fileDevice(file);
 
-	if ( ! fileDevice.open(QFile::ReadOnly | QFile::Text) ) 
+	if ( ! fileDevice.open( QFile::ReadOnly | QFile::Text ) ) 
 	{
-		//BOOST_STATIC_ASSERT_MSG(false,"Could not open file for Syntax highlight");
-		printf("Error al abrir el archivo\n");
+		BOOST_ASSERT_MSG(false,"Could not open file for Syntax highlight");
+		std::cerr << "bool Syntax::load(QString file)" << std::endl;
+		std::cerr << "Could not open file for Syntax highlight" << std::endl;
+
 		return false;
 	}
 	
@@ -76,12 +74,12 @@ bool Syntax::load(QString file)
 		switch(tokenType)
 		{
 			case QXmlStreamReader::StartElement:
-
+			{
 				if(xml.name()!="syntax")
 				{
-					if( xmlMainItems.contains(xml.name().toString()) )
+					if( xmlMainItems.contains( xml.name().toString() ) )
 					{
-						stack.push(xml.name().toString());
+						stack.push( xml.name().toString() );
 					}
 					else
 					{
@@ -90,6 +88,7 @@ bool Syntax::load(QString file)
 				}
 
 				break;
+			}
 
 			case QXmlStreamReader::EndElement:
 
@@ -137,15 +136,18 @@ bool Syntax::load(QString file)
 					if(name=="item")
 					{
 						HighlightingRule rule;
+
 						rule.format=format;
 						rule.pattern=QRegExp(values["pattern"]);
 						rule.ruleOrder=ruleOrder++;
-						highlightingRules.append(rule);
+
+						highlightingRules.push_back(rule);
 						values.clear();
 					}
 					else if(name=="block" || name=="bracket")
 					{
 						HighlightingBlockRule rule;
+
 						rule.format=format;
 						rule.startPattern=QRegExp(values["startPattern"]);
 						rule.endPattern=QRegExp(values["endPattern"]);
@@ -153,11 +155,11 @@ bool Syntax::load(QString file)
 
 						if(name=="block")
 						{
-							highlightingBlockRules.append(rule);
+							highlightingBlockRules.push_back(rule);
 						}
 						else
 						{
-							highlightingBracketsRules.append(rule); //Bracket rule
+							highlightingBracketsRules.push_back(rule);
 						}
 
 						values.clear();
@@ -167,72 +169,85 @@ bool Syntax::load(QString file)
 				break;
 			}
 		}
-		if (xml.hasError())
+		if ( xml.hasError() )
 		{
-			// do error handling
-			printf("Error %s: %ld:%ld %s\n", file.toLocal8Bit().data(), xml.lineNumber(), xml.columnNumber(), xml.errorString().toLocal8Bit().data() );
+			BOOST_ASSERT_MSG(false,"Error while reading xml file");
+			std::cerr << "Error reading xml file: " << "Line: " << xml.lineNumber() << " Column: " << xml.columnNumber() << std::endl;
 			return false;
 		}
 	
 	return true;
 }
 
-Syntax::Rule1st Syntax::highlight1stRule(const QString & text, int startIndex)
+shared_ptr<Syntax::Rule1st> Syntax::highlight1stRule( const QString & text, int startIndex )
 {
-	Rule1st rule1st;
-	rule1st.startIndex=text.length();
-	rule1st.rule=-1;
+	shared_ptr<Rule1st> rule1st(new Rule1st());
+	rule1st->startIndex=text.length();
+	rule1st->rule=-1;
 	
-	for(int i=0; i<highlightingRules.size(); i++)
+	for( std::size_t i=0 ; i < highlightingRules.size() ; i++ )
 	{
 		HighlightingRule *rule=&(highlightingRules[i]);
 		
 		QRegExp *expression = &(rule->pattern);
 		int index = rule->lastFound;
-		//printf("[Syntax::highlight1stRule] i=%d pos=%d startIndex=%d\n", i, index, startIndex);
-		if(index>-1 && index<startIndex)
+
+		if(index>-1 && index < startIndex )
 		{
-			rule->lastFound = index = expression->indexIn(text, startIndex);
+			rule->lastFound = index = expression->indexIn( text, startIndex );
 		}
-		if ( index>-1 && index<rule1st.startIndex )
+
+		if ( index>-1 && index<rule1st->startIndex )
 		{
-			rule1st.startIndex=index;
-			rule1st.length=expression->matchedLength();
-			rule1st.rule=i;
-			rule1st.ruleOrder=rule->ruleOrder;
+			rule1st->startIndex=index;
+			rule1st->length=expression->matchedLength();
+			rule1st->rule=i;
+			rule1st->ruleOrder=rule->ruleOrder;
 		}
 		
-		if(index==startIndex) break;
+		if(index == startIndex )
+		{
+			break;
+		}
 	}
 	
-	if(rule1st.rule==-1) rule1st.startIndex=-1;
+	if(rule1st->rule == -1 )
+	{
+		rule1st->startIndex = -1;
+	}
 	
 	return rule1st;
 }
 
-Syntax::Rule1st Syntax::highlight1stBlockRule(const QString & text, int startIndex)
+shared_ptr<Syntax::Rule1st> Syntax::highlight1stBlockRule( const QString & text, int startIndex )
 {
-	Rule1st rule1st;
-	rule1st.startIndex=text.length();
-	rule1st.rule=-1;
+	shared_ptr<Rule1st> rule1st(new Rule1st());
+	rule1st->startIndex=text.length();
+	rule1st->rule=-1;
 	
-	for(int i=0; i<highlightingBlockRules.size(); i++)
+	for( std::size_t i=0; i<highlightingBlockRules.size(); i++)
 	{
 		HighlightingBlockRule rule=highlightingBlockRules[i];
 		
 		int index = rule.startPattern.indexIn(text, startIndex);
 		
-		if ( index>-1 && index<rule1st.startIndex )
+		if ( index>-1 && index<rule1st->startIndex )
 		{
-			rule1st.startIndex=index;
-			rule1st.rule=i;
-			rule1st.ruleOrder=rule.ruleOrder;
+			rule1st->startIndex=index;
+			rule1st->rule=i;
+			rule1st->ruleOrder=rule.ruleOrder;
 		}
 		
-		if(index==startIndex) break;
+		if(index == startIndex )
+		{
+			break;
+		}
 	}
 	
-	if(rule1st.rule==-1) rule1st.startIndex=-1;
+	if( rule1st->rule == -1 )
+	{
+		rule1st->startIndex = -1;
+	}
 	
 	return rule1st;
 }
@@ -241,36 +256,44 @@ Syntax::Rule1st Syntax::highlight1stBlockRule(const QString & text, int startInd
  */
 static void insertInOrder(BlockData *blockData, BlockData::Bracket &bracket)
 {
-	if(blockData->brackets.isEmpty()) blockData->brackets.append(bracket);
+	if( blockData->brackets.empty( ) )
+	{
+		blockData->brackets.push_back( bracket );
+	}
 	else
 	{
-		int j=0;
-		
-		for(;j<blockData->brackets.size();j++)
+		std::size_t j=0;
+
+		for(; j < blockData->brackets.size() ; j++ )
 		{
-			if(blockData->brackets[j].pos>bracket.pos)
+			if( blockData->brackets[j].pos > bracket.pos )
 			{
-				blockData->brackets.insert(j,bracket);
+				blockData->brackets.insert( blockData->brackets.begin() + j , bracket );
 				break;
 			}
 		}
-		if(j>=blockData->brackets.size())
+
+		if( j>= blockData->brackets.size( ) )
 		{
-			blockData->brackets.append(bracket);
+			blockData->brackets.push_back( bracket );
 		}
 	}
 }
-
-
 void Syntax::findBrackets(const QString & text, int start, int end, BlockData *blockData)
 {
 	//blockData->brackets.clear();
 	
-	if( end<0 || end>text.length() ) end=text.length();
+	if( end < 0 || end>text.length() )
+	{
+		end=text.length();
+	}
 	
-	if(start>end) return;
+	if( start > end )
+	{
+		return;
+	}
 	
-	for(int i=0; i<highlightingBracketsRules.size(); i++)
+	for( std::size_t i=0; i<highlightingBracketsRules.size(); i++)
 	{
 		HighlightingBlockRule rule=highlightingBracketsRules[i];
 		
@@ -299,8 +322,6 @@ void Syntax::findBrackets(const QString & text, int start, int end, BlockData *b
 		
 		index = rule.endPattern.indexIn(text, startIndex);
 		
-		
-		
 		while( index>-1 && index<end )
 		{
 			BlockData::Bracket bracket;
@@ -316,34 +337,38 @@ void Syntax::findBrackets(const QString & text, int start, int end, BlockData *b
 }
 
 
-int Syntax::ruleSetFormat(Rule1st rule1st)
+int Syntax::ruleSetFormat( const shared_ptr<Rule1st> &rule1st )
 {
-	HighlightingRule rule=highlightingRules[rule1st.rule];
+	HighlightingRule rule=highlightingRules[rule1st->rule];
 	
-	setFormat(rule1st.startIndex, rule1st.length, rule.format);
+	setFormat(rule1st->startIndex, rule1st->length, rule.format);
 	
-	return rule1st.startIndex + rule1st.length;
+	return rule1st->startIndex + rule1st->length;
 }
 
 
-int Syntax::blockRuleSetFormat(const QString & text, Rule1st rule1st)
+int Syntax::blockRuleSetFormat(const QString & text, const shared_ptr<Rule1st> &rule1st )
 {
-	HighlightingBlockRule rule=highlightingBlockRules[rule1st.rule];
+	HighlightingBlockRule rule=highlightingBlockRules[rule1st->rule];
 		
-	int endIndex = rule.endPattern.indexIn(text, rule1st.startIndex);
+	int endIndex = rule.endPattern.indexIn(text, rule1st->startIndex);
 	int commentLength;
-	if (endIndex == -1)
+
+	if ( endIndex == -1 )
 	{
-	    setCurrentBlockState(rule1st.rule);
-	    commentLength = text.length() - rule1st.startIndex;
-	    setFormat(rule1st.startIndex, commentLength, rule.format);
+	    setCurrentBlockState(rule1st->rule);
+
+	    commentLength = text.length() - rule1st->startIndex;
+
+	    setFormat(rule1st->startIndex, commentLength, rule.format);
+
 	    return text.length();
 	}
 	else
 	{
-	    commentLength = endIndex - rule1st.startIndex
-	                    + rule.endPattern.matchedLength();
-	    setFormat(rule1st.startIndex, commentLength, rule.format);
+	    commentLength = endIndex - rule1st->startIndex + rule.endPattern.matchedLength();
+
+	    setFormat(rule1st->startIndex, commentLength, rule.format);
 	    
 	    return endIndex+1;
 	}
@@ -352,87 +377,75 @@ int Syntax::blockRuleSetFormat(const QString & text, Rule1st rule1st)
 
 void Syntax::highlightBlock ( const QString & text )
 {
-
 	setCurrentBlockState(-1);
 	
 	int startIndex = 0;
 	
 	//Checks previous block state
-	if (previousBlockState() >= 0)
+	if ( previousBlockState() >= 0 )
 	{
-		Rule1st rule1st;
-		rule1st.rule=previousBlockState();
-		rule1st.startIndex=0;
+		shared_ptr<Rule1st> rule1st(new Rule1st());
+		rule1st->rule=previousBlockState();
+		rule1st->startIndex=0;
 		
-		startIndex=blockRuleSetFormat(text,rule1st);
+		startIndex = blockRuleSetFormat(text,rule1st);
 		
 		//TODO: Posible fallo al establecer el estado del bloque
 		
-		if(startIndex==text.length()) return;
+		if( startIndex == text.length() )
+		{
+			return;
+		}
 	}
 	
 	//Gets BlockData
 	BlockData *blockData=new BlockData();
 	
-	//Finds first rule to apply. 
 
-	Rule1st rule1st, blockRule1st;
-	
+
 	//Find initial matches
-	for(int i=0; i<highlightingRules.size(); i++)
+	for(vector<HighlightingRule>::iterator i=highlightingRules.begin(); i != highlightingRules.end(); i++ )
 	{
-		HighlightingRule *rule= &(highlightingRules[i]);
-		QRegExp *expression = &(rule->pattern);
-		int index = expression->indexIn(text, startIndex);
-		rule->lastFound = index;
-		//printf("[Syntax::highlightBlock] index=%d pos=%d \n", index, expression->pos(0));
+		(*i).lastFound =  (*i).pattern.indexIn(text, startIndex);
 	}
+
+	//Finds first rule to apply. 	
+	shared_ptr<Syntax::Rule1st> rule1st = highlight1stRule( text, startIndex );
+	shared_ptr<Syntax::Rule1st> blockRule1st=highlight1stBlockRule( text, startIndex );
 	
-	//printf("[Syntax::highlightBlock] Find initial matches \n");
-	
-	rule1st=highlight1stRule( text, startIndex);
-	blockRule1st=highlight1stBlockRule( text, startIndex);
-	
-	//if(rule1st.rule<0 && blockRule1st.rule<0)
-	//{
-	//	findBrackets(text, startIndex, -1, blockData);
-	//}
-	//else 
-	while(rule1st.rule>=0 || blockRule1st.rule>=0)
+	while( rule1st->rule >=0 || blockRule1st->rule >=0 )
 	{
-		if(rule1st.rule>=0 && blockRule1st.rule>=0)
+		if( rule1st->rule >=0 && blockRule1st->rule >= 0 )
 		{
 			if
-				( 
-					rule1st.startIndex<blockRule1st.startIndex
-					|| 
-					(
-						rule1st.startIndex==blockRule1st.startIndex
-						&&
-						rule1st.ruleOrder<blockRule1st.ruleOrder
-					)
+			( 
+				rule1st->startIndex < blockRule1st->startIndex || 
+				(
+					rule1st->startIndex==blockRule1st->startIndex &&
+					rule1st->ruleOrder<blockRule1st->ruleOrder
 				)
+			)
 			{
-				findBrackets(text, startIndex, rule1st.startIndex, blockData);
-				startIndex=ruleSetFormat(rule1st);
-				rule1st=highlight1stRule( text, startIndex);
+				findBrackets( text , startIndex , rule1st->startIndex , blockData );
+				startIndex=ruleSetFormat( rule1st );
+				rule1st=highlight1stRule( text , startIndex );
 			}
 			else
 			{
-				findBrackets(text, startIndex, blockRule1st.startIndex, blockData);
+				findBrackets(text, startIndex, blockRule1st->startIndex, blockData);
 				startIndex=blockRuleSetFormat(text,blockRule1st);
 				blockRule1st=highlight1stBlockRule( text, startIndex);
 			}
 		}
-		else if(rule1st.rule>=0)
+		else if( rule1st->rule >=0 )
 		{
-			findBrackets(text, startIndex, rule1st.startIndex, blockData);
+			findBrackets(text, startIndex, rule1st->startIndex, blockData);
 			startIndex=ruleSetFormat(rule1st);
 			rule1st=highlight1stRule( text, startIndex);
 		}
 		else
 		{
-			findBrackets(text, startIndex, blockRule1st.startIndex, blockData);
+			findBrackets(text, startIndex, blockRule1st->startIndex, blockData);
 			startIndex=blockRuleSetFormat(text,blockRule1st);
 			blockRule1st=highlight1stBlockRule( text, startIndex);
 		}
@@ -450,26 +463,28 @@ void Syntax::highlightBlock ( const QString & text )
 /**Search brackets in one QTextBlock.*/
 static BlockData::Bracket *searchBracket(int i, int increment, int &bracketsCount, BlockData *blockData, BlockData::Bracket *bracket1)
 {
-	if(blockData==NULL) return NULL;
-	
-	if(i==-1) i=blockData->brackets.size()-1;
-	
-	for(; i>=0 && i<blockData->brackets.size(); i+=increment)
+	if( blockData != NULL )
 	{
-		BlockData::Bracket *bracket=&(blockData->brackets[i]);
-		if(bracket->type==bracket1->type)
+		if( i == -1 )
 		{
-			if(bracket->startBracketOk!=bracket1->startBracketOk)
-				bracketsCount--;
-			else
-				bracketsCount++;
-			
-			if(bracketsCount==0)
-				return bracket;
+			i=blockData->brackets.size()-1;
+		}
+		
+		for(; i >= 0 && i < blockData->brackets.size() ; i+=increment )
+		{
+			BlockData::Bracket *bracket=&(blockData->brackets[i]);
+
+			if(bracket->type==bracket1->type)
+			{
+				( bracket->startBracketOk != bracket1->startBracketOk ) ? bracketsCount-- : bracketsCount++;
+				
+				if( bracketsCount == 0 )
+				{
+					return bracket;
+				}
+			}
 		}
 	}
-	
-	//printf("[searchBracket] bracketsCount=%d\n", bracketsCount);
 	
 	return NULL;
 }
@@ -482,8 +497,13 @@ void Syntax::setFormatPairBrackets(QPlainTextEdit *textEdit)
 	
 	QTextCursor cursor=textEdit->textCursor();
 	QTextBlock block=cursor.block();
-	BlockData *blockData=(BlockData *)block.userData();
-	if(blockData==NULL) return;
+
+	BlockData *blockData= static_cast<BlockData *>( block.userData() );
+	
+	if( blockData == NULL )
+	{
+		return;
+	}
 	
 	int pos=cursor.position()-block.position();
 	
@@ -512,7 +532,10 @@ void Syntax::setFormatPairBrackets(QPlainTextEdit *textEdit)
 		}
 	}
 	
-	if(i<0) return;
+	if( i < 0 )
+	{
+		return;
+	}
 	
 	int increment=(bracket1->startBracketOk) ? +1:-1;
 	int bracketsCount=0;
@@ -525,9 +548,9 @@ void Syntax::setFormatPairBrackets(QPlainTextEdit *textEdit)
 	bracket2=searchBracket( i, increment, bracketsCount, blockData, bracket1);
 	
 	{ //Search brackets in other blocks
-		while( bracket2==NULL )
+		while( bracket2 == NULL )
 		{
-			if(increment>0)
+			if( increment > 0 )
 			{
 				block_bracket2=block_bracket2.next();
 				i=0;
@@ -538,9 +561,12 @@ void Syntax::setFormatPairBrackets(QPlainTextEdit *textEdit)
 				i=-1;
 			}
 			
-			if(!block_bracket2.isValid()) break;
+			if( ! block_bracket2.isValid( ) )
+			{
+				break;
+			}
 			
-			blockData=(BlockData *)block_bracket2.userData();
+			blockData= static_cast<BlockData *>( block_bracket2.userData() );
 			/*
 			printf("[Syntax::setFormatPairBrackets] Interno brackets.size=%d\n", blockData->brackets.size());
 			for(int x=0;x<blockData->brackets.size();x++)
@@ -553,7 +579,10 @@ void Syntax::setFormatPairBrackets(QPlainTextEdit *textEdit)
 			bracket2=searchBracket( i, increment, bracketsCount, blockData, bracket1);
 		}
 		
-		if(bracket2==NULL) return;
+		if( bracket2 == NULL )
+		{
+			return;
+		}
 	}
 	
 	pos=cursor.position();
@@ -574,13 +603,6 @@ void Syntax::setFormatPairBrackets(QPlainTextEdit *textEdit)
 	selections.append(selection1); selections.append(selection2);
 	
 	textEdit->setExtraSelections(selections);
-	
-}
-
-
-
-BlockData::BlockData():QTextBlockUserData()
-{
 }
 
 

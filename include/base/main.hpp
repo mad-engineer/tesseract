@@ -17,14 +17,18 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_MAIN_HPP
-#define TESSERACT_TESSERACT_MAIN_HPP
+#ifndef TESSERACT_BASE_MAIN_HPP
+#define TESSERACT_BASE_MAIN_HPP
 
 #include <memory>
 
 #include <QTimer>
 #include <QVector>
 #include <QApplication>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "session.hpp"
 

@@ -17,14 +17,18 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_OPERATIONS_HPP
-#define TESSERACT_TESSERACT_OPERATIONS_HPP
+#ifndef TESSERACT_BASE_OPERATIONS_HPP
+#define TESSERACT_BASE_OPERATIONS_HPP
 
 #include <QDialog>
 #include <QLineEdit>
 #include <QComboBox>
 #include <QCheckBox>
 #include <QTreeWidget>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "table.hpp"
 #include "mainwindow.hpp"

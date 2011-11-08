@@ -20,6 +20,10 @@
 #ifndef TESSERACT_PROJECTS_PROJECTS_HPP
 #define TESSERACT_PROJECTS_PROJECTS_HPP
 
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
+
 #include "config.hpp"
 #include "ui_projects.hpp"
 

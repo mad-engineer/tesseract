@@ -1,12 +1,16 @@
 #pragma once
-#ifndef TESSERACT_TESSERACT_GENERATE_MENU_HPP
-#define TESSERACT_TESSERACT_GENERATE_MENU_HPP
+#ifndef TESSERACT_BASE_GENERATE_MENU_HPP
+#define TESSERACT_BASE_GENERATE_MENU_HPP
 
 #include <QProcess>
 #include <QGroupBox>
 #include <QComboBox>
 #include <QScrollArea>
 #include <QTextBrowser>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "operations.hpp"
 #include "mainwindow.hpp"

@@ -8,6 +8,10 @@
 #include <QTextEdit>
 #include <QLineEdit>
 
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
+
 // qtoctave project
 #include "config.hpp"
 #include "basewidget.hpp"

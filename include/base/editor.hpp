@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_EDITOR_HPP
-#define TESSERACT_TESSERACT_EDITOR_HPP
+#ifndef TESSERACT_BASE_EDITOR_HPP
+#define TESSERACT_BASE_EDITOR_HPP
 
 #include <QAction>
 #include <QToolBar>
@@ -28,6 +28,10 @@
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 #include <QAbstractListModel>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "syntax.hpp"
 #include "projects.hpp"

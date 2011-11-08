@@ -17,13 +17,17 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_OCTAVE_CONNECTION_HPP
-#define TESSERACT_TESSERACT_OCTAVE_CONNECTION_HPP
+#ifndef TESSERACT_BASE_OCTAVE_CONNECTION_HPP
+#define TESSERACT_BASE_OCTAVE_CONNECTION_HPP
 
 #include <QBuffer>
 #include <QThread>
 #include <QProcess>
 #include <QTextEdit>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "config.hpp"
 

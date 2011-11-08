@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_MAINWINDOW_HPP
-#define TESSERACT_TESSERACT_MAINWINDOW_HPP
+#ifndef TESSERACT_BASE_MAINWINDOW_HPP
+#define TESSERACT_BASE_MAINWINDOW_HPP
 
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
@@ -34,6 +34,10 @@
 #include <QMdiArea>
 #include <QMessageBox>
 #include <QMap>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "config.hpp"
 #include "navigator.hpp"

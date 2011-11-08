@@ -17,13 +17,17 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_TABLE_HPP
-#define TESSERACT_TESSERACT_TABLE_HPP
+#ifndef TESSERACT_BASE_TABLE_HPP
+#define TESSERACT_BASE_TABLE_HPP
 
 #include <QTableWidget>
 #include <QItemDelegate>
 #include <QContextMenuEvent>
 #include <QAbstractTableModel>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "basewidget.hpp"
 #include "table_plot.hpp"

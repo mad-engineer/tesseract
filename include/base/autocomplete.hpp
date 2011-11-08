@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_AUTOCOMPLETE_HPP
-#define TESSERACT_TESSERACT_AUTOCOMPLETE_HPP
+#ifndef TESSERACT_BASE_AUTOCOMPLETE_HPP
+#define TESSERACT_BASE_AUTOCOMPLETE_HPP
 
 #include <memory>
 
@@ -29,6 +29,10 @@
 #include <QListWidget>
 #include <QStringList>
 #include <QStringListModel>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "projects.hpp"
 #include "octave_connection.hpp"

@@ -4,6 +4,10 @@
 
 #include <QRegExp>
 
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
+
 #include "basewidget.hpp"
 
 class QSvgWidget;

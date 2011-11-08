@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_SEARCH_DIALOG_HPP
-#define TESSERACT_TESSERACT_SEARCH_DIALOG_HPP
+#ifndef TESSERACT_BASE_SEARCH_DIALOG_HPP
+#define TESSERACT_BASE_SEARCH_DIALOG_HPP
 
 #include <QDialog>
 #include <QLabel>
@@ -27,6 +27,10 @@
 #include <QGroupBox>
 #include <QBoxLayout>
 #include <QPushButton>
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include "config.hpp"
 

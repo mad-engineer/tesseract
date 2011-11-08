@@ -4,6 +4,10 @@
 
 #include <QFont>
 
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
+
 #include "config.hpp"
 #include "ui_general_menu.hpp"
 

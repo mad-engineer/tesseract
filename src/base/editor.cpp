@@ -523,7 +523,7 @@ void Editor::toolbar_action(QAction *action)
 
 		   if(obj!=NULL)
 		   {
-			   Navigator *nav=(Navigator*)obj;
+			   Navigator *nav= static_cast<Navigator*>(obj);
 			   saveDialog.setDirectory(nav->getNavigatorCurrentPath());
 		   }
 		}
@@ -555,13 +555,18 @@ void Editor::toolbar_action(QAction *action)
 	//	QMessageBox::critical(NULL, tr("Error"), tr("You must save the file first"));
 	//	return;
 	//}
-	if( currentNtv->modified() ) toolbar_action(actionSave);
+		if( currentNtv->modified() ) 
+		{
+			toolbar_action(actionSave);
+		}
 
-	QFileInfo finfo(currentNtv->path());
-	octave_connection->command_enter(QString("cd '") + finfo.path() + "'",false);
-	octave_connection->command_enter(QString("source (\"") +  finfo.fileName() + "\")",false);
+		QFileInfo finfo(currentNtv->path());
+		octave_connection->command_enter(QString("cd '") + finfo.path() + "'",false);
+		octave_connection->command_enter(QString("source (\"") +  finfo.fileName() + "\")",false);
 
-	}else if(action == actionDebug){
+	}
+	else if(action == actionDebug)
+	{
 	/** Run */
 	if(currentNtv->path().isEmpty())
 	{

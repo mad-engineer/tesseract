@@ -17,8 +17,12 @@
  */
 
 #pragma once
-#ifndef TESSERACT_TESSERACT_WINDOWLIST_HPP
-#define TESSERACT_TESSERACT_WINDOWLIST_HPP
+#ifndef TESSERACT_BASE_WINDOWLIST_HPP
+#define TESSERACT_BASE_WINDOWLIST_HPP
+
+#ifdef TESSERACT_USE_VLD
+#	include <vld.h>
+#endif
 
 #include <QMdiArea>
 #include <QComboBox>

@@ -3104,11 +3104,8 @@ zplane
 zpout
 zscore
 ztvals
-base.exe
-config
-lang
-menus
-octave
-scripts
-styles
-syntax
+base.pro
+base.vcproj
+base.vcproj.THINKPAD.Mordwinzew.user
+based_resource.rc
+base_resource.rc
