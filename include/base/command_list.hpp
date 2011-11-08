@@ -20,6 +20,9 @@
 #ifndef TESSERACT_BASE_COMMAND_LIST_HPP
 #define TESSERACT_BASE_COMMAND_LIST_HPP
 
+#include <memory>
+using std::tr1::shared_ptr;
+
 #include <QMenu>
 #include <QMenuBar>
 #include <QLineEdit>
@@ -50,7 +53,7 @@ class CommandList:public BaseWidget
 	Q_OBJECT
 	private:
 	QListView *list;
-	StringListModel *model;
+	shared_ptr<StringListModel> model;
 	QLineEdit *lineEdit;
 	QMenu *context_menu;
 	QMenuBar *menu_bar;

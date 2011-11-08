@@ -228,7 +228,7 @@ Editor::Editor(QWidget *parent): BaseWidget(parent)
 	list_files->setDropIndicatorShown(true);
 	list_files->setDragEnabled(true);
 	list_files->viewport()->setAcceptDrops(true);
-	list_files->setModel(new ListModel(0, this));
+	list_files->setModel(new ListModel(parent, this));
 	connect(list_files,SIGNAL(clicked (const QModelIndex &)), this, SLOT(file_selected(const QModelIndex &)) );
 
 	//Clipboard list
@@ -1195,7 +1195,7 @@ void ListModel::clear()
 	list.clear();
 }
 
-void ListModel::append(QString name, int position)
+void ListModel::append( const QString &name , int position )
 {
 	ListItem item;
 	item.name=name;
@@ -1268,10 +1268,10 @@ QStringList ListModel::mimeTypes() const
 ClipboardListView::ClipboardListView(QWidget *parent):
 QListView(parent)
 {
-	_stringModel = new QStringListModel();
+	_stringModel = new QStringListModel(parent);
 	setModel(_stringModel);
 
-	popup = new QMenu();
+	popup = new QMenu(parent);
 	QAction *edit=popup->addAction(tr("Edit"));
 	popup->addSeparator();
 	QAction *remove=popup->addAction(tr("Delete entry"));

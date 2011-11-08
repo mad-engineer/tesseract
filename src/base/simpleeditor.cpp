@@ -45,7 +45,7 @@ SimpleEditor::SimpleEditor(QWidget *parent):QPlainTextEdit(parent)
 		setDocument(tmpdoc);
 	}
 	
-	completerModel=new QStringListModel();
+	completerModel = new QStringListModel(this);
 	completer= new QCompleter( completerModel , this );
 
 	completer->setCompletionMode(QCompleter::PopupCompletion);

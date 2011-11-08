@@ -20,6 +20,9 @@
 #ifndef TESSERACT_BASE_NAVIGATOR_HPP
 #define TESSERACT_BASE_NAVIGATOR_HPP
 
+#include <memory>
+using std::tr1::shared_ptr;
+
 #include <QWidget>
 #include <QVector>
 #include <QModelIndex>
@@ -75,7 +78,7 @@ class Navigator : public BaseWidget
 		QComboBox *url, *filter_comboBox;
 		
 		//QDirModel *treemodel;
-		QFileSystemNewModel *listmodel;
+		shared_ptr<QFileSystemNewModel> listmodel;
 		//QTreeView *treeview;
 		QTreeView *listview;
 		

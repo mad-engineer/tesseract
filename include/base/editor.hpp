@@ -184,7 +184,7 @@ class ListModel: public QAbstractListModel
 
 	/**Clear data*/
 	void clear();
-	void append(QString name, int position);
+	void append( const QString &name , int position );
 	void update();
 	int position(const QModelIndex &index);
 	QModelIndex position_index(int position);

@@ -38,9 +38,9 @@ CommandList::CommandList( QWidget * parent ):BaseWidget(parent)
 	
 	menu_bar=menuBar();
 	
-	list=new QListView(this);
-	model=new StringListModel();
-	list->setModel(model);
+	list = new QListView(this);
+	model = shared_ptr<StringListModel>(new StringListModel());
+	list->setModel(model.get());
 	list->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	list->show();
 	list->setToolTip(tr("Right click to see menu"));

@@ -548,7 +548,7 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 	return w;
 }
 
-void Main::openTools(QXmlStreamReader &xml, const QString &config_name )
+void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 {
 	QList<BaseWidget*> tools;
 	QHash<QString, WidgetType> tools_type;

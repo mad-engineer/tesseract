@@ -20,9 +20,6 @@
 #ifndef TESSERACT_BASE_SIMPLEEDITOR_HPP
 #define TESSERACT_BASE_SIMPLEEDITOR_HPP
 
-#include <memory>
-using std::tr1::shared_ptr;
-
 #include <QCompleter>
 #include <QPlainTextEdit>
 #include <QStringListModel>

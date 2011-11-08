@@ -156,7 +156,7 @@ void Navigator::createLayout()
 	//layout->addWidget(toolbar);
 	
 	
-	listmodel = new QFileSystemNewModel();
+	listmodel = shared_ptr<QFileSystemModel>(new QFileSystemNewModel());
 	listmodel->setResolveSymlinks(true);
 	listmodel->setFilter(QDir::AllDirs|QDir::AllEntries|QDir::NoDotAndDotDot);
 	listmodel->setNameFilters(QStringList() << "*.m");
@@ -221,7 +221,7 @@ void Navigator::createLayout()
 	listview->setSortingEnabled(true);
 	listview->setItemsExpandable(false);
 	listview->setRootIsDecorated(false);
-	listview->setModel(listmodel);
+	listview->setModel(listmodel.get());
 	listview->setRootIndex(root);
 	//listview->setCursor(Qt::OpenHandCursor);
 	
@@ -517,15 +517,17 @@ void Navigator::createContextMenu()
 
 /**Returns selected files.
 */
-static QList<QFileInfo> selected_files(QTreeView *listview, QFileSystemNewModel *listmodel)
+static QList<QFileInfo> selected_files(QTreeView *listview , const shared_ptr<QFileSystemNewModel> &listmodel )
 {
 	QList<QFileInfo> list;
 	QModelIndexList indexes=listview->selectionModel()->selectedRows();
+
 	for(int i=0; i<indexes.size(); i++)
 	{
 		QModelIndex index=indexes.at(i);
 		list.append(listmodel->fileInfo(index));
 	}
+
 	return list;
 }
 
