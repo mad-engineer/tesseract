@@ -51,29 +51,34 @@ class StringListModel: public QStringListModel
 class CommandList:public BaseWidget
 {
 	Q_OBJECT
-	private:
+
 	QListView *list;
 	shared_ptr<StringListModel> model;
 	QLineEdit *lineEdit;
 	QMenu *context_menu;
 	QMenuBar *menu_bar;
 	QStringList project_history;
+
+
 	public:
-	CommandList( QWidget * parent = 0 );
-	~CommandList();
-	void setLineEdit(QLineEdit *lineEdit);
-	void setSession(Session *session);
-	BaseWidget *copyBaseWidget( QWidget * parent = 0 );
-	
-	virtual QMenu *get_menu();
-	
+
+		CommandList( QWidget * parent = 0 );
+		~CommandList();
+		void setLineEdit(QLineEdit *lineEdit);
+		void setSession(Session *session);
+		BaseWidget *copyBaseWidget( QWidget * parent = 0 );
+		
+		virtual QMenu *get_menu();
+
+
 	public slots:
-	void set_list(QStringList list);
-	void itemClicked (const QModelIndex & item );
-	void copy_clipboard_callback();
-	void contextMenu_cb( const QPoint & /*pos*/);
-	void clean_history_callback();
-	void setProject(QString project);
+
+		void set_list( const QStringList &list );
+		void itemClicked (const QModelIndex & item );
+		void copy_clipboard_callback();
+		void contextMenu_cb( const QPoint & /*pos*/);
+		void clean_history_callback();
+		void setProject( const QString &project );
 };
 
 
