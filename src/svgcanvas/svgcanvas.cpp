@@ -66,9 +66,9 @@ BaseWidget(parent)
 	actionExportTo = new QAction(this);
 	actionExportTo->setText(QApplication::tr("Export to..."));
 	
-	menuFile->addAction(actionExportTo);
+	menuFile->addAction( actionExportTo );
 	
-	connect(actionExportTo, SIGNAL(triggered()), this, SLOT(actionExport_to_callback()));
+	connect( actionExportTo , SIGNAL( triggered( ) ) , this , SLOT( actionExport_to_callback( ) ) );
 }
 
 /*** Xml Handler ***/
@@ -84,15 +84,13 @@ public:
 		this->svg_file_name=svg_file_name;
 	}
 
-
 	bool startElement(const QString &/*namespaceURI*/, const QString &/*localName*/,
 			const QString &/*qname*/, const QXmlAttributes &/*atts*/)
 	{
 		return true;
 	}
 
-
-	bool characters(const QString &ch)
+	bool characters(const QString & /* ATM unused */ )
 	{
 		return true;
 	}
@@ -228,7 +226,7 @@ void SvgCanvas::export_to_png_jpg( int width , int height , const QString &filen
 	image.save(filename);
 }
 
-void SvgCanvas::export_to_pdf_ps(int width , int height , const QString &filename )
+void SvgCanvas::export_to_pdf_ps(int /* ATM unused */ , int /* ATM unused */ , const QString &filename )
 {
 	QPainter plot;
 	QPrinter p;
