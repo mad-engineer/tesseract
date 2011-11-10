@@ -43,7 +43,7 @@
 
 class ClipboardListView;
 
-/**Syntax highliter editor. Supports several editors and autocompletion code.*/
+// Syntax highlighter editor. Supports several editors and auto completion code.
 class Editor: public BaseWidget
 {
   Q_OBJECT

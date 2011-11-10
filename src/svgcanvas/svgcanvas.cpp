@@ -54,7 +54,7 @@ BaseWidget(parent)
 	svg_plot->setAutoFillBackground(true);
 	svg_plot->setBackgroundRole(QPalette::HighlightedText);
 	svg_plot->show();
-	layout->addWidget(svg_plot);
+	layout->addWidget( svg_plot );
 	
 	re.setPattern("~~svgcanvas: *(\\d+) +(.+)\n");
 	re_delete_on_load.setPattern("~~svgcanvasdeleteonload: *(\\d+) +(.+)\n");

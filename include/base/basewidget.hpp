@@ -38,7 +38,7 @@
 class BaseWidget:public QMainWindow
 {
 	Q_OBJECT
-	private:
+
 	QMenu *dockMenu;
 	QVector<QObject*> docks;
 	void addAllDocksTo(BaseWidget *w);
@@ -78,19 +78,22 @@ class BaseWidget:public QMainWindow
 	//void focusOutEvent ( QFocusEvent * event );
 	
 	public slots:
-	void show_out_main_window_callback();
-	void show_in_main_window_callback();
-	void showDockableObjects();
-	void hideDockableObjects();
-	void dockObject(QAction *action);
-	void dock_destroyed_cb (QObject *obj);
-	
+
+		void showDockableObjects( );
+		void hideDockableObjects( );
+		void dockObject( QAction *action );
+		void show_in_main_window_callback( );
+		void show_out_main_window_callback( );
+		void dock_destroyed_cb( QObject *obj );
+
+
 	signals:
-	/** This signal is emited when widget is activated.*/
-	void widget_activated(BaseWidget *w);
-	
-	/**Dinamic help required.*/
-	void dynamic_help_required(const QString &text);
+
+		/** This signal is emited when widget is activated.*/
+		void widget_activated( BaseWidget *w );
+		
+		/**Dinamic help required.*/
+		void dynamic_help_required( const QString &text );
 };
 
 #endif
