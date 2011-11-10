@@ -25,7 +25,7 @@ void CSplashScreen::showMessage(const QString& theMessage, int theAlignment/* = 
 	repaint();
 }
 
-void CSplashScreen::paintEvent(QPaintEvent* pe)
+void CSplashScreen::paintEvent( QPaintEvent * /* ATM unused parameter */ )
 {
 	QRect aTextRect(rect());
 	aTextRect.setRect(aTextRect.x()+5, aTextRect.y()+5, aTextRect.width()-10, aTextRect.height()-10);
