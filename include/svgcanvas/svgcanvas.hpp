@@ -19,15 +19,15 @@ class OctaveConnection;
 class SvgCanvas: public BaseWidget
 {
 	Q_OBJECT
-	QSvgWidget *svg_plot;
+
+	QMenu *menuFile;
 	int canvas_number;
-	QRegExp re, re_save, re_delete_on_load;
+	QSvgWidget *svg_plot;
 	OctaveConnection *oc;
 	QString svg_file_name;
-	
-	QMenu *menuFile;
 	QAction *actionExportTo;
-	
+	QRegExp re, re_save, re_delete_on_load;
+
 	void export_to_png_jpg( int width , int height , const QString &filename );
 	void export_to_pdf_ps( int width , int height , const QString &filename );
 	
