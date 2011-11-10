@@ -24,8 +24,8 @@ class DynamicHelp :public BaseWidget
 {
 	Q_OBJECT
 	public:
-	Dynamic_help(QString octave_path, QWidget *parent=0);
-	~Dynamic_help();
+	DynamicHelp(QString octave_path, QWidget *parent=0);
+	~DynamicHelp();
 	/** Sets QLineEdit from keyboard signals are listen.
 	 */
 	void setLineEdit(QLineEdit *lineedit);
