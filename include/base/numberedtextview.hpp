@@ -17,12 +17,12 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-// -*- c++ -*-
 
 #pragma once
 #ifndef TESSERACT_BASE_NUMBEREDTEXTVIEW_HPP
 #define TESSERACT_BASE_NUMBEREDTEXTVIEW_HPP
 
+#include <QMenu>
 #include <QLabel>
 #include <QFrame>
 #include <QPixmap>
