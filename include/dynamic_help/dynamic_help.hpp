@@ -20,7 +20,7 @@
 /**
  * If you write a command in Terminal's command line, DynamicHelp shows help of commands.
  */
-class Dynamic_help :public BaseWidget
+class DynamicHelp :public BaseWidget
 {
 	Q_OBJECT
 	public:
@@ -44,25 +44,32 @@ class Dynamic_help :public BaseWidget
 	
 	/**Listen opened session tools.*/
 	void listen_tools(WidgetType type);
+
+		/** Sets QLineEdit from keyboard signals are listen. **/
+		void setLineEdit( QLineEdit *lineedit );
+		
+		/**Sets session.*/
+		void setSession( Session *session );
+		BaseWidget *copyBaseWidget( QWidget * parent = 0 );
 	
+
 	public slots:
 	
-	/**
-	* Shows help when of text.
-	 * @param text Text from QLineEdit.
-	*/
-	void textChanged ( const QString & text );
-	
-	/** Reads and shows Octave output.
-	 */
-	void readyReadStandardOutput (QString line);
-	
-	/** Updates shown help when QLineEdit changes happend.
-	 */
-	void update();
-	
-	/**New tool to listen.*/
-	void newTool(WidgetType type, QObject *tool);
+		/** Updates shown help when QLineEdit changes happened. */
+		void update( );
+
+		/**
+		* Shows help when of text.
+		 * @param text Text from QLineEdit.
+		*/
+		void textChanged ( const QString & text );
+		
+		/** Reads and shows Octave output.
+		 */
+		void readyReadStandardOutput ( const QString &line );
+		
+		/**New tool to listen.*/
+		void newTool( WidgetType type , QObject *tool );
 };
 
 #endif
