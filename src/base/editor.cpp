@@ -252,7 +252,7 @@ Editor::Editor(QWidget *parent): BaseWidget(parent)
 	toolbar_action(actionNew);
 }
 
-void Editor::resizeEvent( QResizeEvent * event )
+void Editor::resizeEvent( QResizeEvent * /* ATM unused */ )
 {
 	bool notDocked = isWindow();
 
@@ -410,7 +410,7 @@ void Editor::show_edit_menu()
 {
 	menuEdit->clear();
 
-	if(currentNtv!=NULL)
+	if( currentNtv != NULL )
 	{
 		menuEdit->addMenu(currentNtv->textEdit()->createStandardContextMenu());
 	}
@@ -462,13 +462,13 @@ void Editor::saveProject()
 // }
 
 
-void Editor::setOctaveConnection(OctaveConnection *oc)
+void Editor::setOctaveConnection( OctaveConnection *oc )
 {
   octave_connection = oc;
 }
 
 
-void Editor::toolbar_action(QAction *action)
+void Editor::toolbar_action( QAction *action )
 {
 	QStringList filters;
 
@@ -490,12 +490,14 @@ void Editor::toolbar_action(QAction *action)
 
 		tabWidget->setCurrentIndex( tabWidget->addTab(ntv, tr("New")) );
 	}
-	else if(action == actionOpen) 	/** Open **/
+	else if(action == actionOpen) 	
 	{
+		/** Open **/
 		openFile();
 	}
-	else if(action == actionSave && !currentNtv->path().isEmpty())	/* Save */
+	else if(action == actionSave && !currentNtv->path().isEmpty( ) )	
 	{
+		/* Save */
 		if( currentNtv->save() )
 		{
 			setTabText(tabWidget->currentIndex(), currentNtv->path().split("/").last());
@@ -505,8 +507,9 @@ void Editor::toolbar_action(QAction *action)
 			QMessageBox::critical(NULL, tr("Error"), tr("Can not be saved"));
 		}
 	}
-	else if(action == actionSaveAs || (action == actionSave && currentNtv->path().isEmpty())) 	/** Save as **/
+	else if( action == actionSaveAs || ( action == actionSave && currentNtv->path().isEmpty() ) ) 	
 	{
+		/** Save as **/
 		QString path;
 		QFileDialog saveDialog(this, Qt::Dialog);
 
@@ -517,11 +520,11 @@ void Editor::toolbar_action(QAction *action)
 		//Use Navigator path if current path is empty
 		if(currentNtv->path().isEmpty())
 		{
-		   QObject *obj= session->getFirstTool(NAVIGATOR);
+		   QObject *obj= session->getFirstTool( NAVIGATOR );
 
-		   if(obj!=NULL)
+		   if( obj != NULL )
 		   {
-			   Navigator *nav= static_cast<Navigator*>(obj);
+			   Navigator *nav= static_cast<Navigator*>( obj );
 			   saveDialog.setDirectory(nav->getNavigatorCurrentPath());
 		   }
 		}
@@ -801,7 +804,7 @@ void Editor::tabChanged(int index)
 
 void Editor::textModified(bool ok)
 {
-	for(int i=0;i<tabWidget->count(); i++)
+	for( int i = 0 ; i < tabWidget-> count() ; i++ )
 	{
 		NumberedTextView *ntv=(NumberedTextView *)tabWidget->widget(i);
 		if( ntv==NULL ) continue;
@@ -829,7 +832,7 @@ void Editor::textModified(bool ok)
 void Editor::closeEvent ( QCloseEvent * event )
 {
 	bool modified=false;
-	for(int i=0;i<tabWidget->count();i++)
+	for( int i = 0 ; i < tabWidget->count( ) ; i++ )
 	{
 		modified|=( (NumberedTextView*)tabWidget->widget(i) )->modified();
 	}
@@ -853,9 +856,9 @@ void Editor::closeEvent ( QCloseEvent * event )
 
 void Editor::closeTabs(bool close_all_tabs)
 {
-	while(tabWidget->count()>0)
+	while( tabWidget->count() > 0 )
 	{
-		if(currentNtv==NULL)
+		if(currentNtv == NULL )
 		{
 			printf("[Editor::closeTabs] currentNtv==NULL\n");
 			break;
@@ -923,8 +926,8 @@ void Editor::closeTabs(bool close_all_tabs)
 		if(!close_all_tabs) break;
 	}
 
-	// Crear uno si no queda ninguno
-	if(tabWidget->count() == 0)
+	// Add the first tab at start
+	if( tabWidget->count() == 0 )
 	{
 		SimpleEditor *codeEdit = new SimpleEditor(NULL);
 		connect(codeEdit, SIGNAL(dynamic_help_required(const QString &)), this, SLOT(emit_dynamic_help_required(const QString &)));
@@ -939,13 +942,11 @@ void Editor::closeTabs(bool close_all_tabs)
 	}
 	else
 	{
-		tabChanged(tabWidget->currentIndex());
+		tabChanged( tabWidget->currentIndex( ) );
 	}
 
 	updateFileList();
 }
-
-
 
 void Editor::newEditorTab()
 {
@@ -962,8 +963,6 @@ void Editor::newEditorTab()
 	
 	updateFileList();
 }
-
-
 
 void Editor::loadFiles(const QStringList &files)
 {
@@ -1026,16 +1025,16 @@ BaseWidget *Editor::copyBaseWidget(QWidget * parent )
 	bw->setSession(session);
 	bw->octave_connection=octave_connection;
 
-	for(int i=bw->tabWidget->count();i>0;i--)
+	for( int i = bw->tabWidget->count() ; i > 0 ; i-- )
 	{
 		bw->toolbar_action(bw->actionClose);
 	}
 
-	for(int i=0;i<tabWidget->count();i++)
+	for( int i = 0 ; i < tabWidget->count() ; i++ )
 	{
-		NumberedTextView *code=((NumberedTextView*)tabWidget->widget(i) );
+		NumberedTextView *code= static_cast<NumberedTextView*>( tabWidget->widget( i ) );
 
-		if(i!=0)
+		if( i != 0 )
 		{
 			bw->toolbar_action(bw->actionNew);
 		}
@@ -1044,9 +1043,9 @@ BaseWidget *Editor::copyBaseWidget(QWidget * parent )
 		bw->currentNtv->setPath(code->path());
 		bw->currentNtv->setModified(code->modified());
 
-		code->setModified(false);
+		code->setModified( false );
 
-		if( ! code->path().isEmpty() )
+		if( ! code->path().isEmpty( ) )
 		{
 			bw->setTabText(bw->tabWidget->currentIndex(), code->path().split("/").last());
 		}
@@ -1055,16 +1054,16 @@ BaseWidget *Editor::copyBaseWidget(QWidget * parent )
 	return bw;
 }
 
-void Editor::setTabText(int index, const QString & label)
+void Editor::setTabText( int index , const QString & label )
 {
-	tabWidget->setTabText(index, label);
+	tabWidget->setTabText( index , label );
 
-	updateFileList();
+	updateFileList( );
 }
 
 void Editor::updateFileList()
 {
-	ListModel *model=(ListModel *)list_files->model();
+	ListModel *model = static_cast<ListModel*>( list_files->model() );
 	model->clear();
 
 	for(int i=0;i<tabWidget->count();i++)
@@ -1077,7 +1076,7 @@ void Editor::updateFileList()
 
 void Editor::file_selected(const QModelIndex & index)
 {
-	ListModel *model=(ListModel *)list_files->model();
+	ListModel *model = static_cast<ListModel*>( list_files->model() );
 	tabWidget->setCurrentIndex(model->position(index));
 }
 
@@ -1147,40 +1146,36 @@ void Editor::clone_callback()
 	}
 }
 
-
 void Editor::toggleBreakPoint_callback()
 {
 	int lineno=currentNtv->textEdit()->textCursor().blockNumber()+1;
 	currentNtv->toggleBreakpoint(lineno);
 }
 
-///
-
 void Editor::clipboard_double_clicked(const QModelIndex &index)
 {
 	QString text=index.data().toString();
 	currentNtv->textEdit()->textCursor().insertText(text);
 }
-///
 
 ListModel::ListModel(QObject *parent, Editor *editor):QAbstractListModel(parent)
 {
 	this->editor=editor;
 }
 
-int ListModel::rowCount(const QModelIndex &parent) const
+int ListModel::rowCount(const QModelIndex & /* ATM unused */ ) const
 {
 	return list.size();
 }
 
 QVariant ListModel::data(const QModelIndex &index, int role) const
 {
-	if (!index.isValid() || index.row() >= list.size())
+	if ( ! index.isValid() || index.row() >= list.size() )
 	{
 		return QVariant();
 	}
 
-	if (role == Qt::DisplayRole)
+	if ( role == Qt::DisplayRole )
 	{
 		return list.at(index.row()).name;
 	}
@@ -1234,12 +1229,13 @@ Qt::DropActions ListModel::supportedDropActions() const
 	return Qt::CopyAction;
 }
 
-bool ListModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+bool ListModel::dropMimeData(const QMimeData *data, Qt::DropAction /* ATM unused */ , int /* ATM unused */ , int /* ATM unused */ , const QModelIndex & /* ATM unused */ )
 {
 	if (data->hasFormat("text/plain"))
 	{
 		QString path=data->text();
 		editor->openFile(path);
+
 		return true;
 	}
 

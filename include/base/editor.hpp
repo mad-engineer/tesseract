@@ -218,10 +218,12 @@ class ClipboardListView : public QListView
 
 
 	protected:
+
 		void contextMenuEvent ( QContextMenuEvent * event );
 
 
 	public:
+
 		ClipboardListView(QWidget *parent = 0);
 		~ClipboardListView();
 		QStringListModel *stringModel();

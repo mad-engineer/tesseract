@@ -355,9 +355,9 @@ BaseWidget *VariableList::copyBaseWidget(QWidget * parent )
 	vl->setSession(session);
 	vl->send_whos_command_to_octave();
 	
-	Main *main=(Main*)session->getFirstTool(MAIN);
+	Main *main= static_cast<Main*>( session->getFirstTool(MAIN) );
 	
-	connect(vl, SIGNAL(open_table(QString)), main, SLOT(table(QString)) );
+	connect( vl , SIGNAL( open_table( QString ) ) , main , SLOT( table( QString ) ) );
 	
 	return vl;
 }
