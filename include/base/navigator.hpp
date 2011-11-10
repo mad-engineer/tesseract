@@ -49,15 +49,11 @@ using std::tr1::shared_ptr;
 #define QFileSystemNewModel QFileSystemModel
 
 class QToolBar;
-//class QMenuBar;
 class QAction;
 class QVBoxLayout;
 class QLineEdit;
-//class QTreeView;
 class QDirModel;
 class QListView;
-class QPushButton;
-//class QStatusBar;
 
 class Navigator : public BaseWidget
 {
@@ -104,7 +100,6 @@ class Navigator : public BaseWidget
 		QAction *remove;
 		QAction *rename;
 
-		// Private Methods
 		void createActions();
 		//void createMenuBar();
 		void createToolBar();
