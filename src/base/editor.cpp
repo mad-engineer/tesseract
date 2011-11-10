@@ -49,7 +49,7 @@ Editor::Editor(QWidget *parent): BaseWidget(parent)
 	search_dialog=NULL;
 	// Title
 	setWindowTitle(tr("Editor"));
-	setWindowIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/xedit.png"));
+	setWindowIcon( QIcon( QApplication::applicationDirPath() + "/styles/default/images/xedit.png" ) );
 
 	// Layout
 	QVBoxLayout *vLayout = new QVBoxLayout();
