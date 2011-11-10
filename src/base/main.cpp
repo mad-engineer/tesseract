@@ -550,35 +550,35 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 
 void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 {
+	BaseWidget *bw;
+	QWidget *parent;
 	QList<BaseWidget*> tools;
 	QHash<QString, WidgetType> tools_type;
-	QWidget *parent;
-	BaseWidget *bw;
 
-	tools_type["terminal"]=TERMINAL;
 	tools_type["help"]=HELP;
 	tools_type["table"]=TABLE;
-	tools_type["dynamic_help"]=DYNAMIC_HELP;
 	tools_type["editor"]=EDITOR;
-	tools_type["navigator"]=NAVIGATOR;
-	tools_type["variables_list"]=VARIABLESLIST;
-	tools_type["command_list"]=COMMANDLIST;
-	tools_type["main_window"]=MAINWINDOW;
+	tools_type["terminal"]=TERMINAL;
 	tools_type["svgcanvas"]=SVGCANVAS;
+	tools_type["navigator"]=NAVIGATOR;
+	tools_type["main_window"]=MAINWINDOW;
+	tools_type["command_list"]=COMMANDLIST;
+	tools_type["dynamic_help"]=DYNAMIC_HELP;
+	tools_type["variables_list"]=VARIABLESLIST;
 
-	while ( ! xml.atEnd() )
+	while ( ! xml.atEnd( ) )
 	{
-		xml.readNext();
+		xml.readNext( );
 
-		if( xml.isStartElement() )
+		if( xml.isStartElement( ) )
 		{
-			if(xml.name()=="tool")
+			if( xml.name( ) == "tool" )
 			{
-				QXmlStreamAttributes attr=xml.attributes();
+				QXmlStreamAttributes attr = xml.attributes( );
 
-				QString type=attr.value("type").toString();
+				QString type = attr.value( "type" ).toString( );
 
-				if(!tools_type.contains(type))
+				if( ! tools_type.contains( type ) )
 				{
 					printf("Type %s isn't in database\n", type.toLocal8Bit().data());
 					return;

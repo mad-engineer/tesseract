@@ -199,9 +199,8 @@ class ListModel: public QAbstractListModel
 
 	private:
 
-	class ListItem
+	struct ListItem
 	{
-		public:
 		QString name;
 		int position;
 	};

@@ -79,10 +79,10 @@ QVector<QObject*> Session::getTools()
 	return all_tools;
 }
 
-QObject *Session::getFirstTool(WidgetType type)
+QObject *Session::getFirstTool( WidgetType type )
 {
 	QObject *tool=NULL;
-	if(tools.contains(type) && tools[type].size()>0)
+	if( tools.contains(type) && tools[type].size() )
 	{
 		tool=tools[type][0];
 	}
