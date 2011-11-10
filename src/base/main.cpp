@@ -710,7 +710,7 @@ void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 					;
 				}
 			}
-			else if(!tools.isEmpty())
+			else if( ! tools.isEmpty( ) )
 			{
 				QXmlStreamAttributes attr=xml.attributes();
 				switch( tools.last()->widgetType() )
