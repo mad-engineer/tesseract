@@ -47,9 +47,9 @@ BaseWidget::BaseWidget(QWidget *parent):QMainWindow(parent)
 
 BaseWidget::~BaseWidget()
 {
-	if(session!=NULL)
+	if( session != NULL )
 	{
-		session->removeTool(this);
+		session->removeTool( this );
 	}
 }
 
@@ -251,21 +251,28 @@ void BaseWidget::addAllDocksTo(BaseWidget *w)
 	w->update();
 }
 
-bool BaseWidget::containsBaseWidget(BaseWidget *w)
+bool BaseWidget::containsBaseWidget( BaseWidget *w )
 {
-	if(w==this) return true;
-	
-	for(int i=0;i<docks.size();i++)
+	if( w == this ) 
 	{
-		QDockWidget *d=(QDockWidget *)(docks[i]);
-		BaseWidget *bw=(BaseWidget *)(d->widget());
-		if(bw->containsBaseWidget(w)) return true;
+		return true;
+	}
+	
+	for( int i = 0 ; i < docks.size() ; i++ )
+	{
+		QDockWidget *d = static_cast<QDockWidget *>( docks[i] );
+		BaseWidget *bw = static_cast<BaseWidget *>( d->widget( ) );
+
+		if( bw->containsBaseWidget( w ) )
+		{
+			return true;
+		}
 	}
 	
 	return false;
 }
 
-void BaseWidget::toXML(QXmlStreamWriter &xml)
+void BaseWidget::toXML(QXmlStreamWriter & /* ATM unused */ )
 {
 	
 }

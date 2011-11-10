@@ -914,7 +914,7 @@ void MainWindow::hideSetVisibleObjects()
 	menuDocks->clear();
 }
 
-BaseWidget *MainWindow::copyBaseWidget( QWidget * parent )
+BaseWidget *MainWindow::copyBaseWidget( QWidget * /* ATM unused */ )
 {
 	return NULL;
 }

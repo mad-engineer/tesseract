@@ -170,7 +170,6 @@ private:
     bool textModifiedOk;
 };
 
-
-#endif // NUMBERED_TEXT_VIEW_H
+#endif
 
 

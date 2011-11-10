@@ -32,7 +32,7 @@ CommandList::CommandList( QWidget * parent ):BaseWidget(parent)
 	setWindowTitle(tr("Commands' List"));
 	setWindowIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/news_section.png"));
 	
-	QVBoxLayout *layout=new QVBoxLayout;
+	QVBoxLayout *layout=new QVBoxLayout();
 	layout->setSpacing(0);
 	layout->setContentsMargins(0,0,0,0);
 	
@@ -91,7 +91,7 @@ void CommandList::setLineEdit(QLineEdit *lineEdit)
 	this->lineEdit=lineEdit;
 }
 
-void CommandList::set_list(QStringList list)
+void CommandList::set_list( const QStringList &list )
 {
 	//printf("[CommandList::set_list] Setting list.\n");
 	QStringList history;
@@ -99,15 +99,18 @@ void CommandList::set_list(QStringList list)
 	project_history=list;
 	history << list;
 	int history_size=127;
-	if(!get_config("lines_in_history").isEmpty())
+
+	if( ! get_config("lines_in_history").isEmpty() )
 	{
 		history_size=get_config("lines_in_history").toInt();
 	}
-	while(history.size()>history_size)
+
+	while( history.size() > history_size )
 	{
 		history.removeFirst();
 		//project_history.removeFirst();
 	}
+
 	model->setStringList(history);
 	QModelIndex item=model->index(history.size()-1);
 	this->list->scrollTo(item);
