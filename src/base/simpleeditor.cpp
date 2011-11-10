@@ -337,11 +337,12 @@ void SimpleEditor::activated( const QString & text )
 	view->hide();
 }
 
-void SimpleEditor::autoComplete(int position, int charsRemoved, int charsAdded)
+void SimpleEditor::autoComplete( int /* ATM unused */ , int /* ATM unused */ , int charsAdded )
 {
-	//printf("[SimpleEditor::autoComplete] charsAdded=%d\n", charsAdded);
-	if(charsAdded==1)
-		autoComplete();
+	if( charsAdded == 1 )
+	{
+		autoComplete( );
+	}
 }
 
 void SimpleEditor::autoComplete(int size)
