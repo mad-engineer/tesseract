@@ -16,11 +16,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-
-// loading files for stylesheets
-
 #include <fstream>
-#include <cassert>
+
+#include <boost/assert.hpp>
 
 #include <QIcon>
 #include <QToolBar>
