@@ -128,7 +128,7 @@ void CommandList::setSession(Session *session)
 	connect(session, SIGNAL(projectChanged(QString)), this, SLOT(setProject(QString)));
 }
 
-void CommandList::setProject(QString project)
+void CommandList::setProject( const QString &project )
 {
 	QStringList history=Projects::listCommandHistory( project );
 	project_history.clear();

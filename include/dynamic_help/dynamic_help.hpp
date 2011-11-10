@@ -26,14 +26,9 @@ class DynamicHelp :public BaseWidget
 	public:
 	DynamicHelp(QString octave_path, QWidget *parent=0);
 	~DynamicHelp();
-	/** Sets QLineEdit from keyboard signals are listen.
-	 */
-	void setLineEdit(QLineEdit *lineedit);
-	
+
 	/**Sets session.*/
-	void setSession(Session *session);
-	BaseWidget *copyBaseWidget( QWidget * parent = 0 );
-	
+	void setSession( Session *session );
 	private:
 	QTextEdit *textEdit;
 	QCheckBox *stop_help;
@@ -45,12 +40,11 @@ class DynamicHelp :public BaseWidget
 	/**Listen opened session tools.*/
 	void listen_tools(WidgetType type);
 
-		/** Sets QLineEdit from keyboard signals are listen. **/
-		void setLineEdit( QLineEdit *lineedit );
-		
-		/**Sets session.*/
-		void setSession( Session *session );
-		BaseWidget *copyBaseWidget( QWidget * parent = 0 );
+	/** Sets QLineEdit from keyboard signals are listen. **/
+	void setLineEdit( QLineEdit *lineedit );
+	
+
+	BaseWidget *copyBaseWidget( QWidget * parent = 0 );
 	
 
 	public slots:

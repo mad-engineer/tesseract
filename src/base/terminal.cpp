@@ -36,7 +36,7 @@
 
 QString projectsPath();
 
-Terminal::Terminal(QWidget * parent):BaseWidget(parent)
+Terminal::Terminal(QWidget * parent):BaseWidget(parent),
 octave_connection(NULL)
 {
 	widget_type=TERMINAL;

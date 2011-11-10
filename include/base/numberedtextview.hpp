@@ -46,33 +46,37 @@ class NumberBar : public QWidget
 {
     Q_OBJECT
 
-public:
-    NumberBar( QWidget *parent );
-    ~NumberBar();
+	SimpleEditor *edit;
+	QPixmap stopMarker;
+	QPixmap currentMarker;
+	QPixmap bugMarker;
+	QList<int> breakpoints;
+	int currentLine;
+	int bugLine;
+	QRect stopRect;
+	QRect currentRect;
+	QRect bugRect;
 
-    void setCurrentLine( int lineno );
-    void setBugLine( int lineno );
-    void toggleBreakpoint( int lineno );
-    QList<int> *getBreakpoints();
 
-    void setTextEdit( SimpleEditor *edit );
-    void paintEvent( QPaintEvent *ev );
+	protected:
 
-protected:
-    bool event( QEvent *ev );
+		bool event( QEvent *ev );
 
-private:
-    SimpleEditor *edit;
-    QPixmap stopMarker;
-    QPixmap currentMarker;
-    QPixmap bugMarker;
-    QList<int> breakpoints;
-    int currentLine;
-    int bugLine;
-    QRect stopRect;
-    QRect currentRect;
-    QRect bugRect;
+
+	public:
+
+		NumberBar( QWidget *parent );
+		~NumberBar();
+
+		void setCurrentLine( int lineno );
+		void setBugLine( int lineno );
+		void toggleBreakpoint( int lineno );
+		QList<int> *getBreakpoints();
+
+		void setTextEdit( SimpleEditor *edit );
+		void paintEvent( QPaintEvent *ev );
 };
+
 
 /**
  * Displays a CodeEdit with line numbers.
@@ -80,94 +84,108 @@ private:
 class NumberedTextView : public QFrame
 {
     Q_OBJECT
+	QMenu *contextMenu;
+	QString filePath;
+	QLabel *line_column_label;
+	SimpleEditor *view;
+	NumberBar *numbers;
+	QHBoxLayout *hbox;
+	QVBoxLayout *vbox;
+	int currentLine;
+	QTextCursor highlight;
+	bool textModifiedOk;
 
-public:
-    NumberedTextView( QWidget *parent = 0 , SimpleEditor *textEdit=new SimpleEditor() );
-    ~NumberedTextView();
+	void createConnections( );
+	void createContextMenu( );
 
-    QList<int> *getBreakpoints();
+	protected:
 
-    void open( const QString &path );
-    
-    /**Saves file to path. @return true if all is OK.*/
-    bool save( QString path = QString());
+		void contextMenuEvent ( QContextMenuEvent * event );
 
-    const QString &path();
-    void setPath( const QString &path );
-    
-    bool modified();
-    void setModified(bool modify);
+	public:
 
-    /** Returns the CodeEdit of the main view. */
-    SimpleEditor *textEdit() const { return view; }
+		NumberedTextView( QWidget *parent = 0 , SimpleEditor *textEdit=new SimpleEditor() );
+		~NumberedTextView();
 
-    /**
-     * Sets the line that should have the current line indicator.
-     * A value of -1 indicates no line should show the indicator.
-     */
-    void setCurrentLine( int lineno );
+		QList<int> *getBreakpoints();
 
-    /**
-     * Toggle breakpoint
-     */
-    void toggleBreakpoint( int lineno );
+		void open( const QString &path );
+	    
+		/**Saves file to path. @return true if all is OK.*/
+		bool save( QString path = QString());
 
-    /**
-     * Sets the line that should have the bug line indicator.
-     * A value of -1 indicates no line should show the indicator.
-     */
-    void setBugLine( int lineno );
+		const QString &path();
+		void setPath( const QString &path );
+	    
+		bool modified();
+		void setModified(bool modify);
 
-    /** @internal Used to get tooltip events from the view for the hover signal. */
-    bool eventFilter( QObject *obj, QEvent *event );
-    
-    /**Indent selected text.*/
-    void indent();
-    
-    /**UnIndent selected text.*/
-    void unindent();
-    
-    /**Comment selected text.*/
-    void comment();
-    
-    /**UnComment selected text.*/
-    void uncomment();
+		/** Returns the CodeEdit of the main view. */
+		SimpleEditor *textEdit() const { return view; }
 
-signals:
-    /**
-     * Emitted when the mouse is hovered over the text edit component.
-     * @param word The word under the mouse pointer
-     */
-    void mouseHover( const QString &word );
+		/**
+		 * Sets the line that should have the current line indicator.
+		 * A value of -1 indicates no line should show the indicator.
+		 */
+		void setCurrentLine( int lineno );
 
-    /**
-     * Emitted when the mouse is hovered over the text edit component.
-     * @param pos The position of the mouse pointer.
-     * @param word The word under the mouse pointer
-     */
-    void mouseHover( const QPoint &pos, const QString &word );
-    
-    /**
-     * Emitted when file is changed.
-     */
-    void textModified();
+		/**
+		 * Toggle breakpoint
+		 */
+		void toggleBreakpoint( int lineno );
 
-protected slots:
-    /** @internal Used to update the highlight on the current line. */
-    void textChanged( int pos, int added, int removed );
-public slots:
-    void cursor_moved_cb();
+		/**
+		 * Sets the line that should have the bug line indicator.
+		 * A value of -1 indicates no line should show the indicator.
+		 */
+		void setBugLine( int lineno );
 
-private:
-    QString filePath;
-    QLabel *line_column_label;
-    SimpleEditor *view;
-    NumberBar *numbers;
-    QHBoxLayout *hbox;
-    QVBoxLayout *vbox;
-    int currentLine;
-    QTextCursor highlight;
-    bool textModifiedOk;
+		/** @internal Used to get tooltip events from the view for the hover signal. */
+		bool eventFilter( QObject *obj, QEvent *event );
+	    
+		/**Indent selected text.*/
+		void indent();
+	    
+		/**UnIndent selected text.*/
+		void unindent();
+	    
+		/**Comment selected text.*/
+		void comment();
+	    
+		/**UnComment selected text.*/
+		void uncomment();
+
+
+	signals:
+		/**
+		 * Emitted when the mouse is hovered over the text edit component.
+		 * @param word The word under the mouse pointer
+		 */
+		void mouseHover( const QString &word );
+
+		/**
+		 * Emitted when the mouse is hovered over the text edit component.
+		 * @param pos The position of the mouse pointer.
+		 * @param word The word under the mouse pointer
+		 */
+		void mouseHover( const QPoint &pos, const QString &word );
+	    
+		/**
+		 * Emitted when file is changed.
+		 */
+		void textModified();
+
+
+	protected slots:
+
+		/** @internal Used to update the highlight on the current line. */
+		void textChanged( int pos, int added, int removed );
+
+
+	public slots:
+
+		void cursor_moved_cb();
+		void contextMenuPopUp( const QPoint & pos );
 };
 
 #endif

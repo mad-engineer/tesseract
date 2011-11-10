@@ -7,7 +7,7 @@
 
 #include "dynamic_help.hpp"
 
-Dynamic_help::Dynamic_help(QString octave_path, QWidget *parent):BaseWidget(parent)
+DynamicHelp::DynamicHelp(QString octave_path, QWidget *parent):BaseWidget(parent)
 {
 	widget_type=DYNAMIC_HELP;
 	this->octave_path=octave_path;
@@ -186,9 +186,9 @@ void DynamicHelp::newTool(WidgetType type, QObject *tool)
 	}
 }
 
-BaseWidget *Dynamic_help::copyBaseWidget(QWidget * parent )
+BaseWidget *DynamicHelp::copyBaseWidget(QWidget * parent )
 {
-	Dynamic_help *bw=new Dynamic_help(octave_path,parent);
+	DynamicHelp *bw=new DynamicHelp(octave_path,parent);
 	bw->setSession(session);
 	bw->textEdit->setHtml(textEdit->toHtml());
 	
