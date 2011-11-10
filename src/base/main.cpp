@@ -597,19 +597,19 @@ void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 
 				if( type == "terminal" )
 				{
-					bw=(BaseWidget*)session.getFirstTool(TERMINAL);
+					bw = static_cast<BaseWidget*>( session.getFirstTool( TERMINAL ) );
 				}
 				else if( type == "main_window" )
 				{
-					bw=(BaseWidget*)session.getFirstTool(MAINWINDOW);
+					bw = static_cast<BaseWidget*>( session.getFirstTool( MAINWINDOW ) );
 				}
 				else if( tools.isEmpty() )
 				{
-					bw=createTool(tools_type[type], parent);
+					bw = createTool(tools_type[type], parent);
 				}
 				else
 				{
-					bw=createTool(tools_type[type], tools.last());
+					bw = createTool(tools_type[type], tools.last());
 				}
 
 				QString title=attr.value("title").toString();
@@ -693,7 +693,7 @@ void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 					}
 				}
 
-				tools.append(bw);
+				tools.append( bw );
 
 				switch( bw->widgetType() )
 				{

@@ -174,8 +174,10 @@ Editor::Editor(QWidget *parent): BaseWidget(parent)
 	menuRun->addAction(actionSendToOctave);
 	menuRun->addAction(actionDebug);
 	menuRun->addAction(actionStep);
+
 	//connect(menuRun, SIGNAL(triggered(QAction*)),this, SLOT(toolbar_action(QAction*)));
 	menuRun->addSeparator();
+
 	actionToggleBreakPoint=menuRun->addAction(tr("Toggle breakpoint"));
 	actionToggleBreakPoint->setShortcut(tr("F7"));
 	connect(actionToggleBreakPoint, SIGNAL(triggered()),this, SLOT(toggleBreakPoint_callback()));
@@ -205,6 +207,7 @@ Editor::Editor(QWidget *parent): BaseWidget(parent)
 	menuConfig=menuBar()->addMenu(tr("Config"));
 
 	// TabWidget
+
 	tabWidget = new QTabWidget(this);
 	tabWidget->setTabsClosable(true);
 	tabWidget->show();
@@ -481,8 +484,8 @@ void Editor::toolbar_action( QAction *action )
 		connect(codeEdit, SIGNAL(dynamic_help_required(const QString &)), this, SLOT(emit_dynamic_help_required(const QString &)));
 
 		NumberedTextView *ntv = new NumberedTextView(this, codeEdit);
-		
-		connect(ntv->textEdit(), SIGNAL(toggleBreakpoint(int)), this, SLOT(toggleBreakpoint(int)));
+
+		connect(ntv->textEdit() , SIGNAL(toggleBreakpoint(int)), this, SLOT(toggleBreakpoint(int)));
 		//connect(ntv, SIGNAL(textModified()), this, SLOT(textModified()));
 		connect(codeEdit->document(), SIGNAL(modificationChanged (bool)), this, SLOT(textModified(bool)));
 
@@ -551,11 +554,11 @@ void Editor::toolbar_action( QAction *action )
 	}
 	else if(action == actionRun)
 	{
-	//if(currentNtv->path().isEmpty())
-	//{
-	//	QMessageBox::critical(NULL, tr("Error"), tr("You must save the file first"));
-	//	return;
-	//}
+		//if(currentNtv->path().isEmpty())
+		//{
+		//	QMessageBox::critical(NULL, tr("Error"), tr("You must save the file first"));
+		//	return;
+		//}
 		if( currentNtv->modified() ) 
 		{
 			toolbar_action(actionSave);
@@ -564,16 +567,15 @@ void Editor::toolbar_action( QAction *action )
 		QFileInfo finfo(currentNtv->path());
 		octave_connection->command_enter(QString("cd '") + finfo.path() + "'",false);
 		octave_connection->command_enter(QString("source (\"") +  finfo.fileName() + "\")",false);
-
 	}
 	else if(action == actionDebug)
 	{
-	/** Run */
-	if(currentNtv->path().isEmpty())
-	{
-	  QMessageBox::critical(NULL, tr("Error"), tr("You must save the file first"));
-	  return;
-	}
+		/** Run */
+		if(currentNtv->path().isEmpty())
+		{
+		  QMessageBox::critical(NULL, tr("Error"), tr("You must save the file first"));
+		  return;
+		}
 
 	// Debug?
 	if(actionStep->isEnabled())
