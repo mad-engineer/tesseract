@@ -81,28 +81,25 @@ Dynamic_help::Dynamic_help(QString octave_path, QWidget *parent):BaseWidget(pare
 	setAttribute(Qt::WA_DeleteOnClose);
 	textEdit->clear();
 
-	//TODO: find a better way to avoid double code
-	{
-		QFile file( QApplication::applicationDirPath()+"/styles/default/mainwindow/widgets/dynamic_help.css" );
+	QFile file( QApplication::applicationDirPath() + "/styles/default/mainwindow/widgets/dynamic_help.css" );
 
-		if( file.open( QFile::ReadOnly ) )
-		{
-			setStyleSheet( QLatin1String( file.readAll() ) ) ;
-		}
+	if( file.open( QFile::ReadOnly ) )
+	{
+		setStyleSheet( QLatin1String( file.readAll() ) ) ;
 	}
 }
 
-void Dynamic_help::setLineEdit(QLineEdit *lineedit)
+void DynamicHelp::setLineEdit(QLineEdit *lineedit)
 {
 	connect( lineedit, SIGNAL( textChanged ( const QString &) ) , this, SLOT( textChanged ( const QString &) ) );
 }
 
-void Dynamic_help::update()
+void DynamicHelp::update()
 {
 	textChanged(input_text);
 }
 
-void Dynamic_help::textChanged ( const QString & text )
+void DynamicHelp::textChanged ( const QString & text )
 {
 	if(text.length()<2 || stop_help->checkState()==Qt::Checked) return;
 	if( time.elapsed()< 1000)
@@ -134,17 +131,21 @@ void Dynamic_help::textChanged ( const QString & text )
 	textEdit->insertHtml("<b>Results for "+input_text+":</b><br>\n");
 }
 
-void Dynamic_help::readyReadStandardOutput (QString out)
+void DynamicHelp::readyReadStandardOutput ( const QString &out )
 {
 	QTextCursor cursor=textEdit->textCursor();
+
 	cursor.movePosition(QTextCursor::End);
+
 	textEdit->setTextCursor( cursor );
 	textEdit->insertPlainText(out);
+
 	cursor.movePosition(QTextCursor::Start);
+
 	textEdit->setTextCursor( cursor );
 }
 
-Dynamic_help::~Dynamic_help()
+DynamicHelp::~DynamicHelp()
 {
 	octave->command_enter(QString("quit\n").toLocal8Bit());
 	octave->kill();
@@ -154,7 +155,7 @@ Dynamic_help::~Dynamic_help()
 	delete textEdit;
 }
 
-void Dynamic_help::setSession(Session *session)
+void DynamicHelp::setSession(Session *session)
 {
 	BaseWidget::setSession(session);
 	
@@ -167,7 +168,7 @@ void Dynamic_help::setSession(Session *session)
 	listen_tools(EDITOR);
 }
 
-void Dynamic_help::listen_tools(WidgetType type)
+void DynamicHelp::listen_tools(WidgetType type)
 {
 	QVector<QObject*> tools=session->getTools(type);
 	for(int i=0;i<tools.size();i++)
@@ -176,7 +177,7 @@ void Dynamic_help::listen_tools(WidgetType type)
 	}
 }
 
-void Dynamic_help::newTool(WidgetType type, QObject *tool)
+void DynamicHelp::newTool(WidgetType type, QObject *tool)
 {
 	if(tool!=NULL && (type==TERMINAL||type==HELP||type==EDITOR) )
 	{

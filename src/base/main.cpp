@@ -371,7 +371,7 @@ void Main::variable_list()
 
 void Main::dynamic_help()
 {
-	Dynamic_help *dynamic_help = static_cast<Dynamic_help*>( createTool( DYNAMIC_HELP , work_space ) );
+	DynamicHelp *dynamic_help = static_cast<DynamicHelp*>( createTool( DYNAMIC_HELP , work_space ) );
 	dynamic_help->show();
 }
 
@@ -476,7 +476,7 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 
 		case DYNAMIC_HELP:
 		{
-			Dynamic_help *dynamic_help=new Dynamic_help(oc->getOctavePath(), parent);
+			DynamicHelp *dynamic_help=new DynamicHelp(oc->getOctavePath(), parent);
 			dynamic_help->setSession(&session);
 			w=dynamic_help;
 			break;

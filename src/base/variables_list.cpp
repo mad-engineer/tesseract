@@ -63,10 +63,9 @@ VariableList::VariableList(QWidget * parent):BaseWidget(parent)
 	popup_edit  = popup_menu->addAction(tr("Edit"));
 	popup_clear = popup_menu->addAction(tr("Clear"));
 	popup_save  = popup_menu->addAction(tr("Save to file"));
-	connect(popup_menu, SIGNAL(triggered(QAction*)),
-					this, SLOT(popupEvent(QAction*)));
-	
-	
+
+	connect(popup_menu, SIGNAL(triggered(QAction*)),this, SLOT(popupEvent(QAction*)));
+
 	menu_bar->addMenu(popup_menu);
 	connect(popup_menu,SIGNAL(aboutToShow ()), this, SLOT(set_menu_options()) );
 

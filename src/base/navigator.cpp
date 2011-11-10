@@ -70,9 +70,6 @@ Navigator::Navigator(QWidget *parent) : BaseWidget(parent)
 			toolbar->setStyleSheet( QLatin1String( file.readAll() ) ) ;
 		}
 	}
-
-
-	
 }
 
 void Navigator::createActions() 
