@@ -35,8 +35,8 @@ class SimpleEditor:public QPlainTextEdit
 	Q_OBJECT
 	QString fileName;
 	QTextCharFormat charFormat;
-	QCompleter *completer;
-	QStringListModel *completerModel;
+	QStringListModel *completer;
+	QCompleter *syntaxCompleterModel;
 	Syntax *syntax;
 	QStringList comands_completion_list;
 	

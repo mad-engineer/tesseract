@@ -28,11 +28,13 @@
 
 extern QString syntaxPath();
 
-SimpleEditor::SimpleEditor(QWidget *parent):QPlainTextEdit(parent)
+SimpleEditor::SimpleEditor(QWidget *parent) : 
+QPlainTextEdit(parent),
+syntax(NULL),
+firtsTimeUsedOk(true),
+completer(new QStringListModel(this)),
+syntaxCompleterModel(new QCompleter( completer , this ))
 {
-	syntax=NULL;
-	firtsTimeUsedOk=true;
-	
 	// TODO: Set via Option
 
 	{
@@ -44,14 +46,11 @@ SimpleEditor::SimpleEditor(QWidget *parent):QPlainTextEdit(parent)
 
 		setDocument(tmpdoc);
 	}
-	
-	completerModel = new QStringListModel(this);
-	completer= new QCompleter( completerModel , this );
 
-	completer->setCompletionMode(QCompleter::PopupCompletion);
-	completer->setWidget(this);
+	syntaxCompleterModel->setCompletionMode(QCompleter::PopupCompletion);
+	syntaxCompleterModel->setWidget(this);
 
-	connect(completer, SIGNAL(activated ( const QString &)), this, SLOT(activated ( const QString &)));
+	connect(syntaxCompleterModel, SIGNAL(activated ( const QString &)), this, SLOT(activated ( const QString &)));
 	
 	if( get_config("bracketsMatch") != "false" )
 	{
@@ -74,7 +73,7 @@ SimpleEditor::SimpleEditor(QWidget *parent):QPlainTextEdit(parent)
 	
 	if( font_name.isEmpty() )
 	{
-		font_name="Consolas";
+		font_name="Courier New";
 	}
 	
 	if( font_size.isEmpty() )
@@ -188,18 +187,18 @@ void SimpleEditor::keyPressEvent(QKeyEvent * e)
 	//In all cases completer popup must been hided.
 	if(e->key()!=Qt::Key_Return && e->key()!=Qt::Key_Enter )
 	{
-		QAbstractItemView *view=completer->popup();
+		QAbstractItemView *view=syntaxCompleterModel->popup();
 		if(view->isVisible()) view->hide();
 		//completer->setWidget(NULL);
 	}
 	
 	if(e->key()==Qt::Key_Return || e->key()==Qt::Key_Enter )
 	{
-		QAbstractItemView *view=completer->popup();
+		QAbstractItemView *view=syntaxCompleterModel->popup();
 		if(view->isVisible())
 		{
 			QString word=view->currentIndex().data().toString();
-			if( word.isEmpty() ) word=completer->currentCompletion();
+			if( word.isEmpty() ) word=syntaxCompleterModel->currentCompletion();
 			activated( word );
 			return;
 		}
@@ -329,7 +328,7 @@ void SimpleEditor::setCharFormat( const QTextCharFormat &charFormat )
 
 void SimpleEditor::activated( const QString & text )
 {
-	QAbstractItemView *view=completer->popup();
+	QAbstractItemView *view=syntaxCompleterModel->popup();
 	QTextCursor cursor=textCursor();
 	cursor.movePosition( 
 		QTextCursor::PreviousWord, QTextCursor::KeepAnchor);
@@ -363,18 +362,18 @@ void SimpleEditor::autoComplete(int size)
 	
 	list.append(comands_completion_list);
 	
-	completerModel->setStringList( list );
+	completer->setStringList( list );
 	
-	completer->setCompletionPrefix(cursor.selectedText());
+	syntaxCompleterModel->setCompletionPrefix(cursor.selectedText());
 	
 	//printf("[SimpleEditor::autoComplete] >%d<\n", completer->completionCount());
 	
-	if (completer->completionCount()>0 )
+	if (syntaxCompleterModel->completionCount()>0 )
 	{
 		//completer->setWidget(this);
 		QRect r=cursorRect(cursor);
 		r.setWidth(200);
-		completer->complete(r);
+		syntaxCompleterModel->complete(r);
 	}
 }
 
