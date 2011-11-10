@@ -37,10 +37,9 @@
 QString projectsPath();
 
 Terminal::Terminal(QWidget * parent):BaseWidget(parent)
+octave_connection(NULL)
 {
 	widget_type=TERMINAL;
-	
-	octave_connection=NULL;
 	diary_ok=false;
 	
 	init_regular_expresions();
