@@ -241,6 +241,9 @@ NumberedTextView::NumberedTextView( QWidget *parent, SimpleEditor *textEdit )
 	
 	view = textEdit;
 	view->installEventFilter( this );
+
+	createContextMenu();
+	createConnections();
 	
 	connect( view->document(), SIGNAL(contentsChange(int,int,int)), this, SLOT(textChanged(int,int,int)) );
 	connect( view, SIGNAL(cursorPositionChanged()), this, SLOT(cursor_moved_cb()) );
@@ -285,6 +288,36 @@ NumberedTextView::NumberedTextView( QWidget *parent, SimpleEditor *textEdit )
 	line_column_label->show();
 }
 
+void NumberedTextView::createContextMenu()
+{
+	QList<QAction *> actions;
+	actions.reserve(5);
+
+//	actions.append(newFolder);
+	//actions.append(copy);
+	//actions.append(cut);
+	//actions.append(paste);
+	//actions.append(remove);
+	//actions.append(rename);
+
+	contextMenu = new QMenu(this);
+	contextMenu->addActions(actions);
+}
+
+void NumberedTextView::contextMenuEvent ( QContextMenuEvent * event )
+{
+	contextMenu->popup( event->globalPos() );
+}
+
+void NumberedTextView::contextMenuPopUp( const QPoint & )
+{
+	contextMenu->popup( QCursor::pos() );
+}
+
+void NumberedTextView::createConnections( )
+{
+	connect( this , SIGNAL( customContextMenuRequested ( const QPoint & )  ), this, SLOT( contextMenuPopUp( const QPoint & ) ) );
+}
 
 NumberedTextView::~NumberedTextView()
 {
