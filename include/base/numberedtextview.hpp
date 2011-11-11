@@ -95,8 +95,8 @@ class NumberedTextView : public QFrame
 	QTextCursor highlight;
 	bool textModifiedOk;
 
-	void createConnections( );
-	void createContextMenu( );
+	void createConnections();
+	void createContextMenu();
 
 	protected:
 

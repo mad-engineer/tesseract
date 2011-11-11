@@ -28,15 +28,13 @@
 
 extern QString syntaxPath();
 
-SimpleEditor::SimpleEditor(QWidget *parent) : 
-QPlainTextEdit(parent),
-syntax(NULL),
-firtsTimeUsedOk(true),
-completer(new QStringListModel(this)),
-syntaxCompleterModel(new QCompleter( completer , this ))
+SimpleEditor::SimpleEditor( QWidget *parent ) : 
+QPlainTextEdit( parent ),
+syntax( NULL ),
+firtsTimeUsedOk( true ),
+completer( new QStringListModel( this ) ),
+syntaxCompleterModel( new QCompleter( completer , this ) )
 {
-	// TODO: Set via Option
-
 	{
 		QTextDocument *tmpdoc=new QTextDocument();
 		tmpdoc->setProperty("DocumentReferences", QVariant(0));
@@ -52,12 +50,12 @@ syntaxCompleterModel(new QCompleter( completer , this ))
 
 	connect(syntaxCompleterModel, SIGNAL(activated ( const QString &)), this, SLOT(activated ( const QString &)));
 	
-	if( get_config("bracketsMatch") != "false" )
+	if( get_config( "bracketsMatch" ) != "false" )
 	{
 		connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(cursorPositionChangedCallBack()));
 	}
 	
-	if( get_config("autoCompletion")!="false" )
+	if( get_config( "autoCompletion" ) != "false" )
 	{
 		connect(document(), SIGNAL(contentsChange(int, int, int)), this, SLOT(autoComplete(int, int, int)));
 	}
@@ -81,62 +79,53 @@ syntaxCompleterModel(new QCompleter( completer , this ))
 		font_size=QString::number( text_edit_font.pointSize() );
 	}
 	
-	text_edit_font.setFamily(font_name);
-	text_edit_font.setPointSize(font_size.toInt());
+	text_edit_font.setFamily( font_name );
+	text_edit_font.setPointSize( font_size.toInt() );
 	
 	setFont(text_edit_font);
 
-	//TODO: find a better way to avoid double code
-	{
-		QFile file( QApplication::applicationDirPath()+"/styles/default/editor.css" );
+	QFile file( QApplication::applicationDirPath() + "/styles/default/editor.css" );
 
-		if( file.open( QFile::ReadOnly ) )
-		{
-			setStyleSheet( QLatin1String( file.readAll() ) ) ;
-		}
+	if( file.open( QFile::ReadOnly ) )
+	{
+		setStyleSheet( QLatin1String( file.readAll() ) ) ;
 	}
 }
 
 void SimpleEditor::loadSyntaxXMLDescription()
 {
-	printf("[SimpleEditor::loadSyntaxXMLDescription] Loading syntax\n");
+	QFileInfo file( fileName );
 
-	QString installPath = syntaxPath();
-	QFileInfo file(fileName);
-	QString suffix=file.suffix();
-	
-	if(comands_completion_list.isEmpty())
+	if( comands_completion_list.isEmpty() )
 	{
-		QFile file(syntaxPath()+"commands.txt");
+		QFile file( syntaxPath() + "commands.txt" );
 
-		if (file.open(QFile::ReadOnly))
+		if ( file.open( QFile::ReadOnly ) )
 		{
 			char buf[1024];
 
-			while(file.readLine(buf, sizeof(buf))>=0)
+			while( file.readLine( buf , sizeof( buf ) ) >= 0 )
 			{
-				comands_completion_list.append(QString(buf).trimmed());
+				comands_completion_list.append( QString( buf ).trimmed() );
 			}
 
 			file.close();
 		}
 	}
 
-	QFileInfo xml(installPath+suffix+".xml");
+	QFileInfo xml( syntaxPath() + file.suffix() + ".xml" );
 
 	if( xml.exists() )
 	{
-		printf("[SimpleEditor::loadSyntaxXMLDescription] Loading syntax\n");
-
-		if( syntax==NULL )
+		if( syntax == NULL )
 		{
-			syntax=new Syntax( document() );
-			syntax->load(xml.absoluteFilePath());
-			syntax->setDocument(document());
+			syntax = new Syntax( document() );
+			syntax->load( xml.absoluteFilePath() );
+			syntax->setDocument( document() );
 		}
 		else
 		{
-			syntax->load(xml.absoluteFilePath());
+			syntax->load( xml.absoluteFilePath() );
 		}
 	}
 }
@@ -340,7 +329,7 @@ void SimpleEditor::autoComplete( int /* ATM unused */ , int /* ATM unused */ , i
 {
 	if( charsAdded == 1 )
 	{
-		autoComplete( );
+		autoComplete();
 	}
 }
 

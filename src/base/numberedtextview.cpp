@@ -49,14 +49,11 @@ bugLine(-1)
     stopMarker = QPixmap( QApplication::applicationDirPath() + "/styles/default/images/stop.png" );
     currentMarker = QPixmap( QApplication::applicationDirPath() + "/styles/default/images/bookmark.png" );
 
-	//TODO: find a better way to avoid double code
-	{
-		QFile file( QApplication::applicationDirPath()+"/styles/default/editor/numberbar.css" );
+	QFile file( QApplication::applicationDirPath()+"/styles/default/editor/numberbar.css" );
 
-		if( file.open( QFile::ReadOnly ) )
-		{
-			setStyleSheet( QLatin1String( file.readAll() ) ) ;
-		}
+	if( file.open( QFile::ReadOnly ) )
+	{
+		setStyleSheet( QLatin1String( file.readAll() ) ) ;
 	}
 }
 
@@ -314,7 +311,7 @@ void NumberedTextView::contextMenuPopUp( const QPoint & )
 	contextMenu->popup( QCursor::pos() );
 }
 
-void NumberedTextView::createConnections( )
+void NumberedTextView::createConnections()
 {
 	connect( this , SIGNAL( customContextMenuRequested ( const QPoint & )  ), this, SLOT( contextMenuPopUp( const QPoint & ) ) );
 }

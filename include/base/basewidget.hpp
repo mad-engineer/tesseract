@@ -79,11 +79,11 @@ class BaseWidget:public QMainWindow
 	
 	public slots:
 
-		void showDockableObjects( );
-		void hideDockableObjects( );
+		void showDockableObjects();
+		void hideDockableObjects();
 		void dockObject( QAction *action );
-		void show_in_main_window_callback( );
-		void show_out_main_window_callback( );
+		void show_in_main_window_callback();
+		void show_out_main_window_callback();
 		void dock_destroyed_cb( QObject *obj );
 
 

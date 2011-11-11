@@ -392,7 +392,7 @@ void Main::editor_callback()
 	{
 		const QString editor = get_config( "editor" );
 
-		if( editor.isEmpty( ) )
+		if( editor.isEmpty() )
 		{
 			return;
 		}
@@ -566,17 +566,17 @@ void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 	tools_type["dynamic_help"]=DYNAMIC_HELP;
 	tools_type["variables_list"]=VARIABLESLIST;
 
-	while ( ! xml.atEnd( ) )
+	while ( ! xml.atEnd() )
 	{
-		xml.readNext( );
+		xml.readNext();
 
-		if( xml.isStartElement( ) )
+		if( xml.isStartElement() )
 		{
-			if( xml.name( ) == "tool" )
+			if( xml.name() == "tool" )
 			{
-				QXmlStreamAttributes attr = xml.attributes( );
+				QXmlStreamAttributes attr = xml.attributes();
 
-				QString type = attr.value( "type" ).toString( );
+				QString type = attr.value( "type" ).toString();
 
 				if( ! tools_type.contains( type ) )
 				{
@@ -710,7 +710,7 @@ void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 					;
 				}
 			}
-			else if( ! tools.isEmpty( ) )
+			else if( ! tools.isEmpty() )
 			{
 				QXmlStreamAttributes attr=xml.attributes();
 				switch( tools.last()->widgetType() )

@@ -256,7 +256,7 @@ shared_ptr<Syntax::Rule1st> Syntax::highlight1stBlockRule( const QString & text,
  */
 static void insertInOrder(BlockData *blockData, BlockData::Bracket &bracket)
 {
-	if( blockData->brackets.empty( ) )
+	if( blockData->brackets.empty() )
 	{
 		blockData->brackets.push_back( bracket );
 	}
@@ -273,7 +273,7 @@ static void insertInOrder(BlockData *blockData, BlockData::Bracket &bracket)
 			}
 		}
 
-		if( j>= blockData->brackets.size( ) )
+		if( j>= blockData->brackets.size() )
 		{
 			blockData->brackets.push_back( bracket );
 		}
@@ -561,7 +561,7 @@ void Syntax::setFormatPairBrackets(QPlainTextEdit *textEdit)
 				i=-1;
 			}
 			
-			if( ! block_bracket2.isValid( ) )
+			if( ! block_bracket2.isValid() )
 			{
 				break;
 			}

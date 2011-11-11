@@ -261,7 +261,7 @@ bool BaseWidget::containsBaseWidget( BaseWidget *w )
 	for( int i = 0 ; i < docks.size() ; i++ )
 	{
 		QDockWidget *d = static_cast<QDockWidget *>( docks[i] );
-		BaseWidget *bw = static_cast<BaseWidget *>( d->widget( ) );
+		BaseWidget *bw = static_cast<BaseWidget *>( d->widget() );
 
 		if( bw->containsBaseWidget( w ) )
 		{

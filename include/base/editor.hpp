@@ -82,7 +82,7 @@ class Editor: public BaseWidget
 	QAction *actionUndo, *actionRedo,*actionCut, *actionCopy, *actionPaste;
 	QAction *actionSearch, *actionRun, *actionDebug, *actionStep, *actionSendToOctave;
 	QAction *actionIndent, *actionUnindent, *actionComment, *actionUncomment, *actionSimpleRCS;
-	QAction *actionToggleBreakPoint;
+	QAction *actionToggleBreakPoint, *actionCloseAll;
 
 	QMenu *menuFile, *menuEdit, *menuRun, *menuConfig, *menuDocks, *menuTools;
 
@@ -98,14 +98,33 @@ class Editor: public BaseWidget
 
 	// Creates actions for the Objects
 	void createActions();
+	void createActionsMenu();
+	void createActionsMenuRun();
+	void createActionsMenuFile();
+	void createActionsMenuEdit();
+	void createActionsToolBarMain();
 
 	// Connects the signals with their objects
 	void createConnections();
+	void createConnectionsMenuFile();
+	void createConnectionsMenuEdit();
 
 	// Create and add additional actions to the context menu
 	void createContextMenu();
 
+	void createToolBars();
+	void createToolBarMain();
+
+	void createMenus();
+	void createMenuRun();
+	void createMenuEdit();
+	void createMenuFile();
+	void createMenuDocks();
+	void createMenuConfig();
+
+
 	protected:
+
 		//   void dropEvent ( QDropEvent * event );
 		//   void dragEnterEvent(QDragEnterEvent *event);
 		void closeEvent ( QCloseEvent * event );

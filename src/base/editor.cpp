@@ -49,83 +49,20 @@ toolBar( addToolBar( tr( "Options" ) ) ),
 contextMenu( new QMenu( this ) ),
 tabWidget( new QTabWidget( this ) )
 {
+	// Title
+	setWindowTitle( tr( "Editor" ) );
+	setWindowIcon( QIcon( QApplication::applicationDirPath() + "/styles/default/images/xedit.png" ) );
+
 	widget_type = EDITOR;
 	createActions();
 	createConnections();
+	createMenus();
 	createContextMenu();
-
-	// Title
-	setWindowTitle(tr("Editor"));
-	setWindowIcon( QIcon( QApplication::applicationDirPath() + "/styles/default/images/xedit.png" ) );
+	createToolBars();
 
 	// Layout
-	QVBoxLayout *vLayout = new QVBoxLayout();
-	centralWidget()->setLayout(vLayout);
-	vLayout->setSpacing (0);
-
-	toolBar->setObjectName(tr("Editor Options"));
-
-	connect(toolBar, SIGNAL(actionTriggered(QAction*)),this, SLOT(toolbar_action(QAction*)));
-
-	//Create menus
-	menuFile=menuBar()->addMenu(tr("File"));
-	menuFile->addAction(actionNew);
-	menuFile->addAction(actionOpen);
-	menuFile->addAction(actionSave);
-	menuFile->addAction(actionSaveAs);
-	actionClone=menuFile->addAction(tr("Clone View"));
-	connect(actionClone, SIGNAL(triggered()),this, SLOT(clone_callback()));
-
-	menuFile->addSeparator();
-	actionPrint=menuFile->addAction(tr("Print"));
-	connect(actionPrint, SIGNAL(triggered()),this, SLOT(print_callback()));
-	menuFile->addSeparator();
-	menuFile->addAction(actionClose);
-	menuFile->addSeparator();
-	QAction *actionCloseAll=menuFile->addAction(tr("Close"));
-	connect(actionCloseAll, SIGNAL(triggered()),this, SLOT(close_editor()));
-	//connect(menuFile, SIGNAL(triggered(QAction*)),this, SLOT(toolbar_action(QAction*)));
-
-	menuEdit=menuBar()->addMenu(tr("Edit"));
-
-	connect(menuEdit, SIGNAL(aboutToShow()), this, SLOT(show_edit_menu()));
-
-	menuRun=menuBar()->addMenu(tr("Run"));
-
-	menuRun->addAction(actionRun);
-	menuRun->addAction(actionSendToOctave);
-	menuRun->addAction(actionDebug);
-	menuRun->addAction(actionStep);
-
-	menuRun->addSeparator();
-
-	actionToggleBreakPoint=menuRun->addAction(tr("Toggle breakpoint"));
-	actionToggleBreakPoint->setShortcut(tr("F7"));
-	connect(actionToggleBreakPoint, SIGNAL(triggered()),this, SLOT(toggleBreakPoint_callback()));
-
-	menuTools=menuBar()->addMenu(tr("Tools"));
-	actionIndent=menuTools->addAction(tr("Indent"));
-	connect(actionIndent, SIGNAL(triggered()),this, SLOT(indent_callback()));
-
-	actionUnindent=menuTools->addAction(tr("Unindent"));
-	connect(actionUnindent, SIGNAL(triggered()),this, SLOT(unindent_callback()));
-
-	menuTools->addSeparator();
-	actionComment=menuTools->addAction(tr("Comment"));
-
-	connect(actionComment, SIGNAL(triggered()),this, SLOT(comment_callback()));
-	actionUncomment=menuTools->addAction(tr("Uncomment"));
-
-	connect(actionUncomment, SIGNAL(triggered()),this, SLOT(uncomment_callback()));
-
-	if(get_config("simple_rcs")=="true")
-	{
-		menuTools->addSeparator();
-		actionSimpleRCS=menuTools->addAction("Revision control system (SimpleRCS)");
-		connect(actionSimpleRCS, SIGNAL(triggered()),this, SLOT(simple_rcs_callback()));
-	}
-
-	menuConfig=menuBar()->addMenu(tr("Config"));
+	QVBoxLayout *vLayout = new QVBoxLayout(0);
+	centralWidget()->setLayout( vLayout );
 
 	// TabWidget
 
@@ -163,21 +100,102 @@ tabWidget( new QTabWidget( this ) )
 
 	connect(list_clipboard,SIGNAL(doubleClicked (const QModelIndex &)), this, SLOT(clipboard_double_clicked(const QModelIndex &)) );
 
-	//This menu is builded here because it show objects if they hav been created
-	menuDocks=createPopupMenu();
-	menuDocks->setTitle(tr("Show/Hide Objects"));
-	menuConfig->addMenu(menuDocks);
-
 	//setAcceptDrops(true);
 
-	project_name=tr("Empty");
+	project_name=tr( "Empty" );
 
-	toolbar_action(actionNew);
+	toolbar_action( actionNew );
+}
+
+void Editor::createConnectionsMenuEdit()
+{
+	connect(menuEdit, SIGNAL( aboutToShow() ), this, SLOT(show_edit_menu()));
+	connect(actionIndent, SIGNAL( triggered() ),this, SLOT(indent_callback()));
+	connect(actionUnindent, SIGNAL( triggered() ),this, SLOT(unindent_callback()));
+	connect(actionComment, SIGNAL( triggered() ),this, SLOT(comment_callback()));
+	connect(actionUncomment, SIGNAL( triggered() ),this, SLOT(uncomment_callback()));
+}
+
+void Editor::createMenus()
+{
+	createMenuFile();
+	createMenuEdit();
+	createMenuRun();
+	createMenuDocks();
+	createMenuConfig();
+}
+
+void Editor::createMenuDocks()
+{
+	menuDocks=createPopupMenu();
+	menuDocks->setTitle(tr("Show/Hide Objects"));
+}
+
+void Editor::createMenuConfig()
+{
+	menuConfig=menuBar()->addMenu(tr("Config"));
+	menuConfig->addMenu(menuDocks);
+}
+
+void Editor::createMenuRun()
+{
+	menuRun=menuBar()->addMenu(tr("Run"));
+
+	menuRun->addAction(actionRun);
+	menuRun->addAction(actionSendToOctave);
+	menuRun->addAction(actionDebug);
+	menuRun->addAction(actionStep);
+
+	menuRun->addSeparator();
+
+	menuRun->addAction(actionToggleBreakPoint);
+}
+
+void Editor::createMenuEdit()
+{
+	menuEdit=menuBar()->addMenu(tr("Edit"));
+
+	menuEdit->addAction(actionCopy);
+	menuEdit->addAction(actionPaste);
+	menuEdit->addAction(actionCut);
+
+	menuEdit->addSeparator();
+
+	menuEdit->addAction(actionIndent);
+	menuEdit->addAction(actionUnindent);
+
+	menuEdit->addSeparator();
+
+	menuEdit->addAction(actionComment);
+	menuEdit->addAction(actionUncomment);
+}
+
+void Editor::createMenuFile()
+{
+	menuFile=menuBar()->addMenu(tr("File"));
+
+	menuFile->addAction(actionNew);
+	menuFile->addAction(actionOpen);
+	menuFile->addAction(actionSave);
+	menuFile->addAction(actionSaveAs);
+
+	menuFile->addSeparator();
+
+	menuFile->addAction(actionPrint);
+
+	menuFile->addSeparator();
+
+	menuFile->addAction(actionClone);
+
+	menuFile->addSeparator();
+
+	menuFile->addAction(actionClose);
+
 }
 
 void Editor::resizeEvent( QResizeEvent * /* ATM unused */ )
 {
-	bool notDocked = isWindow();
+	const bool notDocked = isWindow();
 
 	if( isHidden() )
 	{
@@ -202,7 +220,7 @@ void Editor::resizeEvent( QResizeEvent * /* ATM unused */ )
 	}
 	else
 	{
-		assert(false);
+		BOOST_ASSERT_MSG(false,"Could not open editor stylesheet file.");
 	}
 
 	file.close();
@@ -224,7 +242,7 @@ void Editor::resizeEvent( QResizeEvent * /* ATM unused */ )
 	}
 	else
 	{
-		assert(false);
+		BOOST_ASSERT_MSG(false,"Could not open tab widget stylesheet file.");
 	}
 
 	file.close();
@@ -246,7 +264,7 @@ void Editor::resizeEvent( QResizeEvent * /* ATM unused */ )
 	}
 	else
 	{
-		assert(false);
+		BOOST_ASSERT_MSG(false,"Could not open clipboard stylesheet file.");
 	}
 
 	file.close();
@@ -268,7 +286,7 @@ void Editor::resizeEvent( QResizeEvent * /* ATM unused */ )
 	}
 	else
 	{
-		assert(false);
+		BOOST_ASSERT_MSG(false,"Could not open editor menubar stylesheet file.");
 	}
 
 	file.close();
@@ -290,7 +308,7 @@ void Editor::resizeEvent( QResizeEvent * /* ATM unused */ )
 	}
 	else
 	{
-		assert(false);
+		BOOST_ASSERT_MSG(false,"Could not open editor stylesheet file.");
 	}
 
 	file.close();
@@ -312,93 +330,49 @@ void Editor::resizeEvent( QResizeEvent * /* ATM unused */ )
 	}
 	else
 	{
-		assert(false);
+		BOOST_ASSERT_MSG(false,"Could not open editor filelist stylesheet file.");
 	}
 
 	file.close();
 
 }
 
+void Editor::createActionsMenu()
+{
+	createActionsMenuFile();
+	createActionsMenuRun();
+	createActionsMenuEdit();
+}
+
+//void Editor::createActionsMenuTools()
+//{
+//	//actionToggleBreakPoint = QAction( tr("Insert Breakpoint") , tr("F9") );
+//}
+
+void Editor::createActionsMenuFile()
+{
+	actionClone = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/test.png") , tr("Clone View") , NULL );
+	actionClone->setShortcut( tr("Alt+P") );
+	
+	actionPrint = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/print.png") , tr("Print") , NULL );
+	actionPrint->setShortcut(  tr("Ctrl+P") );
+
+	actionCloseAll = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/exit.png") , tr("Close") , NULL );
+	actionCloseAll->setShortcut( tr("Ctrl+X") );
+}
+
+void Editor::createActionsMenuRun()
+{
+	actionToggleBreakPoint = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/breakpoint.png") , tr("Insert breakpoint") , NULL );
+	actionToggleBreakPoint->setShortcut( tr("F9") );
+}
+
 void Editor::createActions() 
 {
-	// Toolbar & Context Menu
-	actionNew = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/filenew.png"), tr("New"));
-	actionNew->setShortcut(tr("Ctrl+N"));
-	actionNew->setShortcutContext(Qt::WindowShortcut);
-
-	actionOpen = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/fileopen.png"), tr("Open"));
-	actionOpen->setShortcut(tr("Ctrl+O"));
-	actionOpen->setShortcutContext(Qt::WindowShortcut);
-
-	actionSave = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/filesave.png"), tr("Save"));
-	actionSave->setShortcut(tr("Ctrl+S"));
-	actionSave->setShortcutContext(Qt::WindowShortcut);
-
-	actionSaveAs = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/filesaveas.png"), tr("Save as"));
-	actionClose = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/fileclose.png"), tr("Close tab"));
-	toolBar->addSeparator();
-
-	actionRun = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/run.png"), tr("Run"));
-	actionRun->setShortcut(tr("Shift+F5"));
-	actionRun->setShortcutContext(Qt::WindowShortcut);
-
-	actionDebug = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/debug.png"), tr("Debug"));
-	actionDebug->setShortcut(tr("F5"));
-	actionDebug->setShortcutContext(Qt::WindowShortcut);
-
-	actionDebug->setToolTip
-	(
-		"<html>"
-		"<b>Debug:</b>"
-		"<p>Octave includes a built-in debugger to aid in the development of scripts. This can be used to interrupt the execution of an Octave script at a certain point.</p>"
-		"<p>Click over this button to start debugging or continue to next breakpoint.</p>"
-		"</html>"
-	);
-
-	actionDebug->setShortcut(tr("F6"));
-	actionStep = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/step.png"), tr("Detailed debugging"));
-	actionStep->setShortcut(tr("Shift+F6"));
-	actionStep->setEnabled(false);
-	actionSendToOctave=toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/console.png"), tr("Send to Octave") );
-	actionSendToOctave->setShortcut(tr("F9"));
-	actionSendToOctave->setShortcutContext(Qt::WindowShortcut);
-
-	actionSendToOctave->setToolTip
-	(
-		"<html>"
-		"<b>Send to Octave:</b>"
-		"<p>Sends selected text to Octave. If there is not selected text, the full text will be sent.</p>"
-		"</html>"
-	);
-
-	toolBar->addSeparator();
-
-	actionUndo = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/undo.png"), tr("Undo"));
-	actionUndo->setShortcut(tr("Ctrl+Z"));
-	actionUndo->setShortcutContext(Qt::WindowShortcut);
-
-	actionRedo = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/redo.png"), tr("Redo"));
-	actionRedo->setShortcut(tr("Ctrl+Shift+Z"));
-	actionRedo->setShortcutContext(Qt::WindowShortcut);
-	
-	actionCut = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/editcut.png"), tr("Cut"));
-	actionCut->setShortcut(tr("Ctrl+X"));
-	actionCut->setShortcutContext(Qt::WindowShortcut);
-	
-	actionCopy = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/editcopy.png"), tr("Copy"));
-	actionCopy->setShortcut(tr("Ctrl+C"));
-	actionCopy->setShortcutContext(Qt::WindowShortcut);
-	
-	actionPaste = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/editpaste.png"),  tr("Paste"));
-	actionPaste->setShortcut(tr("Ctrl+V"));
-	actionPaste->setShortcutContext(Qt::WindowShortcut);
-
-	toolBar->addSeparator();
-
-	actionSearch = toolBar->addAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/find.png"),  tr("Search and replace"));
-	actionSearch->setShortcut(tr("Ctrl+F"));
-	actionSearch->setShortcutContext(Qt::WindowShortcut);
-
+	createActionsMenu();
+	createActionsMenuEdit();
+//	createActionsMenuTools();
+	createActionsToolBarMain();
 	//newFolder = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/newfolder.png"), tr("&New folder"), this);
 	//exit = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/close.bmp"), tr("Exit"), this);
 
@@ -413,29 +387,174 @@ void Editor::createActions()
 	//rename = new QAction(tr("Rename"), this);
 }
 
+void Editor::createActionsMenuEdit()
+{
+	actionIndent = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/indent.png") , tr("Indent") , NULL );
+	actionIndent->setShortcut( tr("Ctrl+I") );
+
+	actionUnindent = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/outdent.png") , tr("Outdent") , NULL );
+	actionUnindent->setShortcut(  tr("Ctrl+O")  );
+
+	actionComment = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/comment.png") , tr("Comment") , NULL );
+	actionComment->setShortcut( tr("Ctrl+K") );
+
+	actionUncomment = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/uncomment.png") , tr("Uncomment") , NULL );
+	actionUncomment->setShortcut( tr("Ctrl+L") );
+}
+
+void Editor::createActionsToolBarMain()
+{
+	actionNew = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/filenew.png"), tr("New"),NULL);
+	actionNew->setShortcut(tr("Ctrl+N"));
+	actionNew->setShortcutContext(Qt::WindowShortcut);
+
+	actionOpen = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/fileopen.png"), tr("Open"),NULL);
+	actionOpen->setShortcut(tr("Ctrl+O"));
+	actionOpen->setShortcutContext(Qt::WindowShortcut);
+
+	actionSave = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/filesave.png"), tr("Save"),NULL);
+	actionSave->setShortcut(tr("Ctrl+S"));
+	actionSave->setShortcutContext(Qt::WindowShortcut);
+
+	actionSaveAs = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/filesaveas.png"), tr("Save as"),NULL);
+	actionClose = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/fileclose.png"), tr("Close tab"),NULL);
+
+	actionRun = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/run.png"), tr("Run"),NULL);
+	actionRun->setShortcut(tr("Shift+F5"));
+	actionRun->setShortcutContext(Qt::WindowShortcut);
+
+	actionDebug = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/debug.png"), tr("Debug"),NULL);
+	actionDebug->setShortcut(tr("F5"));
+	actionDebug->setShortcutContext(Qt::WindowShortcut);
+
+	actionDebug->setToolTip
+	(
+		"<html>"
+		"<b>Debug:</b>"
+		"<p>Octave includes a built-in debugger to aid in the development of scripts. This can be used to interrupt the execution of an Octave script at a certain point.</p>"
+		"<p>Click over this button to start debugging or continue to next breakpoint.</p>"
+		"</html>"
+	);
+
+	actionStep = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/step.png"), tr("Detailed debugging"),NULL);
+	actionStep->setShortcut(tr("Shift+F6"));
+	actionStep->setEnabled(false);
+
+	actionSendToOctave = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/console.png"), tr("Send to Octave"),NULL);
+	actionSendToOctave->setShortcut(tr("F9"));
+	actionSendToOctave->setShortcutContext(Qt::WindowShortcut);
+
+	actionSendToOctave->setToolTip
+	(
+		"<html>"
+		"<b>Send to Octave:</b>"
+		"<p>Sends selected text to Octave. If there is not selected text, the full text will be sent.</p>"
+		"</html>"
+	);
+
+	actionUndo = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/undo.png"), tr("Undo"),NULL);
+	actionUndo->setShortcut(tr("Ctrl+Z"));
+	actionUndo->setShortcutContext(Qt::WindowShortcut);
+
+	actionRedo = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/redo.png"), tr("Redo"),NULL);
+	actionRedo->setShortcut(tr("Ctrl+Shift+Z"));
+	actionRedo->setShortcutContext(Qt::WindowShortcut);
+
+	actionCut = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/editcut.png"), tr("Cut"),NULL);
+	actionCut->setShortcut(tr("Ctrl+X"));
+	actionCut->setShortcutContext(Qt::WindowShortcut);
+
+	actionCopy = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/editcopy.png"), tr("Copy"),NULL);
+	actionCopy->setShortcut(tr("Ctrl+C"));
+	actionCopy->setShortcutContext(Qt::WindowShortcut);
+
+	actionPaste = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/editpaste.png"),  tr("Paste"),NULL);
+	actionPaste->setShortcut(tr("Ctrl+V"));
+	actionPaste->setShortcutContext(Qt::WindowShortcut);
+
+	actionSearch = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/find.png"),  tr("Search and replace"),NULL);
+	actionSearch->setShortcut(tr("Ctrl+F"));
+	actionSearch->setShortcutContext(Qt::WindowShortcut);
+}
+
 void Editor::customContextMenuPopUp( const QPoint & /*pos*/)
 {
-	contextMenu->popup( QCursor::pos( ) );
+	menuEdit->popup( QCursor::pos() );
 }
 
 void Editor::createContextMenu()
 {
-	QList<QAction *> actions;
-	actions.reserve( 5 );
+	//QList<QAction *> actions;
+	//actions.reserve( 3 );
 
-	actions.append( actionCopy );
-	actions.append( actionPaste );
-	actions.append( actionCut );
-//	actions.append( actionComment );
-//	actions.append( actionUncomment );
+	//actions.append( actionCopy );
+	//actions.append( actionPaste );
+	//actions.append( actionCut );
+	
+	// contextMenu->addActions( menuEdit->actions() );
+	
+	//contextMenu->addSeparator();
 
-	contextMenu->addActions( actions );
+	//QList<QAction *> actions2;
+	//actions.reserve( 2 );
+
+	//actions2.append( actionComment );
+	//actions2.append( actionUncomment );
+	//actions2.append( actionComment );
+	//actions2.append( actionUncomment );
+
 }
+
+void Editor::createToolBars()
+{
+	createToolBarMain();
+}
+
+// Toolbar & Context Menu
+void Editor::createToolBarMain()
+{
+	toolBar->addAction(actionNew);
+	toolBar->addAction(actionOpen);
+	toolBar->addAction(actionSave);
+	toolBar->addAction(actionSaveAs);
+	toolBar->addAction(actionClose);
+
+	toolBar->addSeparator();
+
+	toolBar->addAction(actionRun);
+	toolBar->addAction(actionDebug);
+	toolBar->addAction(actionStep);
+	toolBar->addAction(actionSendToOctave);
+
+	toolBar->addSeparator();
+
+	toolBar->addAction(actionUndo);
+	toolBar->addAction(actionRedo);
+	toolBar->addAction(actionCut);
+	toolBar->addAction(actionCopy);
+	toolBar->addAction(actionPaste);
+
+	toolBar->addSeparator();
+
+	toolBar->addAction(actionSearch);
+
+	toolBar->setObjectName(tr("Editor Options"));
+}
+
 
 void Editor::createConnections()
 {
+	connect( toolBar, SIGNAL( actionTriggered( QAction* ) ) , this , SLOT( toolbar_action( QAction* ) ) );
+	connect( actionClone , SIGNAL( triggered() ), this , SLOT( clone_callback() ) );
 	//connect( currentNtv->textEdit() , SIGNAL( customContextMenuRequested ( const QPoint & )  ), this, SLOT( customContextMenuPopUp( const QPoint & ) ) );
 }
+
+void Editor::createConnectionsMenuFile()
+{
+	connect(actionPrint, SIGNAL( triggered() ),this, SLOT(print_callback()));
+	connect(actionCloseAll, SIGNAL( triggered() ),this, SLOT(close_editor()));
+	connect(actionToggleBreakPoint, SIGNAL( triggered() ),this, SLOT(toggleBreakPoint_callback()));
+};
 
 Editor::~Editor()
 {
@@ -539,7 +658,7 @@ void Editor::toolbar_action( QAction *action )
 		/** Open **/
 		openFile();
 	}
-	else if(action == actionSave && !currentNtv->path().isEmpty( ) )	
+	else if(action == actionSave && !currentNtv->path().isEmpty() )	
 	{
 		/* Save */
 		if( currentNtv->save() )
@@ -888,14 +1007,14 @@ void Editor::textModified()
 
 		QPlainTextEdit *text = ntv->textEdit();
 		
-		const QString tmptext = ( ntv->path().isEmpty() ) ? tr("New") : ntv->path().split("/").last( );
+		const QString tmptext = ( ntv->path().isEmpty() ) ? tr("New") : ntv->path().split("/").last();
 		setTabText( i , ( text->document()->isModified() ) ? tmptext + "*" : tmptext );
 	}
 }
 
 void Editor::closeEvent ( QCloseEvent * event )
 {
-	for( int i = 0 ; i < tabWidget->count( ) ; i++ )
+	for( int i = 0 ; i < tabWidget->count() ; i++ )
 	{
 		if( static_cast<NumberedTextView*>( tabWidget->widget( i ) )->modified() )
 		{
@@ -992,7 +1111,7 @@ void Editor::closeTabs(bool close_all_tabs)
 	}
 	else
 	{
-		tabChanged( tabWidget->currentIndex( ) );
+		tabChanged( tabWidget->currentIndex() );
 	}
 
 	updateFileList();
@@ -1085,7 +1204,7 @@ BaseWidget *Editor::copyBaseWidget(QWidget * parent )
 
 		code->setModified( false );
 
-		if( ! code->path().isEmpty( ) )
+		if( ! code->path().isEmpty() )
 		{
 			bw->setTabText(bw->tabWidget->currentIndex(), code->path().split("/").last());
 		}
@@ -1098,7 +1217,7 @@ void Editor::setTabText( int index , const QString & label )
 {
 	tabWidget->setTabText( index , label );
 
-	updateFileList( );
+	updateFileList();
 }
 
 void Editor::updateFileList()

@@ -81,8 +81,6 @@ MainWindow::MainWindow(OctaveConnection *oc, Session *session, QWidget *parent):
 		{
 			menuBar()->setStyleSheet( QLatin1String( file.readAll() ) ) ;
 		}
-
-		int test = menuBar()->size().height();
 	}
 
 	//TODO: find a better way to avoid double code
@@ -511,7 +509,7 @@ QAction *MainWindow::createAction(const QString &action_name, const char *name, 
 
 	QAction *a = new QAction(this);
 	
-	if( ! icon.isEmpty( ) ) 
+	if( ! icon.isEmpty() ) 
 	{
 		a->setIcon(QIcon(icon));
 	}

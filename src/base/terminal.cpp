@@ -296,7 +296,7 @@ void Terminal::remove_lines(QTextCursor &cursor)
 		cursor.movePosition(QTextCursor::EndOfBlock);
 		lines++;
 
-		if( cursor.atEnd( ) )
+		if( cursor.atEnd() )
 		{
 			QTextBlock block=cursor.block();
 			

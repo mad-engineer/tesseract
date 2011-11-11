@@ -191,7 +191,7 @@ void Help::textChanged ( const QString & text )
 	emit dynamic_help_required(text);
 }
 
-Help::~Help ( )
+Help::~Help ()
 {
 }
 
