@@ -69,7 +69,7 @@ MainWindow::MainWindow(OctaveConnection *oc, Session *session, QWidget *parent):
 
 		if( file.open( QFile::ReadOnly ) )
 		{
-			setStyleSheet( QLatin1String( file.readAll() ) ) ;
+			setStyleSheet( QLatin1String( file.readAll() ) );
 		}
 	}
 
@@ -79,7 +79,7 @@ MainWindow::MainWindow(OctaveConnection *oc, Session *session, QWidget *parent):
 
 		if( file.open( QFile::ReadOnly ) )
 		{
-			menuBar()->setStyleSheet( QLatin1String( file.readAll() ) ) ;
+			menuBar()->setStyleSheet( QLatin1String( file.readAll() ) );
 		}
 	}
 
@@ -89,7 +89,7 @@ MainWindow::MainWindow(OctaveConnection *oc, Session *session, QWidget *parent):
 
 		if( file.open( QFile::ReadOnly ) )
 		{
-			toolBarRun->setStyleSheet( QLatin1String( file.readAll() ) ) ;
+			toolBarRun->setStyleSheet( QLatin1String( file.readAll() ) );
 		}
 
 		toolBarRun->setMaximumHeight(24);
@@ -101,7 +101,7 @@ MainWindow::MainWindow(OctaveConnection *oc, Session *session, QWidget *parent):
 
 		if( file.open( QFile::ReadOnly ) )
 		{
-			toolBarMatrix->setStyleSheet( QLatin1String( file.readAll() ) ) ;
+			toolBarMatrix->setStyleSheet( QLatin1String( file.readAll() ) );
 		}
 
 		toolBarMatrix->setMaximumHeight(24);
@@ -113,7 +113,7 @@ MainWindow::MainWindow(OctaveConnection *oc, Session *session, QWidget *parent):
 
 		if( file.open( QFile::ReadOnly ) )
 		{
-			toolBarHelp->setStyleSheet( QLatin1String( file.readAll() ) ) ;
+			toolBarHelp->setStyleSheet( QLatin1String( file.readAll() ) );
 		}
 
 		toolBarHelp->setMaximumHeight(24);
@@ -125,7 +125,7 @@ MainWindow::MainWindow(OctaveConnection *oc, Session *session, QWidget *parent):
 
 		if( file.open( QFile::ReadOnly ) )
 		{
-			toolBarDocks->setStyleSheet( QLatin1String( file.readAll() ) ) ;
+			toolBarDocks->setStyleSheet( QLatin1String( file.readAll() ) );
 		}
 
 		toolBarDocks->setMaximumHeight(24);

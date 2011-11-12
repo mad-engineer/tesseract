@@ -84,7 +84,7 @@ class Editor: public BaseWidget
 	QAction *actionIndent, *actionUnindent, *actionComment, *actionUncomment, *actionSimpleRCS;
 	QAction *actionToggleBreakPoint, *actionCloseAll;
 
-	QMenu *menuFile, *menuEdit, *menuRun, *menuConfig, *menuDocks, *menuTools;
+	QMenu *menuFile, *menuEdit, *menuRun, *menuConfig, *menuDocks, *menuTools, *menuContext;
 
 	void saveProject();
 
@@ -109,9 +109,6 @@ class Editor: public BaseWidget
 	void createConnectionsMenuFile();
 	void createConnectionsMenuEdit();
 
-	// Create and add additional actions to the context menu
-	void createContextMenu();
-
 	void createToolBars();
 	void createToolBarMain();
 
@@ -121,20 +118,20 @@ class Editor: public BaseWidget
 	void createMenuFile();
 	void createMenuDocks();
 	void createMenuConfig();
-
+	void createMenuContext();
 
 	protected:
 
-		//   void dropEvent ( QDropEvent * event );
-		//   void dragEnterEvent(QDragEnterEvent *event);
-		void closeEvent ( QCloseEvent * event );
+		// void dropEvent ( QDropEvent * event );
+		// void dragEnterEvent(QDragEnterEvent *event);
+		void closeEvent( QCloseEvent * event );
 		void resizeEvent( QResizeEvent * event );
 
 
 	public slots:
 
 		/**Execute actions as copy, paste, save, run, ...*/
-		void toolbar_action(QAction*);
+		void toolbar_action( QAction * );
 
 		/**Search word inserted in dialog in code.*/
 		void search();
@@ -143,25 +140,28 @@ class Editor: public BaseWidget
 		void replace();
 
 		/**Put/Quit break point to debug Octave code.*/
-		void toggleBreakpoint(int lineno);
+		void toggleBreakpoint( int lineno );
 
 		/**Another document is selected to edit.*/
-		void tabChanged(int index);
+		void tabChanged( int index );
+		
+		// Close tab by clicking on x
+		void closeTab( int index );
 
 		/**Sets actual document modify flag true or false.*/
 		void textModified();
 
 		/**Starts debug of Octave code.*/
-		void debug(int lineno, int colno);
+		void debug( int lineno , int colno );
 
 		/**Ends of debug of Octave code.*/
 		void endDebug();
 
 		/**File selected in list file*/
-		void file_selected(const QModelIndex & index);
+		void file_selected( const QModelIndex & index );
 
 		/**Open file.*/
-		void openFile( const QString &file=QString() );
+		void openFile( const QString &file = QString() );
 
 		/**Emits dynamic_help_required*/
 		void emit_dynamic_help_required( const QString &text );
@@ -211,7 +211,7 @@ class Editor: public BaseWidget
 		~Editor();
 
 		/**Set conection with Octave.*/
-		void setOctaveConnection(OctaveConnection *octave_connection);
+		void setOctaveConnection( OctaveConnection *oc );
 
 		/**Gets active project name.*/
 		QString getProject();
@@ -220,9 +220,9 @@ class Editor: public BaseWidget
 		void loadFiles(const QStringList &files);
 
 		/**Close one tab. If close_all_tabs== true close all tabs. It's usefull for load projects.*/
-		void closeTabs(bool close_all_tabs);
+		void closeTabs( bool close_all_tabs );
 
-		void setSession(Session *session);
+		void setSession( Session *session );
 		BaseWidget *copyBaseWidget( QWidget * parent = 0 );
 };
 

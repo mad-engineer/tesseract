@@ -46,7 +46,7 @@ bugLine(-1)
     // Make room for 4 digits and the breakpoint icon
 	setFixedWidth( fontMetrics().width( QString("0000") + 10 + 32 ) );
 	bugMarker = QPixmap( QApplication::applicationDirPath() + "/styles/default/images/bug.png" );
-    stopMarker = QPixmap( QApplication::applicationDirPath() + "/styles/default/images/stop.png" );
+    stopMarker = QPixmap( QApplication::applicationDirPath() + "/styles/default/images/breakpoint.png" );
     currentMarker = QPixmap( QApplication::applicationDirPath() + "/styles/default/images/bookmark.png" );
 
 	QFile file( QApplication::applicationDirPath()+"/styles/default/editor/numberbar.css" );
@@ -225,18 +225,23 @@ bool NumberBar::event( QEvent *event )
 }
 
 QList<int> *NumberBar::getBreakpoints()
-{
+{  
   return &breakpoints;
 }
 
 
 
-NumberedTextView::NumberedTextView( QWidget *parent, SimpleEditor *textEdit )
-: QFrame( parent )
+NumberedTextView::NumberedTextView( QWidget *parent , SimpleEditor *textEdit ) : 
+QFrame( parent ),
+view( textEdit ),
+numbers( new NumberBar( this ) ),
+vbox( new QVBoxLayout(this) ),
+hbox( new QHBoxLayout() ),
+line_column_label( new QLabel( this ) ),
+textModifiedOk( false )
 {
 	setLineWidth( 2 );
-	
-	view = textEdit;
+
 	view->installEventFilter( this );
 
 	createContextMenu();
@@ -246,40 +251,31 @@ NumberedTextView::NumberedTextView( QWidget *parent, SimpleEditor *textEdit )
 	connect( view, SIGNAL(cursorPositionChanged()), this, SLOT(cursor_moved_cb()) );
 	
 	// Setup the line number pane
-	numbers = new NumberBar( this );
 	numbers->setTextEdit( view );
 
-	vbox = new QVBoxLayout(this);
 	vbox->setSpacing( 0 );
 	vbox->setMargin( 0 );
 	
-	hbox = new QHBoxLayout;
-	vbox->addLayout(hbox);
+	vbox->addLayout( hbox );
 	
 	hbox->setSpacing( 0 );
 	hbox->setMargin( 0 );
 	hbox->addWidget( numbers );
 	hbox->addWidget( view );
-
-	textModifiedOk=false;
 	
-	QHBoxLayout *messages_layout= new QHBoxLayout();
-	vbox->addLayout(messages_layout);
+	QHBoxLayout *messages_layout = new QHBoxLayout();
+	vbox->addLayout( messages_layout );
 
 	messages_layout->setMargin( 0 );
 	messages_layout->setSpacing( 0 );
 
+	QFile file( QApplication::applicationDirPath()+"/styles/default/editor/numberbar.css" );
+
+	if( file.open( QFile::ReadOnly ) )
 	{
-		QFile file( QApplication::applicationDirPath()+"/styles/default/editor/numberbar.css" );
-
-		if( file.open( QFile::ReadOnly ) )
-		{
-			setStyleSheet( QLatin1String( file.readAll() ) ) ;
-		}
+		setStyleSheet( QLatin1String( file.readAll() ) ) ;
 	}
-
-	line_column_label=new QLabel( this );
-
+	
 	line_column_label->setText(" Line: 1 Col: 1");
 	messages_layout->addWidget(line_column_label);
 	line_column_label->show();

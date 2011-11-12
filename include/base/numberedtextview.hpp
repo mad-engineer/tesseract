@@ -77,7 +77,6 @@ class NumberBar : public QWidget
 		void paintEvent( QPaintEvent *ev );
 };
 
-
 /**
  * Displays a CodeEdit with line numbers.
  */
@@ -189,5 +188,3 @@ class NumberedTextView : public QFrame
 };
 
 #endif
-
-
