@@ -54,11 +54,11 @@ tabWidget( new QTabWidget( this ) )
 	setWindowIcon( QIcon( QApplication::applicationDirPath() + "/styles/default/images/xedit.png" ) );
 
 	widget_type = EDITOR;
+
 	createActions();
-	createConnections();
 	createMenus();
-	createContextMenu();
 	createToolBars();
+	createConnections();
 
 	// Layout
 	QVBoxLayout *vLayout = new QVBoxLayout(0);
@@ -109,7 +109,7 @@ tabWidget( new QTabWidget( this ) )
 
 void Editor::createConnectionsMenuEdit()
 {
-	connect(menuEdit, SIGNAL( aboutToShow() ), this, SLOT(show_edit_menu()));
+//	connect(menuEdit, SIGNAL( aboutToShow() ), this, SLOT(show_edit_menu()));
 	connect(actionIndent, SIGNAL( triggered() ),this, SLOT(indent_callback()));
 	connect(actionUnindent, SIGNAL( triggered() ),this, SLOT(unindent_callback()));
 	connect(actionComment, SIGNAL( triggered() ),this, SLOT(comment_callback()));
@@ -390,16 +390,16 @@ void Editor::createActions()
 void Editor::createActionsMenuEdit()
 {
 	actionIndent = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/indent.png") , tr("Indent") , NULL );
-	actionIndent->setShortcut( tr("Ctrl+I") );
+	actionIndent->setShortcut( tr("Ctrl+Tab") );
 
 	actionUnindent = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/outdent.png") , tr("Outdent") , NULL );
-	actionUnindent->setShortcut(  tr("Ctrl+O")  );
+	actionUnindent->setShortcut(  tr("Shift+Tab")  );
 
 	actionComment = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/comment.png") , tr("Comment") , NULL );
 	actionComment->setShortcut( tr("Ctrl+K") );
 
 	actionUncomment = new QAction( QIcon(QApplication::applicationDirPath() + "/styles/default/images/uncomment.png") , tr("Uncomment") , NULL );
-	actionUncomment->setShortcut( tr("Ctrl+L") );
+	actionUncomment->setShortcut( tr("Ctrl+U") );
 }
 
 void Editor::createActionsToolBarMain()
@@ -544,6 +544,8 @@ void Editor::createToolBarMain()
 
 void Editor::createConnections()
 {
+	createConnectionsMenuFile();
+	createConnectionsMenuEdit();
 	connect( toolBar, SIGNAL( actionTriggered( QAction* ) ) , this , SLOT( toolbar_action( QAction* ) ) );
 	connect( actionClone , SIGNAL( triggered() ), this , SLOT( clone_callback() ) );
 	//connect( currentNtv->textEdit() , SIGNAL( customContextMenuRequested ( const QPoint & )  ), this, SLOT( customContextMenuPopUp( const QPoint & ) ) );

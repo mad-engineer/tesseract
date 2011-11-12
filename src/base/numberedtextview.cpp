@@ -657,84 +657,71 @@ static QString startLineRemoveText(QString str, const  QStringList &textToRemove
 
 void NumberedTextView::indent()
 {
-	//QTextDocument *doc=textEdit()->document();
+	QTextCursor cursor( textEdit()->textCursor() );
 	
-	QTextCursor cursor(textEdit()->textCursor());
-	
-	if( !cursor.hasSelection() )
+	if( cursor.hasSelection() )
 	{
-		return;
+		QString str=cursor.selectedText();
+
+		str=startLineInsertText( str , "\t" );
+
+		cursor.insertText(str);
+
+		cursor.setPosition(cursor.position()-str.size() , QTextCursor::KeepAnchor );
+		textEdit()->setTextCursor(cursor);
 	}
-	
-	QString str=cursor.selectedText();
-	
-	str=startLineInsertText( str , "\t" );
-	
-	cursor.insertText(str);
-	cursor.setPosition(cursor.position()-str.size(), QTextCursor::KeepAnchor);
-	textEdit()->setTextCursor(cursor);
 }
 
 void NumberedTextView::unindent()
 {
-	//QTextDocument *doc=textEdit()->document();
-	
 	QTextCursor cursor(textEdit()->textCursor());
 	
-	if( !cursor.hasSelection() )
+	if( cursor.hasSelection() )
 	{
-		return;
+		QString str=cursor.selectedText();
+
+		QStringList textToRemove;
+		textToRemove << "\t" << " ";
+		str=startLineRemoveText(str, textToRemove);
+
+		cursor.insertText(str);
+		cursor.setPosition(cursor.position()-str.size(), QTextCursor::KeepAnchor);
+		textEdit()->setTextCursor(cursor);
 	}
-	
-	QString str=cursor.selectedText();
-	
-	QStringList textToRemove;
-	textToRemove << "\t" << " ";
-	str=startLineRemoveText(str, textToRemove);
-	
-	cursor.insertText(str);
-	cursor.setPosition(cursor.position()-str.size(), QTextCursor::KeepAnchor);
-	textEdit()->setTextCursor(cursor);
 }
 
 void NumberedTextView::comment()
 {
-	//QTextDocument *doc=textEdit()->document();
+	QTextCursor cursor( textEdit()->textCursor() );
 	
-	QTextCursor cursor(textEdit()->textCursor());
-	
-	if( !cursor.hasSelection() )
+	if( cursor.hasSelection() )
 	{
-		return;
+		QString str = cursor.selectedText();
+
+		str = startLineInsertText( str , "% " );
+
+		cursor.insertText( str );
+		cursor.setPosition( cursor.position() - str.size() , QTextCursor::KeepAnchor );
+		textEdit()->setTextCursor( cursor );
 	}
-	
-	QString str=cursor.selectedText();
-	
-	str=startLineInsertText(str, "%");
-	
-	cursor.insertText(str);
-	cursor.setPosition(cursor.position()-str.size(), QTextCursor::KeepAnchor);
-	textEdit()->setTextCursor(cursor);
 }
 
 void NumberedTextView::uncomment()
 {
-	//QTextDocument *doc=textEdit()->document();
+	QTextCursor cursor( textEdit()->textCursor() );
 	
-	QTextCursor cursor(textEdit()->textCursor());
-	
-	if( !cursor.hasSelection() ) 
+	if( cursor.hasSelection() ) 
 	{
-		return;
+		QString str=cursor.selectedText();
+
+		QStringList textToRemove;
+
+		textToRemove << "% " << "#" << "# ";
+
+		str = startLineRemoveText( str , textToRemove );
+
+		cursor.insertText( str );
+		cursor.setPosition( cursor.position() - str.size() , QTextCursor::KeepAnchor );
+		textEdit()->setTextCursor( cursor );
 	}
-	
-	QString str=cursor.selectedText();
-	
-	QStringList textToRemove;
-	textToRemove << "%" << "#";
-	str=startLineRemoveText(str, textToRemove);
-	
-	cursor.insertText(str);
-	cursor.setPosition(cursor.position()-str.size(), QTextCursor::KeepAnchor);
-	textEdit()->setTextCursor(cursor);
 }
