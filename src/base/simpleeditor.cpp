@@ -36,13 +36,13 @@ completer( new QStringListModel( this ) ),
 syntaxCompleterModel( new QCompleter( completer , this ) )
 {
 	{
-		QTextDocument *tmpdoc=new QTextDocument();
-		tmpdoc->setProperty("DocumentReferences", QVariant(0));
+		QTextDocument *tmpdoc = new QTextDocument();
+		tmpdoc->setProperty("DocumentReferences", QVariant( 0 ) );
 		
-		QPlainTextDocumentLayout *layout=new QPlainTextDocumentLayout(tmpdoc);
-		tmpdoc->setDocumentLayout(layout);
+		QPlainTextDocumentLayout *layout = new QPlainTextDocumentLayout( tmpdoc );
+		tmpdoc->setDocumentLayout( layout );
 
-		setDocument(tmpdoc);
+		setDocument( tmpdoc );
 	}
 
 	syntaxCompleterModel->setCompletionMode(QCompleter::PopupCompletion);
@@ -57,7 +57,7 @@ syntaxCompleterModel( new QCompleter( completer , this ) )
 	
 	if( get_config( "autoCompletion" ) != "false" )
 	{
-		connect(document(), SIGNAL(contentsChange(int, int, int)), this, SLOT(autoComplete(int, int, int)));
+		connect( document() , SIGNAL( contentsChange( int , int , int ) ) , this , SLOT( autoComplete( int , int , int ) ) );
 	}
 	
 	auto_indent=( "false"!=get_config("autoindent") );

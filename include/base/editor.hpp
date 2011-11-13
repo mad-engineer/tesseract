@@ -89,7 +89,7 @@ class Editor: public BaseWidget
 	void saveProject();
 
 	/**Defines a new label for the page at position index's tab and updates list_files*/
-	void setTabText(int index, const QString & label);
+	void setTabText( int index , const QString & label );
 	/**Updates list_files*/
 	void updateFileList();
 

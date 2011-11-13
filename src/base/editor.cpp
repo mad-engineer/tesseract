@@ -104,7 +104,7 @@ menuContext( new QMenu( this ) )
 
 	//setAcceptDrops(true);
 
-	project_name=tr( "Empty" );
+	project_name = tr( "Empty" );
 
 	toolbar_action( actionNew );
 }
@@ -120,9 +120,9 @@ void Editor::createConnectionsMenuEdit()
 
 void Editor::createMenus()
 {
+	createMenuRun();
 	createMenuFile();
 	createMenuEdit();
-	createMenuRun();
 	createMenuDocks();
 	createMenuConfig();
 	createMenuContext();
@@ -130,19 +130,19 @@ void Editor::createMenus()
 
 void Editor::createMenuDocks()
 {
-	menuDocks=createPopupMenu();
+	menuDocks = createPopupMenu();
 	menuDocks->setTitle( tr( "Show/Hide Objects" ) );
 }
 
 void Editor::createMenuConfig()
 {
-	menuConfig=menuBar()->addMenu( tr( "Config" ) );
+	menuConfig = menuBar()->addMenu( tr( "Config" ) );
 	menuConfig->addMenu(menuDocks);
 }
 
 void Editor::createMenuRun()
 {
-	menuRun=menuBar()->addMenu( tr( "Run" ) );
+	menuRun = menuBar()->addMenu( tr( "Run" ) );
 
 	menuRun->addAction( actionRun );
 	menuRun->addAction( actionDebug );
@@ -156,7 +156,7 @@ void Editor::createMenuRun()
 
 void Editor::createMenuEdit()
 {
-	menuEdit=menuBar()->addMenu( tr( "Edit" ) );
+	menuEdit = menuBar()->addMenu( tr( "Edit" ) );
 
 	menuEdit->addAction( actionCopy );
 	menuEdit->addAction( actionPaste );
@@ -184,7 +184,7 @@ void Editor::createMenuContext()
 
 void Editor::createMenuFile()
 {
-	menuFile=menuBar()->addMenu( tr( "File" ) );
+	menuFile = menuBar()->addMenu( tr( "File" ) );
 
 	menuFile->addAction( actionNew );
 	menuFile->addAction( actionOpen );
@@ -624,8 +624,7 @@ void Editor::toolbar_action( QAction *action )
 		SimpleEditor *codeEdit = new SimpleEditor( this );
 		NumberedTextView *ntv = new NumberedTextView( this , codeEdit );
 
-		connect( ntv->textEdit()      , SIGNAL( toggleBreakpoint( int )                       ) , this , SLOT( toggleBreakpoint( int )                       ) );
-		connect( codeEdit->document() , SIGNAL( modificationChanged( bool )                   ) , this , SLOT( textModified( bool )                          ) );
+		connect( ntv      , SIGNAL( textModified() ) , this , SLOT( textModified() ) );
 		connect( ntv->textEdit()      , SIGNAL( customContextMenuRequested ( const QPoint & ) ) , this , SLOT( customContextMenuPopUp( const QPoint & )      ) );
 		connect( codeEdit             , SIGNAL( dynamic_help_required( const QString & )      ) , this , SLOT( emit_dynamic_help_required( const QString & ) ) );
 		
@@ -868,7 +867,7 @@ void Editor::closeTab( int index )
 		}
 
 		disconnect( oldNtv->textEdit()             , SIGNAL( toggleBreakpoint( int )                       ) , this , SLOT( toggleBreakpoint( int )                       ) );
-		disconnect( oldNtv->textEdit()->document() , SIGNAL( modificationChanged( bool )                   ) , this , SLOT( textModified( bool )                          ) );
+		disconnect( oldNtv->textEdit()->document() , SIGNAL( modificationChanged( int , int , int )        ) , this , SLOT( textModified( int , int , int )                          ) );
 		disconnect( oldNtv->textEdit()             , SIGNAL( customContextMenuRequested ( const QPoint & ) ) , this , SLOT( customContextMenuPopUp( const QPoint & )      ) );
 		disconnect( oldNtv->textEdit()             , SIGNAL( dynamic_help_required( const QString & )      ) , this , SLOT( emit_dynamic_help_required( const QString & ) ) );
 
@@ -1041,9 +1040,9 @@ void Editor::tabChanged(int index)
 
 void Editor::textModified()
 {
-	for( int i = 0 ; i < tabWidget-> count() ; i++ )
+	for( int i = 0 ; i < tabWidget->count() ; i++ )
 	{
-		NumberedTextView *ntv = static_cast<NumberedTextView*>( tabWidget->widget(i) );
+		NumberedTextView *ntv = static_cast<NumberedTextView*>( tabWidget->widget( i ) );
 
 		if( ntv == NULL )
 		{
@@ -1053,7 +1052,7 @@ void Editor::textModified()
 		QPlainTextEdit *text = ntv->textEdit();
 		
 		const QString tmptext = ( ntv->path().isEmpty() ) ? tr("New") : ntv->path().split("/").last();
-		setTabText( i , ( text->document()->isModified() ) ? tmptext + "*" : tmptext );
+		setTabText( i , tmptext + "*" );
 	}
 }
 

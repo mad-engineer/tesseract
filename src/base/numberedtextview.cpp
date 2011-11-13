@@ -405,7 +405,7 @@ void NumberedTextView::textChanged( int /*pos*/, int removed, int added )
     }
     */
     
-    if( !textModifiedOk && view->document()->isModified() )
+    if( ! textModifiedOk )
     {
     	textModifiedOk=true;
     	emit textModified();

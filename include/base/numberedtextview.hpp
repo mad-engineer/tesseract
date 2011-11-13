@@ -83,6 +83,7 @@ class NumberBar : public QWidget
 class NumberedTextView : public QFrame
 {
     Q_OBJECT
+
 	QMenu *contextMenu;
 	QString filePath;
 	QLabel *line_column_label;
@@ -97,9 +98,11 @@ class NumberedTextView : public QFrame
 	void createConnections();
 	void createContextMenu();
 
+
 	protected:
 
 		void contextMenuEvent ( QContextMenuEvent * event );
+
 
 	public:
 
@@ -140,7 +143,7 @@ class NumberedTextView : public QFrame
 		void setBugLine( int lineno );
 
 		/** @internal Used to get tooltip events from the view for the hover signal. */
-		bool eventFilter( QObject *obj, QEvent *event );
+		bool eventFilter( QObject *obj , QEvent *event );
 	    
 		/**Indent selected text.*/
 		void indent();
@@ -156,6 +159,7 @@ class NumberedTextView : public QFrame
 
 
 	signals:
+
 		/**
 		 * Emitted when the mouse is hovered over the text edit component.
 		 * @param word The word under the mouse pointer
