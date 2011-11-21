@@ -16,6 +16,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <iostream>
+
 #include <QFile>
 #include <QStack>
 #include <QXmlStreamReader>
