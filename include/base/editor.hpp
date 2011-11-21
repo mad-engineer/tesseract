@@ -120,6 +120,10 @@ class Editor: public BaseWidget
 	void createMenuConfig();
 	void createMenuContext();
 
+	bool saveAll();
+	bool saveTab();
+	bool saveAsTab();
+
 	protected:
 
 		// void dropEvent ( QDropEvent * event );

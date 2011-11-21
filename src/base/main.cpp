@@ -496,10 +496,10 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 
 		case NAVIGATOR:
 		{
-			Navigator *nav=new Navigator(parent);
-			nav->setOctaveConnection(oc.get());
-			nav->setSession(&session);
-			w=nav;
+			Navigator *nav = new Navigator( parent );
+			nav->setOctaveConnection( oc.get() );
+			nav->setSession( &session );
+			w = nav;
 			break;
 		}
 

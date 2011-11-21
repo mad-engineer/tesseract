@@ -121,8 +121,8 @@ class Navigator : public BaseWidget
 		// Public Methods
 		void setOctaveConnection(OctaveConnection *oc);
 		
-		QString getNavigatorCurrentPath();
-		void setNavigatorCurrentPath(QString path);
+		QString getNavigatorCurrentPath() const;
+		bool setNavigatorCurrentPath(const QString &path );
 
 	public slots:
 		void expanded(const QModelIndex &index);
@@ -142,7 +142,7 @@ class Navigator : public BaseWidget
 		void filter_cb(const QString &s);
 		void change_cursor_cb(const QModelIndex &index);
 		/**Sets active project name.*/
-		void setProject(QString name);
+		void setProject( const QString &name );
 };
 
 

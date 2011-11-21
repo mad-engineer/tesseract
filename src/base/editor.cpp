@@ -48,7 +48,9 @@ search_dialog( NULL ),
 toolBar( addToolBar( tr( "Options" ) ) ),
 contextMenu( new QMenu( this ) ),
 tabWidget( new QTabWidget( this ) ),
-menuContext( new QMenu( this ) )
+menuContext( new QMenu( this ) ),
+list_files_dock( new QDockWidget( tr("File list") , this ) ),
+project_name( tr( "Empty" ) )
 {
 	// Title
 	setWindowTitle( tr( "Editor" ) );
@@ -76,7 +78,6 @@ menuContext( new QMenu( this ) )
 	vLayout->addWidget( tabWidget );
 
 	//List of files
-	list_files_dock = new QDockWidget( tr("File list") , this );
 	list_files_dock->setObjectName(list_files_dock->windowTitle());
 	addDockWidget(Qt::LeftDockWidgetArea, list_files_dock);
 	//list_files_dock->show();
@@ -104,7 +105,6 @@ menuContext( new QMenu( this ) )
 
 	//setAcceptDrops(true);
 
-	project_name = tr( "Empty" );
 
 	toolbar_action( actionNew );
 }
@@ -614,10 +614,6 @@ void Editor::setOctaveConnection( OctaveConnection *oc )
 
 void Editor::toolbar_action( QAction *action )
 {
-	QStringList filters;
-
-	filters << "Octave (*.m; *.M)" << "Plain text (*.txt)" << "All files (*.*)";
-	
 	/** New **/
 	if( action == actionNew )
 	{
@@ -637,70 +633,19 @@ void Editor::toolbar_action( QAction *action )
 		/** Open **/
 		openFile();
 	}
-	else if( action == actionSave && !currentNtv->path().isEmpty() )	
+	else if( action == actionSave )	
 	{
-		/* Save */
-		if( currentNtv->save() )
-		{
-			setTabText(tabWidget->currentIndex(), currentNtv->path().split("/").last());
-		}
-		else
-		{
-			QMessageBox::critical(NULL, tr("Error"), tr("Can not be saved"));
-		}
+		saveTab();
 	}
-	else if( action == actionSaveAs || ( action == actionSave && currentNtv->path().isEmpty() ) ) 	
+	else if( action == actionSaveAs ) 	
 	{
-		/** Save as **/
-		QString path;
-		QFileDialog saveDialog(this, Qt::Dialog);
-
-		saveDialog.setAcceptMode(QFileDialog::AcceptSave);
-		saveDialog.setDefaultSuffix("m");
-		saveDialog.setFilters(filters);
-
-		//Use Navigator path if current path is empty
-		if(currentNtv->path().isEmpty())
-		{
-		   QObject *obj= session->getFirstTool( NAVIGATOR );
-
-		   if( obj != NULL )
-		   {
-			   Navigator *nav= static_cast<Navigator*>( obj );
-			   saveDialog.setDirectory(nav->getNavigatorCurrentPath());
-		   }
-		}
-		else
-		{
-			QFileInfo current_file(currentNtv->path());
-			saveDialog.setDirectory(current_file.absolutePath());
-			saveDialog.selectFile(current_file.baseName());
-		}
-
-		if(saveDialog.exec() == QDialog::Accepted)
-		{
-			path = saveDialog.selectedFiles().first();
-
-			if(currentNtv->save(path))
-			{
-				setTabText(tabWidget->currentIndex(), currentNtv->path().split("/").last());
-			}
-			else
-			{
-				QMessageBox::critical(NULL, tr("Error"), path + tr("can not be saved"));
-			}
-		}
+		saveAsTab();
 	}
 	else if( action == actionRun )
 	{
-		//if(currentNtv->path().isEmpty())
-		//{
-		//	QMessageBox::critical(NULL, tr("Error"), tr("You must save the file first"));
-		//	return;
-		//}
 		if( currentNtv->modified() ) 
 		{
-			toolbar_action(actionSave);
+			saveTab();
 		}
 
 		QFileInfo finfo(currentNtv->path());
@@ -819,6 +764,81 @@ void Editor::toolbar_action( QAction *action )
 	{
 		BOOST_ASSERT_MSG( false , "Unhandled action" );
 	}
+}
+
+/*
+* This function will be called if save all is pressed
+*/
+bool Editor::saveAll()
+{
+	return true;
+}
+
+/*
+* This function will be called if save is pressed.
+* It calls save as if the path variable is empty.
+*/
+bool Editor::saveTab()
+{
+	if( ! currentNtv->path().isEmpty() )	
+	{
+		if( currentNtv->save() )
+		{
+			setTabText( tabWidget->currentIndex() , currentNtv->path().split( "/" ).last() );
+			return true;
+		}
+		else
+		{
+			QMessageBox::critical( NULL , tr("Error") , tr( "Can not be saved" ) );
+			return false;
+		}
+	}
+	else
+	{
+		return saveAsTab();
+	}
+}
+
+/* 
+* This function will be called if save is pressed but no path is set
+* or if save as is pressed.
+*/
+bool Editor::saveAsTab()
+{
+
+	QStringList filters;
+	filters << "Octave (*.m; *.M)" << "Plain text (*.txt)" << "All files (*.*)";
+
+	QFileDialog saveDialog( this , Qt::Dialog );
+	
+	saveDialog.setFilters( filters );
+	saveDialog.setDefaultSuffix( "m" );
+	saveDialog.setAcceptMode( QFileDialog::AcceptSave );
+
+	//Use Navigator path if current path is empty
+	if( currentNtv->path().isEmpty() )
+	{
+		QObject *obj= session->getFirstTool( NAVIGATOR );
+
+		if( obj != NULL )
+		{
+			saveDialog.setDirectory( static_cast<Navigator*>( obj )->getNavigatorCurrentPath() );
+		}
+	}
+	else
+	{
+		QFileInfo current_file( currentNtv->path() );
+		saveDialog.setDirectory( current_file.absolutePath() );
+		saveDialog.selectFile( current_file.baseName() );
+	}
+
+	if( saveDialog.exec() == QDialog::Accepted )
+	{
+		currentNtv->setPath( saveDialog.selectedFiles().first() );
+		return saveTab();
+	}
+
+	return false;
 }
 
 void Editor::closeTab( int index )
@@ -1044,13 +1064,11 @@ void Editor::textModified()
 	{
 		NumberedTextView *ntv = static_cast<NumberedTextView*>( tabWidget->widget( i ) );
 
-		if( ntv == NULL )
+		if( ( ! ntv->modified() ) || ntv == NULL )
 		{
 			continue;
 		}
 
-		QPlainTextEdit *text = ntv->textEdit();
-		
 		const QString tmptext = ( ntv->path().isEmpty() ) ? tr("New") : ntv->path().split("/").last();
 		setTabText( i , tmptext + "*" );
 	}
@@ -1120,7 +1138,7 @@ void Editor::closeTabs( bool close_all_tabs )
 
 		// Borrar
 		//tabWidget->removeTab(tabWidget->currentIndex());
-		disconnect(currentNtv->textEdit()->document(), SIGNAL(modificationChanged (bool)), this, SLOT(textModified(bool)));
+		disconnect( currentNtv , SIGNAL( textModified() ) , this , SLOT( textModified() ) );
 		NumberedTextView *ntv=currentNtv;
 		currentNtv=NULL;
 		//TODO: Check if another view (clone view) is using the same document object

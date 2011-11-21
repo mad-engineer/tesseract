@@ -32,6 +32,8 @@
 #include <QModelIndex>
 #include <QMessageBox>
 
+#include <boost/assert.hpp>
+
 #include "config.hpp"
 #include "navigator.hpp"
 
@@ -108,16 +110,16 @@ void Navigator::createActions()
 	menu->addAction(up);
 }*/
 
-void Navigator::setSession(Session *session)
+void Navigator::setSession( Session *session )
 {
 	//Sets octave_connection to NULL to not change dir at creation
 	//Uses last pwd in Octave.
 	OctaveConnection *oc=octave_connection;
 	octave_connection=NULL;
 	
-	BaseWidget::setSession(session);
-	setProject(session->getProjectName());
-	connect(session, SIGNAL(projectChanged(QString)), this, SLOT(setProject(QString)) );
+	BaseWidget::setSession( session );
+	setProject( session->getProjectName() );
+	connect( session , SIGNAL( projectChanged( QString ) ) , this , SLOT( setProject( QString ) ) );
 	
 	//Restore octave_connection
 	octave_connection=oc;
@@ -236,11 +238,9 @@ void Navigator::createLayout()
 	layout->addWidget(listview,1);
 }
 
-QString Navigator::getNavigatorCurrentPath()
+QString Navigator::getNavigatorCurrentPath() const
 {
-	QModelIndex root = listview->rootIndex();
-	QString rootPath = listmodel->filePath(root);
-	return rootPath;
+	return listmodel->filePath( listview->rootIndex() );
 }
 
 Navigator::~Navigator()
@@ -260,15 +260,14 @@ Navigator::~Navigator()
 	configuration["navigator_start_path"]=values;
 	set_config(configuration);
 	
-	if(project_name.isEmpty()) Projects::saveNavigatorPath("Empty", getNavigatorCurrentPath());
-	else Projects::saveNavigatorPath(project_name, getNavigatorCurrentPath());
+	Projects::saveNavigatorPath( project_name.isEmpty() ? "Empty" : project_name , getNavigatorCurrentPath() );
 }
 
-void Navigator::setProject(QString name)
+void Navigator::setProject( const QString &name )
 {
-	project_name=name;
+	project_name = name;
 	
-	setNavigatorCurrentPath(Projects::navigatorPath(name));
+	setNavigatorCurrentPath( Projects::navigatorPath( name ) );
 }
 
 void Navigator::createConnections()
@@ -464,14 +463,19 @@ void Navigator::urlButtonPressed(bool /*checked*/)
 	setNavigatorCurrentPath( url->lineEdit()->text() );
 }
 
-void Navigator::setNavigatorCurrentPath(QString path)
+bool Navigator::setNavigatorCurrentPath( const QString &path )
 {
-	if( path.isEmpty() ) return;
+	if( path.isEmpty() )
+	{
+		//BOOST_ASSERT_MSG( false , "void Navigator::setNavigatorCurrentPath( const QString &path ) : path is empty" );
+		return false;
+	}
 	
-	QModelIndex next = listmodel->index(path);
+	QModelIndex next = listmodel->index( path );
 	
-	if (next.isValid()) {
-		emit expanded(next);
+	if ( next.isValid() ) 
+	{
+		emit expanded( next );
 	}
 }
 

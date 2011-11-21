@@ -407,7 +407,7 @@ void NumberedTextView::textChanged( int /*pos*/, int removed, int added )
     
     if( ! textModifiedOk )
     {
-    	textModifiedOk=true;
+    	textModifiedOk = true;
     	emit textModified();
     }
 }
