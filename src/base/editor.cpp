@@ -1053,7 +1053,6 @@ void Editor::tabChanged(int index)
 	//printf("Activado %d\n", index);
 	//if(currentNtv!=NULL)
 	//	disconnect(currentNtv->textEdit(), SIGNAL(toggleBreakpoint(int)), this, SLOT(toggleBreakpoint(int)));
-	currentNtv = static_cast<NumberedTextView*>( tabWidget->widget(index) );
 	//setWindowTitle(tabWidget->tabText(index));
 	//connect(currentNtv->textEdit(), SIGNAL(toggleBreakpoint(int)), this, SLOT(toggleBreakpoint(int)));
 	ListModel *list = static_cast<ListModel*>( list_files->model() );
