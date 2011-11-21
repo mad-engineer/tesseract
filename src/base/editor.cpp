@@ -620,13 +620,15 @@ void Editor::toolbar_action( QAction *action )
 		SimpleEditor *codeEdit = new SimpleEditor( this );
 		NumberedTextView *ntv = new NumberedTextView( this , codeEdit );
 
-		connect( ntv      , SIGNAL( textModified() ) , this , SLOT( textModified() ) );
-		connect( ntv->textEdit()      , SIGNAL( customContextMenuRequested ( const QPoint & ) ) , this , SLOT( customContextMenuPopUp( const QPoint & )      ) );
-		connect( codeEdit             , SIGNAL( dynamic_help_required( const QString & )      ) , this , SLOT( emit_dynamic_help_required( const QString & ) ) );
+		connect( ntv			 , SIGNAL( textModified() )								   , this , SLOT( textModified()								) );
+		connect( ntv->textEdit() , SIGNAL( customContextMenuRequested ( const QPoint & ) ) , this , SLOT( customContextMenuPopUp( const QPoint & )      ) );
+		connect( codeEdit        , SIGNAL( dynamic_help_required( const QString & )      ) , this , SLOT( emit_dynamic_help_required( const QString & ) ) );
 		
 		currentNtv = ntv;
 		ntv->textEdit()->setContextMenuPolicy( Qt::CustomContextMenu );
 		tabWidget->setCurrentIndex( tabWidget->addTab(ntv, tr("New")) );
+
+		updateFileList();
 	}
 	else if( action == actionOpen ) 	
 	{
@@ -1298,7 +1300,7 @@ void Editor::updateFileList()
 
 	for(int i=0;i<tabWidget->count();i++)
 	{
-		model->append(tabWidget->tabText(i), i);
+		model->append( tabWidget->tabText( i ) , i );
 	}
 
 	model->update();
