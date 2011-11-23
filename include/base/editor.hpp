@@ -78,7 +78,7 @@ class Editor: public BaseWidget
 	NumberedTextView *currentNtv;
 
 	// Actions
-	QAction *actionNew, *actionOpen, *actionSave, *actionSaveAs, *actionPrint, *actionClose, *actionClone;
+	QAction *actionNew, *actionOpen, *actionSave,*actionSaveAll, *actionSaveAs, *actionPrint, *actionClose, *actionClone;
 	QAction *actionUndo, *actionRedo,*actionCut, *actionCopy, *actionPaste;
 	QAction *actionSearch, *actionRun, *actionDebug, *actionStep, *actionSendToOctave;
 	QAction *actionIndent, *actionUnindent, *actionComment, *actionUncomment, *actionSimpleRCS;

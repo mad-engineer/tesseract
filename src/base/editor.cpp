@@ -189,6 +189,7 @@ void Editor::createMenuFile()
 	menuFile->addAction( actionNew );
 	menuFile->addAction( actionOpen );
 	menuFile->addAction( actionSave );
+	menuFile->addAction( actionSaveAll );
 	menuFile->addAction( actionSaveAs );
 
 	menuFile->addSeparator();
@@ -422,6 +423,10 @@ void Editor::createActionsToolBarMain()
 	actionSave->setShortcut(tr("Ctrl+S"));
 	actionSave->setShortcutContext(Qt::WindowShortcut);
 
+	actionSaveAll = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/filesaveall.png"), tr("Save All") , this );
+	actionSaveAll->setShortcut(tr("Ctrl+Shift+S"));
+	actionSaveAll->setShortcutContext(Qt::WindowShortcut);
+
 	actionSaveAs = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/filesaveas.png"), tr("Save as") , this );
 	actionClose = new QAction(QIcon(QApplication::applicationDirPath() + "/styles/default/images/fileclose.png"), tr("Close tab") , this );
 
@@ -500,6 +505,7 @@ void Editor::createToolBarMain()
 	toolBar->addAction( actionOpen );
 	toolBar->addAction( actionSave );
 	toolBar->addAction( actionSaveAs );
+	toolBar->addAction( actionSaveAll );
 	toolBar->addAction( actionClose );
 
 	toolBar->addSeparator();
@@ -626,7 +632,7 @@ void Editor::toolbar_action( QAction *action )
 		
 		currentNtv = ntv;
 		ntv->textEdit()->setContextMenuPolicy( Qt::CustomContextMenu );
-		tabWidget->setCurrentIndex( tabWidget->addTab(ntv, tr("New")) );
+		tabWidget->setCurrentIndex( tabWidget->addTab( ntv , tr( "New" ) ) );
 
 		updateFileList();
 	}
@@ -643,6 +649,10 @@ void Editor::toolbar_action( QAction *action )
 	{
 		saveAsTab();
 	}
+	else if( action == actionSaveAll )
+	{
+		saveAll();
+	}
 	else if( action == actionRun )
 	{
 		if( currentNtv->modified() ) 
@@ -650,9 +660,9 @@ void Editor::toolbar_action( QAction *action )
 			saveTab();
 		}
 
-		QFileInfo finfo(currentNtv->path());
-		octave_connection->command_enter(QString("cd '") + finfo.path() + "'",false);
-		octave_connection->command_enter(QString("source (\"") +  finfo.fileName() + "\")",false);
+		QFileInfo finfo( currentNtv->path() );
+		octave_connection->command_enter( QString("cd '") + finfo.path() + "'" , false );
+		octave_connection->command_enter( QString("source (\"") +  finfo.fileName() + "\")" , false );
 	}
 	else if( action == actionDebug )
 	{
@@ -764,7 +774,7 @@ void Editor::toolbar_action( QAction *action )
 	}
 	else
 	{
-		BOOST_ASSERT_MSG( false , "Unhandled action" );
+		BOOST_ASSERT_MSG( false , "Unhanded action" );
 	}
 }
 
@@ -773,6 +783,20 @@ void Editor::toolbar_action( QAction *action )
 */
 bool Editor::saveAll()
 {
+	const int currentIndex = tabWidget->currentIndex();
+
+	for( int i = 0 ; i < tabWidget->count() ; i++ )
+	{
+		tabWidget->setCurrentIndex( i );
+		
+		if( ! saveTab() )
+		{
+			return false;
+		}
+	}
+
+	tabWidget->setCurrentIndex( currentIndex );
+
 	return true;
 }
 
@@ -1009,15 +1033,15 @@ void Editor::replace()
 {
 	QTextCursor cursor = currentNtv->textEdit()->textCursor();
 
-	if(!cursor.selectedText().isEmpty())
+	if( ! cursor.selectedText().isEmpty() )
 	{
-		int pos=cursor.position();
-		cursor.insertText(search_dialog->replaceString());
-		cursor.setPosition(pos);
-		currentNtv->textEdit()->setTextCursor(cursor);
+		int pos = cursor.position();
+		cursor.insertText( search_dialog->replaceString() );
+		cursor.setPosition( pos);
+		currentNtv->textEdit()->setTextCursor( cursor );
 	}
 
-	//Next line is comented because editor loose cursor
+	//Next line is commented because editor loose cursor
 	//search();
 }
 
@@ -1048,8 +1072,9 @@ void Editor::endDebug()
 	);
 }
 
-void Editor::tabChanged(int index)
+void Editor::tabChanged( int index )
 {
+	currentNtv = static_cast< NumberedTextView * >( tabWidget->widget( index ) );
 	//printf("Activado %d\n", index);
 	//if(currentNtv!=NULL)
 	//	disconnect(currentNtv->textEdit(), SIGNAL(toggleBreakpoint(int)), this, SLOT(toggleBreakpoint(int)));
@@ -1187,11 +1212,11 @@ void Editor::closeTabs( bool close_all_tabs )
 
 void Editor::newEditorTab()
 {
-	toolbar_action(actionNew);
+	toolbar_action( actionNew );
 	updateFileList();
 }
 
-void Editor::loadFiles(const QStringList &files)
+void Editor::loadFiles( const QStringList &files )
 {
 	QString path;
 
@@ -1251,7 +1276,7 @@ BaseWidget *Editor::copyBaseWidget( QWidget * parent )
 {
 	saveProject();
 
-	Editor *bw=new Editor(parent);
+	Editor *bw = new Editor(parent);
 
 	bw->setSession(session);
 	bw->octave_connection=octave_connection;
@@ -1265,7 +1290,7 @@ BaseWidget *Editor::copyBaseWidget( QWidget * parent )
 	{
 		NumberedTextView *code= static_cast<NumberedTextView*>( tabWidget->widget( i ) );
 
-		if( i != 0 )
+		if( i != NULL )
 		{
 			bw->toolbar_action(bw->actionNew);
 		}
@@ -1305,7 +1330,7 @@ void Editor::updateFileList()
 	model->update();
 }
 
-void Editor::file_selected(const QModelIndex & index)
+void Editor::file_selected( const QModelIndex & index )
 {
 	ListModel *model = static_cast<ListModel*>( list_files->model() );
 	tabWidget->setCurrentIndex(model->position(index));
@@ -1442,9 +1467,9 @@ void ListModel::update()
 	//printf("[ListModel::update] %d Fin\n",list.size());
 }
 
-QModelIndex ListModel::position_index(int position)
+QModelIndex ListModel::position_index( int position )
 {
-	for(int i=0;i<list.size();i++)
+	for( int i=0 ; i < list.size() ; i++ )
 	{
 		if( list[i].position == position )
 		{
@@ -1488,9 +1513,7 @@ QStringList ListModel::mimeTypes() const
 	return types;
 }
 
-///////
-
-ClipboardListView::ClipboardListView(QWidget *parent):
+ClipboardListView::ClipboardListView( QWidget *parent ):
 QListView(parent)
 {
 	_stringModel = new QStringListModel(parent);

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <syntax>
+	<item name="hyperlinks">
+		<pattern>
+			/^%.?(((http|ftp|https):\/{2})?(([0-9a-z_-]+\.)+([a-z]{2,3})(:[0-9]+)?((\/([~0-9a-zA-Z\#\+\%@\.\/_-]+))?(\?[0-9a-zA-Z\+\%@\/&amp;\[\];=_-]+)?)?))\b/imu
+		</pattern>
+		<bold>false</bold>
+		<foreground>#0000FF</foreground>
+		<underline>true</underline>
+	</item>
+
 	<item name="constants">
 		<pattern>
 			\b(inf|Inf|INF|pi|Pi|PI|nan|NaN)\b
