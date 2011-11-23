@@ -549,7 +549,7 @@ bool NumberedTextView::save( QString path )
 
 const QString &NumberedTextView::path()
 {
-  return filePath;
+	return filePath;
 }
 
 void NumberedTextView::setPath(const QString &path )

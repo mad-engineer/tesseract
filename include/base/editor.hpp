@@ -124,6 +124,9 @@ class Editor: public BaseWidget
 	bool saveTab();
 	bool saveAsTab();
 
+	void connectTabSignals( int tabindex );
+	void disconnectTabSignals( int tabindex );
+
 	protected:
 
 		// void dropEvent ( QDropEvent * event );
@@ -211,17 +214,17 @@ class Editor: public BaseWidget
 
 	public:
 
-		Editor(QWidget *parent);
+		Editor( QWidget *parent );
 		~Editor();
 
 		/**Set conection with Octave.*/
 		void setOctaveConnection( OctaveConnection *oc );
 
 		/**Gets active project name.*/
-		QString getProject();
+		const QString getProject() const;
 
 		/**Load a list of files.*/
-		void loadFiles(const QStringList &files);
+		void loadFiles( const QStringList &files );
 
 		/**Close one tab. If close_all_tabs== true close all tabs. It's usefull for load projects.*/
 		void closeTabs( bool close_all_tabs );

@@ -623,18 +623,18 @@ void Editor::toolbar_action( QAction *action )
 	/** New **/
 	if( action == actionNew )
 	{
-		SimpleEditor *codeEdit = new SimpleEditor( this );
-		NumberedTextView *ntv = new NumberedTextView( this , codeEdit );
+		NumberedTextView *ntv = new NumberedTextView( this , new SimpleEditor( this ) );
 
-		connect( ntv			 , SIGNAL( textModified() )								   , this , SLOT( textModified()								) );
-		connect( ntv->textEdit() , SIGNAL( customContextMenuRequested ( const QPoint & ) ) , this , SLOT( customContextMenuPopUp( const QPoint & )      ) );
-		connect( codeEdit        , SIGNAL( dynamic_help_required( const QString & )      ) , this , SLOT( emit_dynamic_help_required( const QString & ) ) );
-		
-		currentNtv = ntv;
+		// Enable custom context menu
 		ntv->textEdit()->setContextMenuPolicy( Qt::CustomContextMenu );
-		tabWidget->setCurrentIndex( tabWidget->addTab( ntv , tr( "New" ) ) );
 
-		updateFileList();
+		const int actTabIndex =  tabWidget->addTab( ntv , tr( "New" ) );
+
+		tabWidget->setCurrentIndex( actTabIndex );
+
+		connectTabSignals( actTabIndex );
+
+		currentNtv = ntv;
 	}
 	else if( action == actionOpen ) 	
 	{
@@ -669,14 +669,15 @@ void Editor::toolbar_action( QAction *action )
 		/** Run */
 		if( currentNtv->path().isEmpty() )
 		{
-		  QMessageBox::critical(NULL, tr("Error"), tr("You must save the file first"));
+		  QMessageBox::critical( NULL , tr( "Error" ) , tr( "You must save the file first" ) );
+
 		  return;
 		}
 
 		// Debug?
 		if( actionStep->isEnabled() )
 		{
-			octave_connection->command_enter(QString("dbcont"));
+			octave_connection->command_enter( QString( "dbcont" ) );
 		}
 		else
 		{
@@ -869,70 +870,66 @@ bool Editor::saveAsTab()
 
 void Editor::closeTab( int index )
 {
-	NumberedTextView *oldNtv = static_cast<NumberedTextView*>( tabWidget->widget(index) );
+	NumberedTextView *oldNtv = static_cast< NumberedTextView * >( tabWidget->widget( index ) );
 
-	if( oldNtv )
+	const bool modified = currentNtv->modified();
+	const bool emptypath = currentNtv->path().isEmpty();
+	const bool emptydoc = currentNtv->textEdit()->toPlainText().isEmpty();
+
+	const bool test1 = modified && ( ! emptypath );
+	const bool test2 = modified && ( ! emptydoc ) && emptypath;
+
+	if( test1 || test2 )
 	{
-		const bool modified = currentNtv->modified();
-		const bool emptypath = currentNtv->path().isEmpty();
-		const bool emptydoc = currentNtv->textEdit()->toPlainText().isEmpty();
+		QMessageBox msg
+		(
+			tr( "Close" ), 
+			tr( "The document has been modified. Save changes?" ),
+			QMessageBox::Question,
+			QMessageBox::Yes, 
+			QMessageBox::No,
+			QMessageBox::Cancel | QMessageBox::Default,
+			this
+		);
 
-		const bool test1 = modified && ! emptypath;
-		const bool test2 = modified && ! emptydoc && emptypath;
-
-		if( test1 || test2 )
+		switch( msg.exec() )
 		{
-			QMessageBox msg
-			(
-				tr( "Close" ), 
-				tr( "The document has been modified. Save changes?" ),
-				QMessageBox::Question,
-				QMessageBox::Yes, 
-				QMessageBox::No,
-				QMessageBox::Cancel | QMessageBox::Default,
-				this
-			);
-
-			switch( msg.exec() )
+			case QMessageBox::Yes:
 			{
-				case QMessageBox::Yes:
-				{
-					toolbar_action( actionSave );
+				toolbar_action( actionSave );
 
-					break;
-				}
-				case QMessageBox::No:
-				{
-					break;
-				}
-				default:
-				{
-					return;
-				}
+				break;
+			}
+			case QMessageBox::No:
+			{
+				break;
+			}
+			default:
+			{
+				return;
 			}
 		}
-
-		disconnect( oldNtv->textEdit()             , SIGNAL( toggleBreakpoint( int )                       ) , this , SLOT( toggleBreakpoint( int )                       ) );
-		disconnect( oldNtv->textEdit()->document() , SIGNAL( modificationChanged( int , int , int )        ) , this , SLOT( textModified( int , int , int )                          ) );
-		disconnect( oldNtv->textEdit()             , SIGNAL( customContextMenuRequested ( const QPoint & ) ) , this , SLOT( customContextMenuPopUp( const QPoint & )      ) );
-		disconnect( oldNtv->textEdit()             , SIGNAL( dynamic_help_required( const QString & )      ) , this , SLOT( emit_dynamic_help_required( const QString & ) ) );
-
-		tabWidget->removeTab( index );
-
-		currentNtv = static_cast<NumberedTextView*>( tabWidget->currentWidget() );
-
-		delete oldNtv;
 	}
 
-	// Add the first tab at start
-	if( tabWidget->count() == 0 )
+	// Disconnect the signals from the obsolete tab
+	disconnectTabSignals( index );
+
+	// If it was the last tab then a new empty tab will be generated
+	if( tabWidget->count() == 1 )
 	{
 		toolbar_action( actionNew );
 	}
-	else
-	{
-		tabChanged( index );
-	}
+
+	tabWidget->removeTab( index );
+
+	delete oldNtv;
+
+	const int actTabIndex = tabWidget->currentIndex();
+
+	tabChanged( actTabIndex );
+
+	// Connect signals to the new tab
+	connectTabSignals( actTabIndex );
 
 	updateFileList();
 }
@@ -977,13 +974,11 @@ void Editor::openFile( const QString &file )
 
 void Editor::setProject( const QString &name )
 {
-	project_name=name;
-	closeTabs(true);
-
+	project_name = name;
 	loadFiles( Projects::listFiles( project_name ) );
 }
 
-QString Editor::getProject()
+const QString Editor::getProject() const
 {
 	return project_name;
 }
@@ -1072,16 +1067,47 @@ void Editor::endDebug()
 	);
 }
 
-void Editor::tabChanged( int index )
+/**
+*	This method will be called through 
+*	a signal if the active tab is changed.
+*/
+void Editor::tabChanged( int tabindex )
 {
-	currentNtv = static_cast< NumberedTextView * >( tabWidget->widget( index ) );
-	//printf("Activado %d\n", index);
-	//if(currentNtv!=NULL)
-	//	disconnect(currentNtv->textEdit(), SIGNAL(toggleBreakpoint(int)), this, SLOT(toggleBreakpoint(int)));
-	//setWindowTitle(tabWidget->tabText(index));
-	//connect(currentNtv->textEdit(), SIGNAL(toggleBreakpoint(int)), this, SLOT(toggleBreakpoint(int)));
-	ListModel *list = static_cast<ListModel*>( list_files->model() );
-	list_files->setCurrentIndex( list->position_index( index ) );
+	currentNtv = static_cast< NumberedTextView * >( tabWidget->widget( tabindex ) );
+	
+	updateFileList();
+	list_files->setCurrentIndex( static_cast<ListModel*>( list_files->model() )->position_index( tabindex ) );
+}
+
+/* 
+*	This method connects all the necessary
+*	tabWidget signals to the right slots 
+*/
+void Editor::connectTabSignals( int tabindex )
+{
+	NumberedTextView *tab = static_cast< NumberedTextView * >( tabWidget->widget( tabindex ) );
+
+	connect( tab			 , SIGNAL( textModified()								 ) , this , SLOT( textModified()								) );
+	connect( tab			 , SIGNAL( toggleBreakpoint( int )                       ) , this , SLOT( toggleBreakpoint( int )                       ) );
+	connect( tab->textEdit() , SIGNAL( dynamic_help_required( const QString & )		 ) , this , SLOT( emit_dynamic_help_required( const QString & ) ) );
+	connect( tab->textEdit() , SIGNAL( customContextMenuRequested ( const QPoint & ) ) , this , SLOT( customContextMenuPopUp( const QPoint & )      ) );
+}
+
+
+// disconnect( oldNtv->textEdit()->document() , SIGNAL( modificationChanged( int , int , int )        ) , this , SLOT( textModified( int , int , int )               ) );
+
+/* 
+*	This method disconnects all the necessary
+*	tabWidget signals to the right slots 
+*/
+void Editor::disconnectTabSignals( int tabindex )
+{
+	NumberedTextView *tab = static_cast< NumberedTextView * >( tabWidget->widget( tabindex ) );
+
+	disconnect( tab				, SIGNAL( textModified()								) , this , SLOT( textModified()								   ) );
+	disconnect( tab				, SIGNAL( toggleBreakpoint( int )                       ) , this , SLOT( toggleBreakpoint( int )                       ) );
+	disconnect( tab->textEdit() , SIGNAL( dynamic_help_required( const QString & )		) , this , SLOT( emit_dynamic_help_required( const QString & ) ) );
+	disconnect( tab->textEdit() , SIGNAL( customContextMenuRequested ( const QPoint & ) ) , this , SLOT( customContextMenuPopUp( const QPoint & )      ) );
 }
 
 void Editor::textModified()
@@ -1322,7 +1348,7 @@ void Editor::updateFileList()
 	ListModel *model = static_cast<ListModel*>( list_files->model() );
 	model->clear();
 
-	for(int i=0;i<tabWidget->count();i++)
+	for( int i=0 ; i < tabWidget->count() ; i++ )
 	{
 		model->append( tabWidget->tabText( i ) , i );
 	}
