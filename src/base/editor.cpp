@@ -137,7 +137,7 @@ void Editor::createMenuDocks()
 
 void Editor::createMenuConfig()
 {
-	menuConfig = menuBar()->addMenu( tr( "Config" ) );
+	menuConfig = menuBar()->addMenu( tr( "Toolbars" ) );
 	menuConfig->addMenu(menuDocks);
 }
 

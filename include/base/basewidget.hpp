@@ -85,7 +85,7 @@ class BaseWidget:public QMainWindow
 		*	position where the menu should be created.
 		*/
 
-		const QMenu *createMenuView();
+		void createMenuView();
 		//void focusInEvent(QFocusEvent * event);
 		//void focusOutEvent ( QFocusEvent * event );
 
