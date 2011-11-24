@@ -374,7 +374,7 @@ void MainWindow::createMenuTools()
 		menuTools->addMenu( w->getMenu() );
 	}
 
-	BaseWidget * w = static_cast< BaseWidget * >( session->getFirstTool( VARIABLESLIST ) );
+	w = static_cast< BaseWidget * >( session->getFirstTool( VARIABLESLIST ) );
 	
 	if( w != NULL && w->getMenu() != NULL )
 	{
@@ -385,23 +385,22 @@ void MainWindow::createMenuTools()
 
 void MainWindow::createMenuView()
 {
-	//menuView->clear();
-	menuView->addMenu( menuToolBars );
-	menuView->addAction(actionClearTerminal);
+	menuView->clear();
+	menuView->addAction( actionClearTerminal );
 
-	menuView->addMenu(menuDocks);
-	//menuDocks->clear();
+	menuView->addMenu( menuDocks );
+	menuDocks->clear();
 
-	menuDocks->addAction(actionEditor);
-	menuDocks->addAction(actionVariableList);
-	menuDocks->addAction(actionNavigator);
-	menuDocks->addAction(actions["actionCommandList"]);
+	menuDocks->addAction( actionEditor );
+	menuDocks->addAction( actionVariableList );
+	menuDocks->addAction( actionNavigator );
+	menuDocks->addAction( actions[ "actionCommandList" ] );
 
-	menuView->addMenu(menuWindowsLayout);
-	//menuWindowsLayout->clear();
+	menuView->addMenu( menuWindowsLayout );
+	menuWindowsLayout->clear();
 
-	menuWindowsLayout->addAction(actionSaveWindowsLayout);
-	menuWindowsLayout->addAction(actionDeleteWindowsLayout);
+	menuWindowsLayout->addAction( actionSaveWindowsLayout );
+	menuWindowsLayout->addAction( actionDeleteWindowsLayout );
 
 	menuWindowsLayout->addSeparator();
 

@@ -61,7 +61,7 @@ class BaseWidget:public QMainWindow
 		WidgetType widgetType();
 		
 		/**Sets session.*/
-		void setSession(Session *session);
+		void setSession( Session *session );
 		/**Gets session.*/
 		Session *getSession();
 		
@@ -69,14 +69,14 @@ class BaseWidget:public QMainWindow
 		virtual QMenu *getMenu();
 		
 		/**Gets a copy of this BaseWidget.*/
-		virtual BaseWidget *copyBaseWidget( QWidget * parent = 0 )=0;
+		virtual BaseWidget *copyBaseWidget( QWidget * parent = 0 ) = 0;
 		
 		/**Tool properties in xml.*/
-		virtual void toXML(QXmlStreamWriter &xml);
+		virtual void toXML( QXmlStreamWriter &xml );
 		
-		void addDock(QWidget *w);
+		void addDock( QWidget *w );
 		QVector<QObject*> getDocks();
-		bool containsBaseWidget(BaseWidget *w);
+		bool containsBaseWidget( BaseWidget *w );
 
 		/** 
 		*	To avoid that menu "View" is generated as
@@ -85,10 +85,11 @@ class BaseWidget:public QMainWindow
 		*	position where the menu should be created.
 		*/
 
-		void createMenuView();
+		const QMenu *createMenuView();
 		//void focusInEvent(QFocusEvent * event);
 		//void focusOutEvent ( QFocusEvent * event );
-	
+
+
 	public slots:
 
 		void showDockableObjects();
@@ -101,10 +102,10 @@ class BaseWidget:public QMainWindow
 
 	signals:
 
-		/** This signal is emited when widget is activated.*/
+		/** This signal is emitted when widget is activated.*/
 		void widget_activated( BaseWidget *w );
 		
-		/**Dinamic help required.*/
+		/**Dynamic help required.*/
 		void dynamic_help_required( const QString &text );
 };
 

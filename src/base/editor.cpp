@@ -45,7 +45,7 @@ Editor::Editor( QWidget *parent ) :
 BaseWidget( parent ),
 currentNtv( NULL ),
 search_dialog( NULL ),
-toolBar( addToolBar( tr( "Options" ) ) ),
+toolBar( addToolBar( tr( "Editor Toolbar" ) ) ),
 contextMenu( new QMenu( this ) ),
 tabWidget( new QTabWidget( this ) ),
 menuContext( new QMenu( this ) ),

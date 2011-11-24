@@ -33,7 +33,7 @@ session( NULL )
 
 void BaseWidget::createMenuView()
 {
-	QMenu *menuView=menuBar()->addMenu( tr( "View" ) );
+	QMenu *menuView = menuBar()->addMenu( tr( "View" ) );
 	dockMenu = menuView->addMenu( tr( "Add to..." ) );
 
 	connect( menuView->addAction(tr("Show outside of main window") ) , SIGNAL( triggered()           ) , this , SLOT( show_out_main_window_callback() ) );
