@@ -367,22 +367,30 @@ void MainWindow::createMenus()
 
 void MainWindow::createMenuTools()
 {
+	BaseWidget * w = static_cast< BaseWidget * >( session->getFirstTool( COMMANDLIST ) );
+	
+	if( w != NULL && w->getMenu() != NULL )
+	{
+		menuTools->addMenu( w->getMenu() );
+	}
 
-	BaseWidget *w=(BaseWidget*)session->getFirstTool(COMMANDLIST);
-	if(w!=NULL && w->getMenu()!=NULL) menuTools->addMenu(w->getMenu());
-
-	w=(BaseWidget*)session->getFirstTool(VARIABLESLIST);
-	if(w!=NULL && w->getMenu()!=NULL) menuTools->addMenu(w->getMenu());
+	BaseWidget * w = static_cast< BaseWidget * >( session->getFirstTool( VARIABLESLIST ) );
+	
+	if( w != NULL && w->getMenu() != NULL )
+	{
+		menuTools->addMenu( w->getMenu() );
+	}
 }
 
 
 void MainWindow::createMenuView()
 {
-	menuView->clear();
+	//menuView->clear();
+	menuView->addMenu( menuToolBars );
 	menuView->addAction(actionClearTerminal);
 
 	menuView->addMenu(menuDocks);
-	menuDocks->clear();
+	//menuDocks->clear();
 
 	menuDocks->addAction(actionEditor);
 	menuDocks->addAction(actionVariableList);
@@ -390,7 +398,7 @@ void MainWindow::createMenuView()
 	menuDocks->addAction(actions["actionCommandList"]);
 
 	menuView->addMenu(menuWindowsLayout);
-	menuWindowsLayout->clear();
+	//menuWindowsLayout->clear();
 
 	menuWindowsLayout->addAction(actionSaveWindowsLayout);
 	menuWindowsLayout->addAction(actionDeleteWindowsLayout);
