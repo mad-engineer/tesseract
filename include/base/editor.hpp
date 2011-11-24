@@ -84,7 +84,7 @@ class Editor: public BaseWidget
 	QAction *actionIndent, *actionUnindent, *actionComment, *actionUncomment, *actionSimpleRCS;
 	QAction *actionToggleBreakPoint, *actionCloseAll;
 
-	QMenu *menuFile, *menuEdit, *menuRun, *menuConfig, *menuDocks, *menuTools, *menuContext;
+	QMenu *menuFile, *menuEdit, *menuRun, *menuToolBars, *menuDocks, *menuTools, *menuContext;
 
 	void saveProject();
 

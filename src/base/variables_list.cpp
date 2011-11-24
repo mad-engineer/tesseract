@@ -66,7 +66,7 @@ VariableList::VariableList(QWidget * parent):BaseWidget(parent)
 
 	connect(popup_menu, SIGNAL(triggered(QAction*)),this, SLOT(popupEvent(QAction*)));
 
-	menu_bar->addMenu(popup_menu);
+	//menu_bar->addMenu(popup_menu);
 	connect(popup_menu,SIGNAL(aboutToShow ()), this, SLOT(set_menu_options()) );
 
 	{

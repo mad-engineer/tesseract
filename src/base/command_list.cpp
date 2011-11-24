@@ -67,7 +67,7 @@ CommandList::CommandList( QWidget * parent ):BaseWidget(parent)
 	
 	connect(list, SIGNAL( customContextMenuRequested ( const QPoint & )  ), this, SLOT( contextMenu_cb( const QPoint & ) ) );
 	
-	menu_bar->addMenu(context_menu);
+	//menu_bar->addMenu(context_menu);
 
 	//TODO: find a better way to avoid double code
 	{
