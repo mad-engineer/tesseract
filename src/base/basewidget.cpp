@@ -23,26 +23,24 @@
 #include "mainwindow.hpp"
 
 
-BaseWidget::BaseWidget(QWidget *parent):QMainWindow(parent)
+BaseWidget::BaseWidget( QWidget *parent ) : 
+QMainWindow( parent ),
+session( NULL )
 {
-	setAttribute(Qt::WA_DeleteOnClose);
-	//setFocusPolicy(Qt::StrongFocus);
-	session=NULL;
-	QWidget *central=new QWidget(this);
-	setCentralWidget(central);
-	
-	QMenu *windows_menu=menuBar()->addMenu(tr("View"));
-	QAction *outAction= windows_menu->addAction(tr("Show outside of main window"));
-	connect(outAction, SIGNAL(triggered ()), this, SLOT(show_out_main_window_callback()));
-	QAction *inAction= windows_menu->addAction(tr("Show inside of main window"));
-	connect(inAction, SIGNAL(triggered ()), this, SLOT(show_in_main_window_callback()));
-	
-	dockMenu=windows_menu->addMenu(tr("Add to..."));
-	
-	connect(windows_menu, SIGNAL(aboutToShow ()), this, SLOT(showDockableObjects()) );
-	connect(windows_menu,SIGNAL(aboutToHide ()), this, SLOT(hideDockableObjects()) );
-	
-	connect(dockMenu,SIGNAL( triggered(QAction*) ), this, SLOT( dockObject(QAction*) ) );
+	setAttribute( Qt::WA_DeleteOnClose );
+	setCentralWidget( new QWidget( this ) );
+}
+
+void BaseWidget::createMenuView()
+{
+	QMenu *menuView=menuBar()->addMenu( tr( "View" ) );
+	dockMenu = menuView->addMenu( tr( "Add to..." ) );
+
+	connect( menuView->addAction(tr("Show outside of main window") ) , SIGNAL( triggered()           ) , this , SLOT( show_out_main_window_callback() ) );
+	connect( menuView->addAction(tr("Show inside of main window")  ) , SIGNAL( triggered()           ) , this , SLOT( show_in_main_window_callback()  ) );
+	connect( menuView												 , SIGNAL( aboutToShow()         ) , this , SLOT( showDockableObjects()           ) );
+	connect( menuView												 , SIGNAL( aboutToHide()         ) , this , SLOT( hideDockableObjects()           ) );
+	connect( dockMenu												 , SIGNAL( triggered( QAction* ) ) , this , SLOT( dockObject(QAction*)            ) );
 }
 
 BaseWidget::~BaseWidget()
@@ -88,7 +86,7 @@ Session *BaseWidget::getSession()
 	return session;
 }
 
-QMenu *BaseWidget::get_menu()
+QMenu *BaseWidget::getMenu()
 {
 	return NULL;
 }

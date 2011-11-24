@@ -120,9 +120,10 @@ void Editor::createConnectionsMenuEdit()
 
 void Editor::createMenus()
 {
-	createMenuRun();
 	createMenuFile();
 	createMenuEdit();
+	createMenuView();
+	createMenuRun();
 	createMenuDocks();
 	createMenuConfig();
 	createMenuContext();
@@ -758,7 +759,7 @@ void Editor::toolbar_action( QAction *action )
 		
 		if( cursor.hasSelection() )
 		{
-			octave_connection->command_enter( cursor.selectedText().replace( QChar(0x2029) , '\n' ) );
+			octave_connection->command_enter( cursor.selectedText().replace( QChar( 0x2029 ) , '\n' ) );
 		}
 		else
 		{

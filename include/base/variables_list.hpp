@@ -45,7 +45,7 @@ class VariableList:public BaseWidget
 	public:
 	VariableList( QWidget * parent = 0 );
 	void setOctaveConnection(OctaveConnection *octave_connection);
-	virtual QMenu *get_menu();
+	virtual QMenu *getMenu();
 	BaseWidget *copyBaseWidget( QWidget * parent = 0 );
 	
 	protected:

@@ -68,7 +68,7 @@ class CommandList:public BaseWidget
 		void setSession(Session *session);
 		BaseWidget *copyBaseWidget( QWidget * parent = 0 );
 		
-		virtual QMenu *get_menu();
+		virtual QMenu *getMenu();
 
 
 	public slots:

@@ -163,7 +163,7 @@ void CommandList::clean_history_callback()
 	set_list(list);
 }
 
-QMenu *CommandList::get_menu()
+QMenu *CommandList::getMenu()
 {
 	return context_menu;
 }

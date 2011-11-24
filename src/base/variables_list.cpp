@@ -341,7 +341,7 @@ void VariableList::popupEvent(QAction *action)
 	}
 }
 
-QMenu *VariableList::get_menu()
+QMenu *VariableList::getMenu()
 {
 	if(popup_menu!=NULL && set_menu_options()) return popup_menu;
 	else return NULL;

@@ -369,10 +369,10 @@ void MainWindow::createMenuTools()
 {
 
 	BaseWidget *w=(BaseWidget*)session->getFirstTool(COMMANDLIST);
-	if(w!=NULL && w->get_menu()!=NULL) menuTools->addMenu(w->get_menu());
+	if(w!=NULL && w->getMenu()!=NULL) menuTools->addMenu(w->getMenu());
 
 	w=(BaseWidget*)session->getFirstTool(VARIABLESLIST);
-	if(w!=NULL && w->get_menu()!=NULL) menuTools->addMenu(w->get_menu());
+	if(w!=NULL && w->getMenu()!=NULL) menuTools->addMenu(w->getMenu());
 }
 
 

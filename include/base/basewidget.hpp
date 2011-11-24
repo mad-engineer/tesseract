@@ -41,41 +41,53 @@ class BaseWidget:public QMainWindow
 
 	QMenu *dockMenu;
 	QVector<QObject*> docks;
-	void addAllDocksTo(BaseWidget *w);
-	
-	public:
-	BaseWidget(QWidget *parent=0);
-	~BaseWidget();
-	
-	/**WidgetType of base widget.
-	 * @return Type of widget.
-	*/
-	WidgetType widgetType();
-	
-	/**Sets session.*/
-	void setSession(Session *session);
-	/**Gets session.*/
-	Session *getSession();
-	
-	/**Gets menu of this BaseWidget.*/
-	virtual QMenu *get_menu();
-	
-	/**Gets a copy of this BaseWidget.*/
-	virtual BaseWidget *copyBaseWidget( QWidget * parent = 0 )=0;
-	
-	/**Tool properties in xml.*/
-	virtual void toXML(QXmlStreamWriter &xml);
-	
-	void addDock(QWidget *w);
-	QVector<QObject*> getDocks();
-	bool containsBaseWidget(BaseWidget *w);
-	
+	void addAllDocksTo( BaseWidget *w );
+
+
 	protected:
-	WidgetType widget_type;
-	Session *session;
+
+		Session *session;
+		WidgetType widget_type;
+
+
+	public:
+
+		BaseWidget( QWidget *parent = NULL );
+		~BaseWidget();
 	
-	//void focusInEvent(QFocusEvent * event);
-	//void focusOutEvent ( QFocusEvent * event );
+		/**WidgetType of base widget.
+		 * @return Type of widget.
+		*/
+		WidgetType widgetType();
+		
+		/**Sets session.*/
+		void setSession(Session *session);
+		/**Gets session.*/
+		Session *getSession();
+		
+		/**Gets menu of this BaseWidget.*/
+		virtual QMenu *getMenu();
+		
+		/**Gets a copy of this BaseWidget.*/
+		virtual BaseWidget *copyBaseWidget( QWidget * parent = 0 )=0;
+		
+		/**Tool properties in xml.*/
+		virtual void toXML(QXmlStreamWriter &xml);
+		
+		void addDock(QWidget *w);
+		QVector<QObject*> getDocks();
+		bool containsBaseWidget(BaseWidget *w);
+
+		/** 
+		*	To avoid that menu "View" is generated as
+		*	the first most left menu, every inherited
+		*	class should call this method at the right
+		*	position where the menu should be created.
+		*/
+
+		void createMenuView();
+		//void focusInEvent(QFocusEvent * event);
+		//void focusOutEvent ( QFocusEvent * event );
 	
 	public slots:
 
