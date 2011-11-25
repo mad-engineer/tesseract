@@ -3107,5 +3107,3 @@ ztvals
 base.pro
 base.vcproj
 base.vcproj.THINKPAD.Mordwinzew.user
-based_resource.rc
-base_resource.rc

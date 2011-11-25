@@ -67,10 +67,10 @@ octave_connection(NULL)
 	cols_in_terminal=get_config("cols_in_terminal").toInt();
 	lines_in_terminal=get_config("lines_in_terminal").toInt();
 
-	text=new QTextEdit(this);
+	text = new QTextEdit(this);
 
-	text->setReadOnly (true);
-	text->setLineWrapMode (QTextEdit::NoWrap);
+	text->setReadOnly( true );
+	text->setLineWrapMode( QTextEdit::NoWrap );
 	//text->setLineWrapColumnOrWidth ( cols_in_terminal );
 
 	if(get_config("show_ide_commands").isEmpty())
@@ -85,44 +85,39 @@ octave_connection(NULL)
 		show_ide_commands_ok = get_config("show_ide_commands")=="true";
 	}
 
-	if(get_config("terminal_font").isEmpty())
+	if( get_config( "terminal_font" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
-		c["terminal_font"]="Liberation Mono";
+		c[ "terminal_font" ] = "Courier New";
 		set_config(c);
 	}
-	
-	//{
-	//	QFont font;
-	//	font.fromString(get_config("terminal_font"));
-	//	text->setFont( font );
-	//}
-	if(get_config("terminal_foreground_color").isEmpty())
+
+	if( get_config( "terminal_foreground_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
-		c["terminal_foreground_color"]="Black";
-		set_config(c);
+		c[ "terminal_foreground_color" ] = "Black";
+		set_config( c );
 	}
 	
-	if(get_config("terminal_background_color").isEmpty())
+	if( get_config( "terminal_background_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
-		c["terminal_background_color"]="White";
-		set_config(c);
+		c[ "terminal_background_color" ] = "White";
+		set_config( c );
 	}
 	
-	if(get_config("terminal_error_color").isEmpty())
+	if( get_config( "terminal_error_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
-		c["terminal_error_color"]="Red";
-		set_config(c);
+		c[ "terminal_error_color" ] = "Red";
+		set_config( c );
 	}
 	
-	if(get_config("ide_command_color").isEmpty())
+	if( get_config( "ide_command_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
-		c["ide_command_color"]="lightGray";
-		set_config(c);
+		c[ "ide_command_color" ] = "lightGray";
+		set_config( c );
 	}
 	
 	//text->setTextColor(get_config("terminal_foreground_color"));

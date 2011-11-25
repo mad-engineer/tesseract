@@ -60,18 +60,18 @@ syntaxCompleterModel( new QCompleter( completer , this ) )
 		connect( document() , SIGNAL( contentsChange( int , int , int ) ) , this , SLOT( autoComplete( int , int , int ) ) );
 	}
 	
-	auto_indent=( "false"!=get_config("autoindent") );
-	automatic_indention_statement_ok = (get_config("autoindent_statements")=="true");
+	auto_indent=( "false" != get_config( "autoindent" ) );
+	automatic_indention_statement_ok = get_config("autoindent_statements") == "true";
 	
 	//Set editor's font
 		
 	QFont text_edit_font;
-  	QString font_name=get_config("textEditFont");
-	QString font_size=get_config("textEditFontSize");
+  	QString font_name = get_config( "textEditFont" );
+	QString font_size = get_config( "textEditFontSize" );
 	
 	if( font_name.isEmpty() )
 	{
-		font_name="Courier New";
+		font_name = "Courier New";
 	}
 	
 	if( font_size.isEmpty() )
