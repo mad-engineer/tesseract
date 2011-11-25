@@ -48,24 +48,24 @@ octave_connection(NULL)
 	
 	//Se crea la ventana del terminal
 	setWindowTitle(tr("Octave Terminal"));
-	setWindowIcon( QIcon(QApplication::applicationDirPath() + "/styles/default/images/konsole.png") );
+	setWindowIcon( QIcon(QApplication::applicationDirPath() + "/styles/default/images/console.png") );
 	
-	if(get_config("lines_in_terminal").isEmpty())
+	if( get_config( "lines_in_terminal" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
-		c["lines_in_terminal"]="1000";
+		c[ "lines_in_terminal" ]="1000";
 		set_config(c);
 	}
 
-	if(get_config("cols_in_terminal").isEmpty())
+	if( get_config( "cols_in_terminal" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
-		c["cols_in_terminal"]="80";
-		set_config(c);
+		c["cols_in_terminal"] = "80";
+		set_config( c );
 	}
 
-	cols_in_terminal=get_config("cols_in_terminal").toInt();
-	lines_in_terminal=get_config("lines_in_terminal").toInt();
+	cols_in_terminal = get_config( "cols_in_terminal" ).toInt();
+	lines_in_terminal = get_config( "lines_in_terminal" ).toInt();
 
 	text = new QTextEdit(this);
 
