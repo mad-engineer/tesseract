@@ -940,23 +940,23 @@ void Editor::openFile( const QString &file )
 	/** Open **/
 	QString path;
 
-	if(file.isEmpty())
+	if( file.isEmpty() )
 	{
 		QFileDialog openDialog(this, tr("Open") /*Qt::Dialog*/);
 
 		QStringList filters;
 		filters << "Octave (*.m; *.M)" << "Plain text (*.txt)" << "All files (*)";
 
-		openDialog.setAcceptMode(QFileDialog::AcceptOpen);
-		openDialog.setDefaultSuffix("m");
-		openDialog.setFilters(filters);
+		openDialog.setAcceptMode( QFileDialog::AcceptOpen );
+		openDialog.setDefaultSuffix( "m" );
+		openDialog.setFilters( filters );
 
 		//openDialog.setViewMode(QFileDialog::Detail);
 		QFileInfo current_file(currentNtv->path());
 		openDialog.setDirectory(current_file.absolutePath());
 		openDialog.selectFile(current_file.baseName());
 
-		if(openDialog.exec() == QDialog::Accepted)
+		if( openDialog.exec() == QDialog::Accepted )
 		{
 			path = openDialog.selectedFiles().first();
 		}
