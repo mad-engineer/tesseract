@@ -1303,34 +1303,29 @@ BaseWidget *Editor::copyBaseWidget( QWidget * parent )
 {
 	saveProject();
 
-	Editor *bw = new Editor(parent);
+	Editor *bw = new Editor( parent );
 
-	bw->setSession(session);
-	bw->octave_connection=octave_connection;
-
-	for( int i = bw->tabWidget->count() ; i > 0 ; i-- )
-	{
-		bw->toolbar_action(bw->actionClose);
-	}
+	bw->setSession( session );
+	bw->octave_connection = octave_connection;
 
 	for( int i = 0 ; i < tabWidget->count() ; i++ )
 	{
-		NumberedTextView *code= static_cast<NumberedTextView*>( tabWidget->widget( i ) );
+		NumberedTextView *code = static_cast< NumberedTextView * >( tabWidget->widget( i ) );
 
-		if( i != NULL )
+		if( i )
 		{
-			bw->toolbar_action(bw->actionNew);
+			bw->toolbar_action( bw->actionNew );
 		}
 
-		bw->currentNtv->textEdit()->setPlainText(code->textEdit()->toPlainText());
-		bw->currentNtv->setPath(code->path());
-		bw->currentNtv->setModified(code->modified());
+		bw->currentNtv->setPath( code->path() );
+		bw->currentNtv->setModified( code->modified() );
+		bw->currentNtv->textEdit()->setPlainText( code->textEdit()->toPlainText() );
 
 		code->setModified( false );
 
 		if( ! code->path().isEmpty() )
 		{
-			bw->setTabText(bw->tabWidget->currentIndex(), code->path().split("/").last());
+			bw->setTabText( bw->tabWidget->currentIndex() , code->path().split("/").last() );
 		}
 	}
 

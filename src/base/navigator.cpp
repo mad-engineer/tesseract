@@ -477,6 +477,8 @@ bool Navigator::setNavigatorCurrentPath( const QString &path )
 	{
 		emit expanded( next );
 	}
+
+	return true;
 }
 
 #include <QInputDialog>
