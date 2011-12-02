@@ -42,3 +42,5 @@ build/msw/vc9/_UpgradeReport_Files/*
 *.vsprops
 resources/base/config/last_windows_layout.xml
 resources/base/config/config.rc
+resources/base/config/SmallClipboard.xml
+resources/base/syntax/commands.txt
