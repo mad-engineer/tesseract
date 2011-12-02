@@ -1074,10 +1074,13 @@ void Editor::endDebug()
 */
 void Editor::tabChanged( int tabindex )
 {
-	currentNtv = static_cast< NumberedTextView * >( tabWidget->widget( tabindex ) );
-	
-	updateFileList();
-	list_files->setCurrentIndex( static_cast<ListModel*>( list_files->model() )->position_index( tabindex ) );
+	if( tabindex )
+	{
+		currentNtv = static_cast< NumberedTextView * >( tabWidget->widget( tabindex ) );
+
+		updateFileList();
+		list_files->setCurrentIndex( static_cast<ListModel*>( list_files->model() )->position_index( tabindex ) );
+	}
 }
 
 /* 
