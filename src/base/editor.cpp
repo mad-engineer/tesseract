@@ -928,9 +928,6 @@ void Editor::closeTab( int index )
 
 	tabChanged( actTabIndex );
 
-	// Connect signals to the new tab
-	connectTabSignals( actTabIndex );
-
 	updateFileList();
 }
 
