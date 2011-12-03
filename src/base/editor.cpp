@@ -507,7 +507,6 @@ void Editor::createToolBarMain()
 	toolBar->addAction( actionSave );
 	toolBar->addAction( actionSaveAs );
 	toolBar->addAction( actionSaveAll );
-	toolBar->addAction( actionClose );
 
 	toolBar->addSeparator();
 
@@ -1074,7 +1073,7 @@ void Editor::endDebug()
 */
 void Editor::tabChanged( int tabindex )
 {
-	if( tabindex )
+	if( tabindex >= 0 )
 	{
 		currentNtv = static_cast< NumberedTextView * >( tabWidget->widget( tabindex ) );
 
