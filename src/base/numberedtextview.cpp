@@ -57,10 +57,6 @@ bugLine(-1)
 	}
 }
 
-NumberBar::~NumberBar()
-{
-}
-
 void NumberBar::setCurrentLine( int lineno )
 {
     currentLine = lineno;
@@ -316,8 +312,8 @@ NumberedTextView::~NumberedTextView()
 {
 	hide();
 	//printf("Borrado ntv\n");
-	SimpleEditor *_textEdit=textEdit();
-	_textEdit->setDocument(NULL);
+	SimpleEditor *pTextEdit=textEdit();
+	pTextEdit->setDocument(NULL);
 }
 
 void NumberedTextView::setCurrentLine( int lineno )
@@ -352,7 +348,7 @@ void NumberedTextView::toggleBreakpoint( int lineno )
 	}
 	else
 	{
-		assert(false);
+		assert( false );
 	}
 }
 
@@ -364,7 +360,7 @@ void NumberedTextView::setBugLine( int lineno )
 	}
 	else
 	{
-		assert(false);
+		assert( false );
 	}
 }
 
@@ -439,15 +435,15 @@ bool NumberedTextView::eventFilter( QObject *obj, QEvent *event )
 
 QList<int> *NumberedTextView::getBreakpoints()
 {
-	QList<int> *br=NULL;
+	QList<int> *br = NULL;
 
-	if(numbers!=NULL) 
+	if( numbers != NULL ) 
 	{
 		br=numbers->getBreakpoints();
 	}
 	else
 	{
-		assert(false);
+		assert( false );
 	}
 
 	return br;
@@ -458,6 +454,7 @@ void NumberedTextView::open( const QString &path )
   FILE *fl;
 
   fl = fopen(path.toLocal8Bit().constData(), "rt");
+  
   if(fl)
   {
 	fclose(fl);
@@ -467,84 +464,88 @@ void NumberedTextView::open( const QString &path )
 	
 	textModifiedOk=false;
 	textEdit()->document()->setModified(false);
-  }else{
+  }
+  else
+  {
     throw path;
   }
 }
 
 bool NumberedTextView::save( QString path )
 {
-  FILE *fl;
+	FILE *fl;
 
-  if( path.isEmpty() )
-  {
-	  path = filePath;
-  }
-  QRegExp re("[A-Za-z_][A-Za-z0-9_]*\\.m");
-  
-  if( ! re.exactMatch( QFileInfo(path).fileName() ) )
-  {
-	QMessageBox msgBox;
-	msgBox.setText( tr("This file name is not valid.") );
-	msgBox.setInformativeText(tr("Octave doesn't understand this file name:\n")+path+tr("\nPlease, change it.\n Do you want to save your changes?"));
-	msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
-	msgBox.setDefaultButton(QMessageBox::Save);
-	int ret = msgBox.exec();
-	switch (ret)
+	if( path.isEmpty() )
 	{
-		case QMessageBox::Save:
-		    // Save was clicked
-		    break;
-		case QMessageBox::Cancel:
-		    // Cancel was clicked
-		    	return false;
-		    break;
-		default:
-		    // should never be reached
-		    break;
+		path = filePath;
 	}
-  }
-  
-  
-  fl = fopen(path.toLocal8Bit().constData(), "wt");
-  
-  if(fl)
-  {
 
-    filePath = path;
-    QTextStream *stream = new QTextStream(fl);
+	QRegExp re("[A-Za-z_][A-Za-z0-9_]*\\.m");
 
-    (*stream) << textEdit()->document()->toPlainText();
+	if( ! re.exactMatch( QFileInfo( path ).fileName() ) )
+	{
+		QMessageBox msgBox;
 
-    delete stream;
+		msgBox.setText( tr("This file name is not valid.") );
+		msgBox.setInformativeText(tr("Octave doesn't understand this file name:\n")+path+tr("\nPlease, change it.\n Do you want to save your changes?"));
+		msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
+		msgBox.setDefaultButton(QMessageBox::Save);
 
-    fclose(fl);
+		int ret = msgBox.exec();
 
-    textModifiedOk=false;
-    view->document()->setModified(false);
-  }
-  else
-  {
-    return false;
-  }
-  
-  if(get_config("simple_rcs")=="true")
-  {
-  	QString repository=path+"~~";
-  	QString command("simplercs \""+repository+"\" \""+path+"\"");
-  	QProcess::startDetached(command);
-  	//QProcess::execute(command);
-  	printf("[NumberedTextView::save] Comando: %s\n", command.toLocal8Bit().data() );
-  }
-  else
-  {
-  	//printf("[NumberedTextView::save] No rcs\n");
-  }
-  
-  //Set syntax
-  textEdit()->setFile(filePath);
-  
-  return true;
+		switch (ret)
+		{
+			case QMessageBox::Save:
+				// Save was clicked
+				break;
+			case QMessageBox::Cancel:
+				// Cancel was clicked
+	    			return false;
+				break;
+			default:
+				// should never be reached
+				break;
+		}
+	}
+   
+	fl = fopen(path.toLocal8Bit().constData(), "wt");
+
+	if( fl )
+	{
+		filePath = path;
+		QTextStream *stream = new QTextStream(fl);
+
+		(*stream) << textEdit()->document()->toPlainText();
+
+		delete stream;
+
+		fclose(fl);
+
+		textModifiedOk=false;
+		view->document()->setModified(false);
+	}
+	else
+	{
+		return false;
+	}
+
+	if(get_config("simple_rcs")=="true")
+	{
+		QString repository=path+"~~";
+		QString command("simplercs \""+repository+"\" \""+path+"\"");
+		QProcess::startDetached(command);
+		//QProcess::execute(command);
+		printf("[NumberedTextView::save] Comando: %s\n", command.toLocal8Bit().data() );
+	}
+	else
+	{
+		//printf("[NumberedTextView::save] No rcs\n");
+	}
+
+	//Set syntax
+	textEdit()->setFile(filePath);
+
+	return true;
 }
 
 const QString &NumberedTextView::path()
@@ -554,8 +555,8 @@ const QString &NumberedTextView::path()
 
 void NumberedTextView::setPath(const QString &path )
 {
-	filePath=path;
-	textEdit()->setFile(path);
+	filePath = path;
+	textEdit()->setFile( path );
 }
 
 void NumberedTextView::setModified( bool modify )
@@ -570,16 +571,19 @@ bool NumberedTextView::modified()
 
 void NumberedTextView::cursor_moved_cb()
 {
-	QTextCursor cursor=view->textCursor();
+	QTextCursor cursor = view->textCursor();
 	QTextBlock actual_block=cursor.block();
-	int lineCount=1;
+	int lineCount = 1;
 	QTextBlock block = view->document()->begin();
 	
-	for ( ;block.isValid() && actual_block!=block; block = block.next()) lineCount++ ;
+	for ( ;block.isValid() && actual_block != block ; block = block.next() )
+	{
+		lineCount++ ;
+	}
 	
-	int col= cursor.position() - block.position() + 1;
+	int col = cursor.position() - block.position() + 1;
 	
-	line_column_label->setText(" Line: "+QString::number(lineCount)+" Col: "+QString::number(col) );
+	line_column_label->setText(" Line: " + QString::number( lineCount ) + " Col: " + QString::number( col ) );
 }
 
 static QString startLineInsertText(QString str, const QString &textToInsert)

@@ -1425,8 +1425,8 @@ void Editor::clone_callback()
 
 void Editor::toggleBreakPoint_callback()
 {
-	int lineno=currentNtv->textEdit()->textCursor().blockNumber()+1;
-	currentNtv->toggleBreakpoint(lineno);
+	const int lineno = currentNtv->textEdit()->textCursor().blockNumber()+1;
+	currentNtv->toggleBreakpoint( lineno );
 }
 
 void Editor::clipboard_double_clicked(const QModelIndex &index)
@@ -1435,9 +1435,11 @@ void Editor::clipboard_double_clicked(const QModelIndex &index)
 	currentNtv->textEdit()->textCursor().insertText(text);
 }
 
-ListModel::ListModel(QObject *parent, Editor *editor):QAbstractListModel(parent)
+ListModel::ListModel( QObject *parent , Editor *newEditor ) : 
+QAbstractListModel(parent),
+editor(newEditor)
 {
-	this->editor=editor;
+
 }
 
 int ListModel::rowCount(const QModelIndex & /* ATM unused */ ) const
@@ -1445,7 +1447,7 @@ int ListModel::rowCount(const QModelIndex & /* ATM unused */ ) const
 	return list.size();
 }
 
-QVariant ListModel::data(const QModelIndex &index, int role) const
+QVariant ListModel::data( const QModelIndex &index, int role ) const
 {
 	if ( ! index.isValid() || index.row() >= list.size() )
 	{
@@ -1454,7 +1456,7 @@ QVariant ListModel::data(const QModelIndex &index, int role) const
 
 	if ( role == Qt::DisplayRole )
 	{
-		return list.at(index.row()).name;
+		return list.at( index.row() ).name;
 	}
 
 	return QVariant();
@@ -1473,15 +1475,15 @@ void ListModel::append( const QString &name , int position )
 	list.append(item);
 }
 
-int ListModel::position(const QModelIndex &index)
+int ListModel::position( const QModelIndex &index )
 {
-	return list.at(index.row()).position;
+	return list.at( index.row() ).position;
 }
 
 void ListModel::update()
 {
 	//printf("[ListModel::update] %d Inicio\n",list.size());
-	QModelIndex index0=index(0);
+	QModelIndex index0 = index(0);
 	beginInsertRows(index0, 0, list.size()-1);
 	//printf("[ListModel::update] %d Proceso\n",list.size());
 	endInsertRows();
@@ -1494,7 +1496,7 @@ QModelIndex ListModel::position_index( int position )
 	{
 		if( list[i].position == position )
 		{
-			return index(i,0);
+			return index( i , 0 );
 		}
 	}
 
@@ -1535,12 +1537,12 @@ QStringList ListModel::mimeTypes() const
 }
 
 ClipboardListView::ClipboardListView( QWidget *parent ):
-QListView(parent)
+QListView(parent),
+_stringModel( new QStringListModel( parent ) ),
+popup( new QMenu( parent ) )
 {
-	_stringModel = new QStringListModel(parent);
 	setModel(_stringModel);
 
-	popup = new QMenu(parent);
 	QAction *edit=popup->addAction(tr("Edit"));
 	popup->addSeparator();
 	QAction *remove=popup->addAction(tr("Delete entry"));
@@ -1574,6 +1576,7 @@ QListView(parent)
 
 	//Load last state SmallClipboard
 	QFile inFile(configPath()+"SmallClipboard.xml");
+	
 	if( inFile.exists() )
 	{
 		inFile.open(QIODevice::ReadOnly);
@@ -1592,16 +1595,23 @@ QListView(parent)
 
 ClipboardListView::~ClipboardListView()
 {
-	QFile outFile(configPath()+"SmallClipboard.xml");
-	outFile.open(QIODevice::WriteOnly);
-	QXmlStreamWriter out(&outFile);
-	saveStateXML(out);
-	outFile.close();
+	QFile outFile( configPath() + "SmallClipboard.xml" );
+	
+	if( outFile.open( QIODevice::WriteOnly ) )
+	{
+		saveStateXML( QXmlStreamWriter( &outFile ) );
+
+		outFile.close();
+	}
+	else
+	{
+		BOOST_ASSERT_MSG( false , "Could not open file to write xml settings." );
+	}
 }
 
-void ClipboardListView::contextMenuEvent ( QContextMenuEvent * event )
+void ClipboardListView::contextMenuEvent( QContextMenuEvent * event )
 {
-	popup->popup(event->globalPos());
+	popup->popup( event->globalPos() );
 }
 
 QStringListModel *ClipboardListView::stringModel()
@@ -1612,6 +1622,7 @@ QStringListModel *ClipboardListView::stringModel()
 void ClipboardListView::edit_callback()
 {
 	QModelIndexList indexes=selectedIndexes();
+	
 	for(int i=0; i<indexes.size(); i++)
 	{
 		QModelIndex index=indexes[i];
@@ -1622,7 +1633,9 @@ void ClipboardListView::edit_callback()
 void ClipboardListView::remove_callback()
 {
 	QModelIndexList indexes=selectedIndexes();
+	
 	QStringList list=_stringModel->stringList();
+	
 	for(int i=0; i<indexes.size(); i++)
 	{
 		QModelIndex index=indexes[i];
@@ -1630,6 +1643,7 @@ void ClipboardListView::remove_callback()
 		int k=list.indexOf(text);
 		list.removeAt(k);
 	}
+	
 	_stringModel->setStringList(list);
 }
 

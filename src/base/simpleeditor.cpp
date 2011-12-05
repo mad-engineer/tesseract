@@ -76,13 +76,13 @@ syntaxCompleterModel( new QCompleter( completer , this ) )
 	
 	if( font_size.isEmpty() )
 	{
-		font_size=QString::number( text_edit_font.pointSize() );
+		font_size = QString::number( text_edit_font.pointSize() );
 	}
 	
 	text_edit_font.setFamily( font_name );
 	text_edit_font.setPointSize( font_size.toInt() );
 	
-	setFont(text_edit_font);
+	setFont( text_edit_font );
 
 	QFile file( QApplication::applicationDirPath() + "/styles/default/editor.css" );
 
@@ -456,7 +456,6 @@ void SimpleEditor::setDocument ( QTextDocument * document )
 
 SimpleEditor::~SimpleEditor()
 {
-	printf("[SimpleEditor::~SimpleEditor] Entered\n");
 	QTextDocument * oldDocument=this->document();
 	unreferenceDocument(oldDocument);
 }

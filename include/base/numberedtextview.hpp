@@ -66,7 +66,6 @@ class NumberBar : public QWidget
 	public:
 
 		NumberBar( QWidget *parent );
-		~NumberBar();
 
 		void setCurrentLine( int lineno );
 		void setBugLine( int lineno );

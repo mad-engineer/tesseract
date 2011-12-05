@@ -134,90 +134,12 @@ class Editor: public BaseWidget
 		void closeEvent( QCloseEvent * event );
 		void resizeEvent( QResizeEvent * event );
 
-
-	public slots:
-
-		/**Execute actions as copy, paste, save, run, ...*/
-		void toolbar_action( QAction * );
-
-		/**Search word inserted in dialog in code.*/
-		void search();
-
-		/**Replace word inserted in dialog in code.*/
-		void replace();
-
-		/**Put/Quit break point to debug Octave code.*/
-		void toggleBreakpoint( int lineno );
-
-		/**Another document is selected to edit.*/
-		void tabChanged( int index );
-		
-		// Close tab by clicking on x
-		void closeTab( int index );
-
-		/**Sets actual document modify flag true or false.*/
-		void textModified();
-
-		/**Starts debug of Octave code.*/
-		void debug( int lineno , int colno );
-
-		/**Ends of debug of Octave code.*/
-		void endDebug();
-
-		/**File selected in list file*/
-		void file_selected( const QModelIndex & index );
-
-		/**Open file.*/
-		void openFile( const QString &file = QString() );
-
-		/**Emits dynamic_help_required*/
-		void emit_dynamic_help_required( const QString &text );
-
-		/**Sets active project name.*/
-		void setProject( const QString &name );
-
-		/**Indent text.*/
-		void indent_callback();
-
-		/**Indent text.*/
-		void unindent_callback();
-
-		/**Indent text.*/
-		void comment_callback();
-
-		/**Indent text.*/
-		void uncomment_callback();
-
-		/**Shows simple_rcs tool for actual file*/
-		void simple_rcs_callback();
-
-		/**Sets/unsets breakpoint for debug*/
-		void toggleBreakPoint_callback();
-
-		/**Close window*/
-		void close_editor();
-
-		/**Print file*/
-		void print_callback();
-
-		/**Shows edit menu*/
-		void show_edit_menu();
-
-		/**Clone editor tab. Clone actual editor tab.*/
-		void clone_callback();
-
-		/**Text in clipboard has been selected double clicked, insert in text.*/
-		void clipboard_double_clicked(const QModelIndex &);
-
-		// Open the customized editor context menu
-		void customContextMenuPopUp( const QPoint & /*pos*/);
-
 	public:
 
 		Editor( QWidget *parent );
 		~Editor();
 
-		/**Set conection with Octave.*/
+		/**Set connection with Octave.*/
 		void setOctaveConnection( OctaveConnection *oc );
 
 		/**Gets active project name.*/
@@ -231,6 +153,85 @@ class Editor: public BaseWidget
 
 		void setSession( Session *session );
 		BaseWidget *copyBaseWidget( QWidget * parent = 0 );
+
+
+		public slots:
+
+			/**Execute actions as copy, paste, save, run, ...*/
+			void toolbar_action( QAction * );
+
+			/**Search word inserted in dialog in code.*/
+			void search();
+
+			/**Replace word inserted in dialog in code.*/
+			void replace();
+
+			/**Put/Quit break point to debug Octave code.*/
+			void toggleBreakpoint( int lineno );
+
+			/**Another document is selected to edit.*/
+			void tabChanged( int index );
+
+			// Close tab by clicking on x
+			void closeTab( int index );
+
+			/**Sets actual document modify flag true or false.*/
+			void textModified();
+
+			/**Starts debug of Octave code.*/
+			void debug( int lineno , int colno );
+
+			/**Ends of debug of Octave code.*/
+			void endDebug();
+
+			/**File selected in list file*/
+			void file_selected( const QModelIndex & index );
+
+			/**Open file.*/
+			void openFile( const QString &file = QString() );
+
+			/**Emits dynamic_help_required*/
+			void emit_dynamic_help_required( const QString &text );
+
+			/**Sets active project name.*/
+			void setProject( const QString &name );
+
+			/**Indent text.*/
+			void indent_callback();
+
+			/**Indent text.*/
+			void unindent_callback();
+
+			/**Indent text.*/
+			void comment_callback();
+
+			/**Indent text.*/
+			void uncomment_callback();
+
+			/**Shows simple_rcs tool for actual file*/
+			void simple_rcs_callback();
+
+			/**Sets/unsets breakpoint for debug*/
+			void toggleBreakPoint_callback();
+
+			/**Close window*/
+			void close_editor();
+
+			/**Print file*/
+			void print_callback();
+
+			/**Shows edit menu*/
+			void show_edit_menu();
+
+			/**Clone editor tab. Clone actual editor tab.*/
+			void clone_callback();
+
+			/**Text in clipboard has been selected double clicked, insert in text.*/
+			void clipboard_double_clicked(const QModelIndex &);
+
+			// Open the customized editor context menu
+			void customContextMenuPopUp( const QPoint & /*pos*/);
+
 };
 
 
