@@ -304,7 +304,7 @@ MenuExtCallBack *GenerateMenu::process_menu_file(QString _file)
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return false;
 	
 	QString label;
-	MenuExtCallBack *wizard=new MenuExtCallBack();
+	MenuExtCallBack *wizard=new MenuExtCallBack( static_cast<QWidget *>( parent() ) );
 	
 	bool accept_blank_parameters=false;
 	bool auto_exec = false;
@@ -548,10 +548,10 @@ FileEdit::FileEdit(const QString &newLabel, QWidget *parent):InputWidget(parent)
 {
 	label=new QLabel(newLabel, this);
 
-	lineedit=new QLineEdit(this);
-	file_button=new QPushButton(tr("File..."),this);
+	lineedit=new QLineEdit(parent);
+	file_button=new QPushButton(tr("File..."),parent);
 	
-	QHBoxLayout *hbox=new QHBoxLayout;
+	QHBoxLayout *hbox = new QHBoxLayout( parent );
 	
 	hbox->addWidget(label);
 	hbox->addWidget(lineedit);
@@ -633,7 +633,7 @@ MenuExtCallBack::MenuExtCallBack(QWidget *parent):QWidget(parent)
 {
 	auto_exec_ok=false;
 	
-	QVBoxLayout *vbox=new QVBoxLayout;
+	QVBoxLayout *vbox=new QVBoxLayout( parent );
 	
 	input_box=new QGroupBox (tr("Input Parameters"), this);
 	output_box=new QGroupBox (tr("Output Parameters"), this);

@@ -56,17 +56,23 @@ class GenerateMenu:public QObject
 class MenuCallBack:public QObject
 {
 	Q_OBJECT
-	public:
-	MenuCallBack(const QString &menu_name, OctaveConnection *oc);
-	private:
+
+	QString output;
 	QProcess process;
 	QString menu_name;
-	QString output;
 	OctaveConnection *octave_connection;
+
+
+	public:
+
+		MenuCallBack( const QString &menu_name , OctaveConnection *oc );
+
+
 	public slots:
-	void actions_callback();
-	void readyReadStandardOutput();
-	void finished( int exitCode, QProcess::ExitStatus exitStatus );
+
+		void actions_callback();
+		void readyReadStandardOutput();
+		void finished( int exitCode , QProcess::ExitStatus exitStatus );
 };
 
 /**Callback for ".menu" files. See QtOctave doc for ".menu" files.*/
@@ -87,9 +93,6 @@ class MenuFileCallBack: public QObject
 	
 };
 
-
-///////////////////////////////
-
 /**Base class for input widgets in menus.*/
 class InputWidget:public QWidget
 {
@@ -103,12 +106,14 @@ class InputWidget:public QWidget
 class LineEdit:public InputWidget
 {
 	Q_OBJECT
+
 	public:
-	LineEdit(const QString &label, QWidget *parent=0);
-	QLabel *label;
-	QLineEdit *lineedit;
-	QString parameter();
-	void setParameter( const QString &param );
+
+		LineEdit(const QString &label, QWidget *parent=0);
+		QLabel *label;
+		QLineEdit *lineedit;
+		QString parameter();
+		void setParameter( const QString &param );
 };
 
 /**Simple line edit and select file dialog for menus.*/
