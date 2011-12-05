@@ -44,3 +44,10 @@ resources/base/config/last_windows_layout.xml
 resources/base/config/config.rc
 resources/base/config/SmallClipboard.xml
 resources/base/syntax/commands.txt
+build/qtcreator/4.7/base/base.vcxproj
+build/qtcreator/4.7/svgcanvas/svgcanvas.vcxproj
+build/qtcreator/4.7/projects/projects.vcxproj
+build/qtcreator/4.7/dynamic_help/dynamic_help.vcxproj
+build/qtcreator/4.7/operations/operations.vcxproj
+*.filters
+*.rc
