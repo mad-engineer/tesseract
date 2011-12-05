@@ -23,7 +23,7 @@ QString GenerateMenu::menu_path( QString file_path )
 {
 	if( file_path.startsWith( path ) )
 	{
-		file_path.remove( 0,path.size() );
+		file_path.remove( 0 , path.size() );
 	}
 
 	return file_path;
@@ -298,8 +298,6 @@ bool GenerateMenu::process_menu_file(const QString &newFile,  QStringList &  inp
 	return true;
 }
 
-///////////////////////////////
-
 MenuExtCallBack *GenerateMenu::process_menu_file(QString _file)
 {
 	QFile file(_file);
@@ -425,10 +423,6 @@ MenuExtCallBack *GenerateMenu::process_menu_file(QString _file)
 	return wizard;
 }
 
-///////////////////////////////
-
-
-
 MenuFileCallBack::MenuFileCallBack(const QString &newMenuName, 
 								   OctaveConnection *newOc, 
 								   Operations *newOperations, 
@@ -520,20 +514,16 @@ void MenuCallBack::actions_callback()
 	
 }
 
-///////////////////////////////
-
 InputWidget::InputWidget(QWidget *parent):QWidget(parent)
 {
 }
-
-///////////////////////////////
 
 LineEdit::LineEdit(const QString &newLabel, QWidget *parent):InputWidget(parent)
 {
 	label = new QLabel(newLabel, this);
 	lineedit = new QLineEdit(this);
 	
-	QHBoxLayout *hbox=new QHBoxLayout;
+	QHBoxLayout *hbox = new QHBoxLayout;
 	
 	hbox->addWidget(label);
 	hbox->addWidget(lineedit);
@@ -544,21 +534,15 @@ LineEdit::LineEdit(const QString &newLabel, QWidget *parent):InputWidget(parent)
 	setLayout(hbox);
 }
 
-///////////////////////////////
-
 QString LineEdit::parameter()
 {
 	return lineedit->text();
 }
 
-///////////////////////////////
-
 void LineEdit::setParameter(const QString &param)
 {
 	lineedit->setText(param);
 }
-
-///////////////////////////////
 
 FileEdit::FileEdit(const QString &newLabel, QWidget *parent):InputWidget(parent)
 {
@@ -582,21 +566,15 @@ FileEdit::FileEdit(const QString &newLabel, QWidget *parent):InputWidget(parent)
 	connect(file_button, SIGNAL( clicked() ), this, SLOT(file_button_callback()) );
 }
 
-///////////////////////////////
-
 QString FileEdit::parameter()
 {
 	return lineedit->text();
 }
 
-///////////////////////////////
-
 void FileEdit::setParameter(const QString &param)
 {
 	lineedit->setText(param);
 }
-
-///////////////////////////////
 
 void FileEdit::file_button_callback()
 {
@@ -621,9 +599,6 @@ void FileEdit::file_button_callback()
 	lineedit->setText(s);
 }
 
-
-///////////////////////////////
-
 ComboBox::ComboBox(const QString &newLabel, QWidget *parent):InputWidget(parent)
 {
 	label=new QLabel(newLabel, this);
@@ -642,14 +617,10 @@ ComboBox::ComboBox(const QString &newLabel, QWidget *parent):InputWidget(parent)
 	setLayout(hbox);
 }
 
-///////////////////////////////
-
 QString ComboBox::parameter()
 {
 	return combobox->currentText();
 }
-
-///////////////////////////////
 
 void ComboBox::setParameter(const QString &param)
 {
@@ -657,8 +628,6 @@ void ComboBox::setParameter(const QString &param)
 	
 	combobox->insertItems(0,list);
 }
-
-///////////////////////////////
 
 MenuExtCallBack::MenuExtCallBack(QWidget *parent):QWidget(parent)
 {
@@ -680,7 +649,7 @@ MenuExtCallBack::MenuExtCallBack(QWidget *parent):QWidget(parent)
 	vbox->addWidget(output_box);
 	//vbox->addWidget(help_widget);
 	
-	QHBoxLayout *hbox=new QHBoxLayout;
+	QHBoxLayout *hbox = new QHBoxLayout;
 	
 	vbox->addLayout(hbox);
 	
@@ -729,15 +698,11 @@ MenuExtCallBack::MenuExtCallBack(QWidget *parent):QWidget(parent)
 	hide();
 }
 
-///////////////////////////////
-
 void MenuExtCallBack::ok_button_callback()
 {
 	oc->command_enter( generate_command().trimmed() );
 	hide();
 }
-
-///////////////////////////////
 
 void MenuExtCallBack::copy_clipboard_button_callback()
 {
@@ -747,14 +712,10 @@ void MenuExtCallBack::copy_clipboard_button_callback()
 	hide();
 }
 
-///////////////////////////////
-
 void MenuExtCallBack::cancel_button_callback()
 {
 	hide();
 }
-
-///////////////////////////////
 
 void MenuExtCallBack::help_button_callback()
 {
@@ -778,7 +739,6 @@ void MenuExtCallBack::help_button_callback()
 	help->show();
 }
 
-///////////////////////////////
 #include<QDesktopWidget>
 
 void MenuExtCallBack::actions_callback()
@@ -809,14 +769,10 @@ void MenuExtCallBack::actions_callback()
 	show();
 }
 
-///////////////////////////////
-
 void MenuExtCallBack::setOctaveConnection(OctaveConnection *oc)
 {
 	this->oc=oc;
 }
-
-///////////////////////////////
 
 void MenuExtCallBack::addInput(InputWidget *input)
 {
@@ -825,8 +781,6 @@ void MenuExtCallBack::addInput(InputWidget *input)
 	this->input.append(input);
 }
 
-///////////////////////////////
-
 void MenuExtCallBack::addOutput(InputWidget *input)
 {
 	output_area->layout()->addWidget(input);
@@ -834,37 +788,26 @@ void MenuExtCallBack::addOutput(InputWidget *input)
 	this->output.append(input);
 }
 
-
-///////////////////////////////
-
 void MenuExtCallBack::addHelp(const QString &newHelp)
 {
 	//help_widget->setHtml(help);
 	help=newHelp;
 }
 
-///////////////////////////////
-
 void MenuExtCallBack::addCommand(const QString &newCommand)
 {
 	command=newCommand;
 }
-
-///////////////////////////////
 
 void MenuExtCallBack::setAcceptBlankParameters(bool accept_blank_parameters)
 {
 	this->accept_blank_parameters=accept_blank_parameters;
 }
 
-///////////////////////////////
-
 void MenuExtCallBack::setAutoExec(bool auto_exec_ok)
 {
 	this->auto_exec_ok=auto_exec_ok;
 }
-
-///////////////////////////////
 
 QString MenuExtCallBack::generate_command()
 {
