@@ -1,11 +1,10 @@
 include(../tesseract.pri)
 
+QT += gui core svg xml
+
 TEMPLATE = vcapp
-
-QT += gui \
-	  core
-
 PROJECT_NAME = base
+TARGET = base
 
 PROJECT_LANG_PATH = $$SOLUTION_LANG_PATH/$$PROJECT_NAME
 TRANSLATIONS += $$PROJECT_LANG_PATH/base_es.ts \
@@ -35,8 +34,6 @@ INCLUDEPATH += 	$$PROJECT_INCLUDE_PROJECTS \
 				$$PROJECT_INCLUDE_DYNAMIC_HELP \
 				$$PROJECT_INCLUDE_OPERATIONS \
 				$$PROJECT_INCLUDE_SVGCANVAS \
-				$(QTDIR2008)/include/QtXml \
-				$(QTDIR2008)/include/QtSvg
 
 HEADERS = $$PROJECT_INCLUDE_PATH/autocomplete.hpp \
            $$PROJECT_INCLUDE_PATH/basewidget.hpp \
@@ -90,13 +87,13 @@ SOURCES  = $$PROJECT_SOURCE_PATH/autocomplete.cpp \
            $$PROJECT_SOURCE_PATH/variables_list.cpp \
            $$PROJECT_SOURCE_PATH/window_list.cpp
 
-	CONFIG(Debug):LIBS = 	-lQtSvgd4 -lQtXmld4 -lsvgcanvasd -loperationsd -lprojectsd -ldynamic_helpd \
+	CONFIG(Debug):LIBS += 	-lsvgcanvasd -loperationsd -lprojectsd -ldynamic_helpd \
 							-L$$PROJECT_LIB_PROJECTS_D \
 							-L$$PROJECT_LIB_DYNAMIC_HELP_D \
 							-L$$PROJECT_LIB_OPERATIONS_D \
 							-L$$PROJECT_LIB_SVGCANVAS_D 
 
-	CONFIG(Release):LIBS = -lQtSvg4 -lQtXml4 -lsvgcanvas -loperations -lprojects -ldynamic_help \
+	CONFIG(Release):LIBS =  -lsvgcanvas -loperations -lprojects -ldynamic_help \
 							-L$$PROJECT_LIB_PROJECTS \
 							-L$$PROJECT_LIB_DYNAMIC_HELP \
 							-L$$PROJECT_LIB_OPERATIONS \

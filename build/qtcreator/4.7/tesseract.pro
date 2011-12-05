@@ -6,7 +6,9 @@ SUBDIRS = base \
 		  svgcanvas \
 		  dynamic_help
 		  
-tesseract.depends = projects \
-					operations \
-					svgcanvas \
-					dynamic_help
+tesseract.depends = base
+
+base.depends = 	projects \
+				operations \
+				svgcanvas \
+				dynamic_help
