@@ -337,13 +337,13 @@ MenuExtCallBack *GenerateMenu::process_menu_file(QString _file)
 				{
 					QString type = rp.cap(1);
 					
-					if(type=="input")
+					if( type=="input" )
 					{
 						LineEdit *lineedit=new LineEdit(label);
 						lineedit->setParameter(rp.cap(2).trimmed());
 						wizard->addInput(lineedit);
 					}
-					else if(type=="input_file")
+					else if( type=="input_file" )
 					{
 						FileEdit *fileedit=new FileEdit(label);
 						fileedit->setParameter(rp.cap(2).trimmed());
@@ -353,35 +353,35 @@ MenuExtCallBack *GenerateMenu::process_menu_file(QString _file)
 					{
 						label = rp.cap(2).trimmed();
 					}
-					else if(type=="output")
+					else if( type=="output" )
 					{
 						LineEdit *lineedit=new LineEdit(label);
 						lineedit->setParameter(rp.cap(2).trimmed());
 						wizard->addOutput(lineedit);
 					}
-					else if(type=="output_file")
+					else if( type=="output_file" )
 					{
 						FileEdit *fileedit=new FileEdit(label);
 						fileedit->setParameter(rp.cap(2).trimmed());
 						wizard->addOutput(fileedit);
 					}
-					else if(type=="output_label")
+					else if( type=="output_label" )
 					{
 						label = rp.cap(2).trimmed();
 					}
-					else if(type=="menu_name")
+					else if( type=="menu_name" )
 					{
 						QString menu_name = rp.cap(2).trimmed();
 						wizard->setWindowTitle(menu_name);
 					}
-					else if(type=="accept_blank_parameters")
+					else if( type=="accept_blank_parameters" )
 					{
 						if (rp.cap(2).trimmed()=="true") accept_blank_parameters=true;
 					}
-					else if(type=="auto_exec")
+					else if( type=="auto_exec" )
 					{
 						QString ok = rp.cap(2).trimmed();
-						auto_exec = (ok=="true");
+						auto_exec = ( ok=="true" );
 					}
 				}
 				else if(rbb.exactMatch(line)) {block_label=rbb.cap(1); block_text=""; state=BLOCK;}
@@ -546,12 +546,12 @@ void LineEdit::setParameter(const QString &param)
 
 FileEdit::FileEdit(const QString &newLabel, QWidget *parent):InputWidget(parent)
 {
-	label=new QLabel(newLabel, this);
+	label = new QLabel(newLabel , this );
 
-	lineedit=new QLineEdit(parent);
-	file_button=new QPushButton(tr("File..."),parent);
+	lineedit=new QLineEdit( this );
+	file_button=new QPushButton(tr("File...") , this );
 	
-	QHBoxLayout *hbox = new QHBoxLayout( parent );
+	QHBoxLayout *hbox = new QHBoxLayout;
 	
 	hbox->addWidget(label);
 	hbox->addWidget(lineedit);
@@ -633,7 +633,7 @@ MenuExtCallBack::MenuExtCallBack(QWidget *parent):QWidget(parent)
 {
 	auto_exec_ok=false;
 	
-	QVBoxLayout *vbox=new QVBoxLayout( parent );
+	QVBoxLayout *vbox=new QVBoxLayout;
 	
 	input_box=new QGroupBox (tr("Input Parameters"), this);
 	output_box=new QGroupBox (tr("Output Parameters"), this);

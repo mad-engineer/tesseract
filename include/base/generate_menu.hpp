@@ -97,15 +97,19 @@ class MenuFileCallBack: public QObject
 class InputWidget:public QWidget
 {
 	Q_OBJECT
+
+
 	public:
-	InputWidget(QWidget *parent=0);
-	virtual QString parameter()=0;
+
+		InputWidget(QWidget *parent=0);
+		virtual QString parameter()=0;
 };
 
 /**Simple line edit for menus.*/
 class LineEdit:public InputWidget
 {
 	Q_OBJECT
+
 
 	public:
 
@@ -120,27 +124,36 @@ class LineEdit:public InputWidget
 class FileEdit:public InputWidget
 {
 	Q_OBJECT
+
+
 	public:
-	FileEdit(const QString &label, QWidget *parent=0);
-	QLabel *label;
-	QLineEdit *lineedit;
-	QPushButton *file_button;
-	QString parameter();
-	void setParameter( const QString &param );
+
+		FileEdit(const QString &label, QWidget *parent=0);
+		QLabel *label;
+		QLineEdit *lineedit;
+		QPushButton *file_button;
+		QString parameter();
+		void setParameter( const QString &param );
+
+
 	public slots:
-	void file_button_callback();
+
+		void file_button_callback();
 };
 
 /**Simple combobox for menus.*/
 class ComboBox:public InputWidget
 {
 	Q_OBJECT
+
+
 	public:
-	ComboBox(const QString &label, QWidget *parent=0);
-	QLabel *label;
-	QComboBox *combobox;
-	QString parameter();
-	void setParameter( const QString &param );
+
+		ComboBox(const QString &label, QWidget *parent=0);
+		QLabel *label;
+		QComboBox *combobox;
+		QString parameter();
+		void setParameter( const QString &param );
 };
 
 
@@ -148,7 +161,22 @@ class ComboBox:public InputWidget
 class MenuExtCallBack: public QWidget
 {
 	Q_OBJECT
+
+	OctaveConnection *oc;
+	QList<InputWidget*>  input, output;
+	QString command, help;
+	QGroupBox *input_box, *output_box;
+	QWidget *input_area, *output_area;
+	//QTextBrowser *help_widget;
+	bool accept_blank_parameters;
+	QPushButton *ok_button, *copy_clipboard_button, *help_button, *cancel_button;
+	bool auto_exec_ok;
+
+	QString generate_command();
+
+
 	public:
+
 		MenuExtCallBack(QWidget *parent=0);
 		void setOctaveConnection(OctaveConnection *oc);
 		void addInput(InputWidget *input);
@@ -157,27 +185,15 @@ class MenuExtCallBack: public QWidget
 		void addCommand( const QString &command );
 		void setAcceptBlankParameters(bool accept_blank_parameters);
 		void setAutoExec(bool auto_exec_ok);
-	private:
-		OctaveConnection *oc;
-		QList<InputWidget*>  input, output;
-		QString command, help;
-		QGroupBox *input_box, *output_box;
-		QWidget *input_area, *output_area;
-		//QTextBrowser *help_widget;
-		bool accept_blank_parameters;
-		QPushButton *ok_button, *copy_clipboard_button, *help_button, *cancel_button;
-		bool auto_exec_ok;
-		
-		QString generate_command();
+
+
 	public slots:
+
 		void ok_button_callback();
 		void copy_clipboard_button_callback();
 		void cancel_button_callback();
 		void help_button_callback();
 		void actions_callback();
-	
 };
-
-
 
 #endif

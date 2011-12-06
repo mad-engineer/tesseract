@@ -51,3 +51,4 @@ build/qtcreator/4.7/dynamic_help/dynamic_help.vcxproj
 build/qtcreator/4.7/operations/operations.vcxproj
 *.filters
 *.rc
+build/qtcreator/4.7/tesseract.sln

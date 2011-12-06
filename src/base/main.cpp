@@ -282,15 +282,15 @@ void Main::help_octave()
 
 void Main::help_qtoctave()
 {
-	Help *help  =static_cast<Help*>( createTool( HELP , work_space) );
+	Help *help = static_cast<Help*>( createTool( HELP , work_space) );
 
-	if(get_config("qtoctave_help_path").isEmpty())
+	if( get_config( "qtoctave_help_path" ).isEmpty() )
 	{
 		help->setSource( QTOCTAVE_HELP_PATH );
 	}
 	else
 	{
-		help->setSource(get_config("qtoctave_help_path"));
+		help->setSource( get_config( "qtoctave_help_path" ) );
 	}
 
 	help->setWindowTitle("QtOctave Help");
@@ -318,7 +318,7 @@ void Main::help_qtoctave_about()
 
 void Main::table( QString text )
 {
-	bool ok=true;
+	bool ok = true;
 
 	if( text.isEmpty() )
 	{
@@ -834,9 +834,9 @@ static QStringList command_line_find_files(int argn, char *argv[])
 	return files;
 }
 
-int main(int argn, char *argv[])
+int main( int argn , char **argv )
 {
-	QApplication a(argn,argv);
+	QApplication a( argn , argv );
 
 	//Se inicializa la configuración
 	get_config("");
@@ -847,22 +847,30 @@ int main(int argn, char *argv[])
 		class SleeperThread : public QThread
 		{
 		public:
-			static void msleep(unsigned long msecs) 
+			static void msleep( unsigned long msecs ) 
 			{
-				QThread::msleep(msecs);
+				QThread::msleep( msecs );
 			}
 		};
 
-		QPixmap aSplashImage(QApplication::applicationDirPath() + "/styles/default/images/splash.png");
+		QPixmap aSplashImage
+		(
+			QApplication::applicationDirPath() + "/styles/default/images/splash.png" 
+		);
 
-		CSplashScreen aSplashScreen(aSplashImage);
+		CSplashScreen aSplashScreen( aSplashImage );
 		aSplashScreen.show();
 
-		for (int i = 1; i <= 5; i++)
+		for ( int i = 1 ; i <= 5 ; i++ )
 		{
-			aSplashScreen.showMessage(QString("Processing %1...").arg(i), Qt::AlignTop | Qt::AlignLeft, Qt::white);
+			aSplashScreen.showMessage
+			(
+				QString( "Processing %1..." ).arg(i) , 
+				Qt::AlignTop | Qt::AlignLeft , 
+				Qt::white 
+			);
 
-			SleeperThread::msleep(500);
+			SleeperThread::msleep( 500 );
 		}
 	}
 
