@@ -523,7 +523,7 @@ LineEdit::LineEdit(const QString &newLabel, QWidget *parent):InputWidget(parent)
 	label = new QLabel(newLabel, this);
 	lineedit = new QLineEdit(this);
 	
-	QHBoxLayout *hbox = new QHBoxLayout;
+	QHBoxLayout *hbox = new QHBoxLayout();
 	
 	hbox->addWidget(label);
 	hbox->addWidget(lineedit);
@@ -546,16 +546,16 @@ void LineEdit::setParameter(const QString &param)
 
 FileEdit::FileEdit(const QString &newLabel, QWidget *parent):InputWidget(parent)
 {
-	label = new QLabel(newLabel , this );
+	label = new QLabel( newLabel , this );
 
 	lineedit=new QLineEdit( this );
 	file_button=new QPushButton(tr("File...") , this );
 	
-	QHBoxLayout *hbox = new QHBoxLayout;
+	QHBoxLayout *hbox = new QHBoxLayout();
 	
-	hbox->addWidget(label);
-	hbox->addWidget(lineedit);
-	hbox->addWidget(file_button);
+	hbox->addWidget( label );
+	hbox->addWidget( lineedit );
+	hbox->addWidget( file_button );
 	
 	label->show();
 	lineedit->show();
@@ -571,9 +571,9 @@ QString FileEdit::parameter()
 	return lineedit->text();
 }
 
-void FileEdit::setParameter(const QString &param)
+void FileEdit::setParameter( const QString &param )
 {
-	lineedit->setText(param);
+	lineedit->setText( param );
 }
 
 void FileEdit::file_button_callback()
@@ -601,20 +601,20 @@ void FileEdit::file_button_callback()
 
 ComboBox::ComboBox(const QString &newLabel, QWidget *parent):InputWidget(parent)
 {
-	label=new QLabel(newLabel, this);
-	combobox=new QComboBox(this);
+	label=new QLabel( newLabel , this );
+	combobox = new QComboBox( this );
 	
-	QHBoxLayout *hbox=new QHBoxLayout;
+	QHBoxLayout *hbox = new QHBoxLayout();
 	
-	hbox->addWidget(label);
-	hbox->addWidget(combobox);
+	hbox->addWidget( label );
+	hbox->addWidget( combobox );
 	
-	combobox->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+	combobox->setSizePolicy( QSizePolicy::MinimumExpanding , QSizePolicy::Fixed );
 	
 	label->show();
 	combobox->show();
 	
-	setLayout(hbox);
+	setLayout( hbox );
 }
 
 QString ComboBox::parameter()
@@ -633,7 +633,7 @@ MenuExtCallBack::MenuExtCallBack(QWidget *parent):QWidget(parent)
 {
 	auto_exec_ok=false;
 	
-	QVBoxLayout *vbox=new QVBoxLayout;
+	QVBoxLayout *vbox = new QVBoxLayout();
 	
 	input_box=new QGroupBox (tr("Input Parameters"), this);
 	output_box=new QGroupBox (tr("Output Parameters"), this);
@@ -649,7 +649,7 @@ MenuExtCallBack::MenuExtCallBack(QWidget *parent):QWidget(parent)
 	vbox->addWidget(output_box);
 	//vbox->addWidget(help_widget);
 	
-	QHBoxLayout *hbox = new QHBoxLayout;
+	QHBoxLayout *hbox = new QHBoxLayout();
 	
 	vbox->addLayout(hbox);
 	
@@ -723,7 +723,7 @@ void MenuExtCallBack::help_button_callback()
 	
 	help->setAttribute(Qt::WA_DeleteOnClose);
 	
-	QHBoxLayout *hbox=new QHBoxLayout;
+	QHBoxLayout *hbox=new QHBoxLayout();
 	
 	QTextBrowser *help_widget=new QTextBrowser(this);
 	help_widget->show();
