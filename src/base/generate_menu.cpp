@@ -813,12 +813,12 @@ QString MenuExtCallBack::generate_command()
 {
 	QString _command(command), parameter;
 	
-	if(output.size()>0)
+	if( output.size() > 0 )
 	{
 		for (int i = 0; i < output.size();i++)
 		{
-			parameter=output.at(i)->parameter();
-			if( !accept_blank_parameters && parameter.isEmpty() )
+			parameter = output.at(i)->parameter();
+			if( ! accept_blank_parameters && parameter.isEmpty() )
 			{
 				QMessageBox::warning (this, tr("Blank parameter"), tr("There are blank parameters. Please fill all fields."), tr("Ok") );
 			}
@@ -826,12 +826,12 @@ QString MenuExtCallBack::generate_command()
 		}
 	}
 	
-	if(input.size()>0)
+	if( input.size() > 0 )
 	{
 		for (int i = 0; i < input.size();i++)
 		{
-			parameter=input.at(i)->parameter();
-			if( !accept_blank_parameters && parameter.isEmpty() )
+			parameter = input.at(i)->parameter();
+			if( ! accept_blank_parameters && parameter.isEmpty() )
 			{
 				QMessageBox::warning (this, tr("Blank parameter"), tr("There are blank parameters. Please fill all fields."), tr("Ok") );
 			}
