@@ -36,25 +36,28 @@
 
 QString projectsPath();
 
-Terminal::Terminal(QWidget * parent):BaseWidget(parent),
-octave_connection(NULL)
+Terminal::Terminal(QWidget * parent) : 
+BaseWidget(parent),
+octave_connection(NULL),
+diary_ok(false),
+text( new QTextEdit( this ) ),
+combo_box( new Autocomplete(this) )
 {
 	widget_type=TERMINAL;
-	diary_ok=false;
 	
 	init_regular_expresions();
 	
 	menuBar()->hide();
 	
-	//Se crea la ventana del terminal
-	setWindowTitle(tr("Octave Terminal"));
-	setWindowIcon( QIcon(QApplication::applicationDirPath() + "/styles/default/images/console.png") );
+	// TODO: Translate this comment: Se crea la ventana del terminal
+	setWindowTitle( tr( "Octave Terminal" ) );
+	setWindowIcon( QIcon(QApplication::applicationDirPath() + "/styles/default/images/console.png" ) );
 	
 	if( get_config( "lines_in_terminal" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
-		c[ "lines_in_terminal" ]="1000";
-		set_config(c);
+		c[ "lines_in_terminal" ] = "1000";
+		set_config( c );
 	}
 
 	if( get_config( "cols_in_terminal" ).isEmpty() )
@@ -65,36 +68,52 @@ octave_connection(NULL)
 	}
 
 	cols_in_terminal = get_config( "cols_in_terminal" ).toInt();
+
+	// Limit input to positive numbers and a width limit of 1000
+	if( ( ! cols_in_terminal ) || cols_in_terminal > 1000 )
+	{
+		cols_in_terminal = 1000;
+	}
+	
 	lines_in_terminal = get_config( "lines_in_terminal" ).toInt();
 
-	text = new QTextEdit(this);
+	// Same as above
+	if( ( ! lines_in_terminal ) || lines_in_terminal > 10000 )
+	{
+		lines_in_terminal = 10000;
+	}
 
 	text->setReadOnly( true );
 	text->setLineWrapMode( QTextEdit::NoWrap );
 	//text->setLineWrapColumnOrWidth ( cols_in_terminal );
 
-	if(get_config("show_ide_commands").isEmpty())
+	if( get_config( "show_ide_commands" ).isEmpty() )
 	{
-		show_ide_commands_ok=false;
+		show_ide_commands_ok = false;
+
 		QMap<QString,QString> c;
-		c["show_ide_commands"]="false";
-		set_config(c);
+
+		c[ "show_ide_commands" ] = "false";
+		set_config( c );
 	}
 	else
-	{
-		show_ide_commands_ok = get_config("show_ide_commands")=="true";
+	{ 
+		show_ide_commands_ok = get_config( "show_ide_commands" ) == "true" ;
 	}
 
 	if( get_config( "terminal_font" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
+
 		c[ "terminal_font" ] = "Courier New";
+
 		set_config(c);
 	}
 
 	if( get_config( "terminal_foreground_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
+
 		c[ "terminal_foreground_color" ] = "Black";
 		set_config( c );
 	}
@@ -102,6 +121,7 @@ octave_connection(NULL)
 	if( get_config( "terminal_background_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
+
 		c[ "terminal_background_color" ] = "White";
 		set_config( c );
 	}
@@ -109,6 +129,7 @@ octave_connection(NULL)
 	if( get_config( "terminal_error_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
+
 		c[ "terminal_error_color" ] = "Red";
 		set_config( c );
 	}
@@ -116,61 +137,66 @@ octave_connection(NULL)
 	if( get_config( "ide_command_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
+
 		c[ "ide_command_color" ] = "lightGray";
 		set_config( c );
 	}
 	
 	//text->setTextColor(get_config("terminal_foreground_color"));
 	{
-		QPalette p=text->viewport ()->palette();
-		p.setColor(QPalette::Base, QColor(get_config("terminal_background_color")) );
-		text->viewport()->setPalette(p);
+		QPalette p = text->viewport ()->palette();
+		p.setColor( QPalette::Base , QColor( get_config( "terminal_background_color" ) ) );
+		text->viewport()->setPalette( p );
 	}
+
+	QFont font( get_config( "terminal_font" ) );
 	
-	QFont font;
-	font.fromString(get_config("terminal_font"));
-	normal_format.setFont(font);
-	normal_format.setFontWeight(QFont::Normal);
+	normal_format.setFont( font );
+	normal_format.setFontWeight( QFont::Normal );
+
+	ide_command_format = normal_format;
+
+	ide_command_format.setFontPointSize( font.pointSize() );
+	ide_command_format.setForeground( QColor( get_config( "ide_command_color" ) ) );
+
+	normal_format.setForeground( QColor( get_config( "terminal_foreground_color" ) ) );
 	
-	ide_command_format=normal_format;
-	ide_command_format.setForeground(QColor(get_config("ide_command_color")) );
-	ide_command_format.setFontPointSize(font.pointSize()-3);
-	normal_format.setForeground(QColor(get_config("terminal_foreground_color")) );
-	command_format=normal_format;
-	command_format.setFontWeight(QFont::Bold);
-	error_format=normal_format;
-	error_format.setForeground(QColor(get_config("terminal_error_color")) );
+	command_format = normal_format;
+	command_format.setFontWeight( QFont::Bold );
+
+	error_format = normal_format;
+	error_format.setForeground( QColor( get_config( "terminal_error_color" ) ) );
 	
-	text->setHtml("Starting Octave...<br>");
+	text->setHtml( tr( "Starting Octave...<br>" ) );
 	text->show();
-	
-	combo_box=new Autocomplete(this);
-	combo_box->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum);
+
+	combo_box->setSizePolicy( QSizePolicy::Expanding , QSizePolicy::Minimum );
 	combo_box->show();
-	//combo_box->setFocus();
 	
 	//Se captura el "intro" para pasar comandos al octave
-	QLineEdit *line_edit=combo_box/*->lineEdit()*/;
-	connect(line_edit, SIGNAL(returnPressed()), this, SLOT(return_pressed()));
+	QLineEdit *line_edit = combo_box/*->lineEdit()*/;
+
+	connect( line_edit, SIGNAL(returnPressed() ) , this , SLOT( return_pressed() ) );
 	connect( line_edit, SIGNAL( textChanged ( const QString &) ) , this, SLOT( textChanged ( const QString &) ) );
 	
-	line_edit->setText(tr("Insert your commands here..."));
+	line_edit->setText( tr( "Insert your commands here..." ) );
 	line_edit->selectAll();
-	line_edit->setToolTip(tr("Insert your commands here. Use arrows and tab key to commands navigation."));
+	line_edit->setToolTip( tr( "Insert your commands here. Use arrows and tab key to commands navigation." ) );
 	
-	connect(combo_box, SIGNAL(selectionChanged ()), this, SLOT(clear_command_line_first_time()));
+	connect( combo_box , SIGNAL(selectionChanged ()) , this , SLOT(clear_command_line_first_time() ) );
 	
-	QVBoxLayout *layout = new QVBoxLayout;
-	QHBoxLayout *line_layout = new QHBoxLayout;
+	QVBoxLayout *layout = new QVBoxLayout();
+	QHBoxLayout *line_layout = new QHBoxLayout();
+
 	layout->addWidget(text);
 	layout->addLayout(line_layout);
 	
-	line_layout->addWidget(new QLabel("<b>Command line&gt;&gt;</b>",this));
-	line_layout->addWidget(combo_box);
+	line_layout->addWidget( new QLabel( "<b>" + tr( "<Command line" ) + "&gt;&gt;</b>" , this ) );
+	line_layout->addWidget( combo_box );
 	
-	centralWidget()->setLayout(layout);
+	centralWidget()->setLayout( layout );
 	
-	setAcceptDrops(true);
+	setAcceptDrops( true );
 
 	//TODO: find a better way to avoid double code
 	{

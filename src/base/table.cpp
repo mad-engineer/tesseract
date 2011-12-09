@@ -27,23 +27,28 @@
 
 #include "table.hpp"
 
-Table::Table(QWidget * parent):BaseWidget(parent)
+Table::Table( QWidget * parent ) : 
+BaseWidget( parent )
 {
-	widget_type=TABLE;
+	widget_type = TABLE;
 	
 	init_regular_expresions();
 
-	table_form=new TableForm();
-	table_form->setupUi(centralWidget());
+	table_form = shared_ptr< TableForm >( new TableForm() );
+
+	table_form->setupUi( centralWidget() );
+
 	setWindowIcon( QIcon( QApplication::applicationDirPath() + "/styles/default/images/table.png" ) );
+
 	table_form->reloadButton->setIcon( QIcon( QApplication::applicationDirPath() + "/styles/default/images/reload.png" ) );
 	table_form->reloadButton->setToolTip(tr("<b>Reload matrix.</b><br> Some operations change matrix, use reload to view changes."));
 	table_form->spinbox_widget->setLayout(new QHBoxLayout);
 	table_form->spinbox_widget->layout()->addWidget(new QLabel("Indexes showed:"));
 	table_form->spinbox_widget->layout()->setContentsMargins(0,0,0,0);
 	
-	model=new ComplexNumberTableModel;
-	table_form->table_widget->setModel(model);
+	model = new ComplexNumberTableModel( this );
+
+	table_form->table_widget->setModel( model );
 	table_form->table_widget->setItemDelegate( new LineEditDelegate(this) );
 	
 	connect(model,SIGNAL(cellChanged( int, int, QString)),this,SLOT(cellChanged( int, int, QString)));

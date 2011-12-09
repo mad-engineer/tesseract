@@ -20,6 +20,9 @@
 #ifndef TESSERACT_BASE_TABLE_HPP
 #define TESSERACT_BASE_TABLE_HPP
 
+#include <memory>
+using std::tr1::shared_ptr;
+
 #include <QTableWidget>
 #include <QItemDelegate>
 #include <QContextMenuEvent>
@@ -38,79 +41,96 @@ using namespace Ui;
 
 class ComplexNumberTableModel;
 
-/** Shows QTable with spreadsheet. Spreadsheet's data are from given matrix.
-When spreadsheet is modificated, matrix is modificated.
+/** Shows QTable with spreadsheet. Spreadsheets data are from given matrix.
+When spreadsheet is modified, matrix is modified.
 */
 
-class Table:public BaseWidget
+class Table : public BaseWidget
 {
 	Q_OBJECT
-	public:
-	Table( QWidget * parent = 0 );
-	void setOctaveConnection(OctaveConnection *octave_connection);
-	void setMatrix( QString matrix );
-	QString getMatrix();
-	BaseWidget *copyBaseWidget( QWidget * parent = 0 );
-	void toXML(QXmlStreamWriter &xml);
 	
-	private:
-	TableForm *table_form;
+	shared_ptr<TableForm> table_form;
 	OctaveConnection *octave_connection;
+
 	QString matrix;
 	QStringList dimensions;
 	QList<QSpinBox*> spinbox_dimensions;
+
 	void change_rows();
 	void change_cols();
 	void build_menu();
+
 	QMenu *menu;
 	ComplexNumberTableModel *model;
 	
 	void reloadCell(int row, int col);
 	
-	/**Returns matrix name and change : by row and col. Per example, if we are editing matrix a(1,2,:,2,:), matrix_row_col("2','2")==a(1,2,2,2,2). If ranges==true, then show 1:size(a)(#dimension) in other dimensions. For example,  matrix_row_col("2','2", true)==a(1:size(a)(1),1:size(a)(2),2,1:size(a)(4),2).
+	/**	Returns matrix name and change : by row and col. 
+		Per example, if we are editing matrix a(1,2,:,2,:), 
+		matrix_row_col("2','2")==a(1,2,2,2,2). If ranges==true, 
+		then show 1:size(a)(#dimension) in other dimensions. 
+		For example,  
+		matrix_row_col("2','2", true) == a(1:size(a)(1),1:size(a)(2),2,1:size(a)(4),2).
 	% is changed for column number.
 	*/
-	QString matrix_row_col(QString row, QString col, bool ranges=false);
+
+	QString matrix_row_col( QString row , QString col , bool ranges = false );
+
 	/**Returns Octave command to resize matrix. If add==true, then rows or cols are added to dimensions. Negative rows or cols between brackets.*/
-	QString resize_matrix(QString rows, QString cols, bool add=false);
+	QString resize_matrix( QString rows , QString cols , bool add = false );
 	
-	/**Regular expresions:*/
+	/**Regular expressions:*/
 	
 	QRegExp mre; //Used in line_ready
 	
-	/**Init most used regular expresions*/
+	/**Init most used regular expressions*/
 	void init_regular_expresions();
 	
 	protected:
-	void contextMenuEvent ( QContextMenuEvent * event );
+
+		void contextMenuEvent ( QContextMenuEvent * event );
+
+
+	public:
+
+		Table( QWidget * parent = 0 );
+
+		QString getMatrix();
+		void setMatrix( QString matrix );
+		void toXML(QXmlStreamWriter &xml);
+		BaseWidget *copyBaseWidget( QWidget * parent = 0 );
+		void setOctaveConnection( OctaveConnection *octave_connection );
+
 	public slots:
-	void windowActivated ( QWidget * w );
-	void windowActivated();
-	//Plot callbacks
-	void plot(TablePlot::Type);
-	void plotPlot();
-	void plotPolar();
-	void plotLogXandY();
-	void plotLogY();
-	void plotLogX();
-	void plotBar();
-	/** Callback to line_ready signal from OctaveConnection.
-	 * @param line line from Octave.
-	*/
-	void line_ready(QString line);
-	void cellChanged ( int row, int col, QString value );
-	void rows_changed();
-	void cols_changed();
-	void order_changed();
-	void copy_cb();
-	void copy_matrix_cb();
-	void paste_cb();
-	void delete_rows_cb();
-	void delete_columns_cb();
-	void insert_column_right_cb();
-	void insert_column_left_cb();
-	void insert_row_down_cb();
-	void insert_row_up_cb();
+
+		void windowActivated ( QWidget * w );
+		void windowActivated();
+		//Plot callbacks
+		void plot(TablePlot::Type);
+		void plotPlot();
+		void plotPolar();
+		void plotLogXandY();
+		void plotLogY();
+		void plotLogX();
+		void plotBar();
+
+		/** Callback to line_ready signal from OctaveConnection.
+		 * @param line line from Octave.
+		*/
+		void line_ready(QString line);
+		void cellChanged ( int row, int col, QString value );
+		void rows_changed();
+		void cols_changed();
+		void order_changed();
+		void copy_cb();
+		void copy_matrix_cb();
+		void paste_cb();
+		void delete_rows_cb();
+		void delete_columns_cb();
+		void insert_column_right_cb();
+		void insert_column_left_cb();
+		void insert_row_down_cb();
+		void insert_row_up_cb();
 };
 
 class ComplexNumberTableModel: public QAbstractTableModel
