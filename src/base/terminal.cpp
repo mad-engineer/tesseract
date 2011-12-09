@@ -107,7 +107,7 @@ combo_box( new Autocomplete(this) )
 
 		c[ "terminal_font" ] = "Courier New";
 
-		set_config(c);
+		set_config( c );
 	}
 
 	if( get_config( "terminal_foreground_color" ).isEmpty() )

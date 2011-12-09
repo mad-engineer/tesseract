@@ -82,10 +82,11 @@ void Table::init_regular_expresions()
 	mre.setPattern("~~matrix:([A-Za-z0-9_]+) \"([^\"]+)\" ([\\d ]+)"); //Used in line_ready
 }
 
-void Table::setOctaveConnection(OctaveConnection *octave_connection)
+void Table::setOctaveConnection( OctaveConnection *octave_connection )
 {
 	this->octave_connection=octave_connection;
-	connect(octave_connection,SIGNAL(line_ready(QString)),this,SLOT(line_ready(QString)));
+
+	connect( octave_connection , SIGNAL( line_ready( QString ) ) , this , SLOT( line_ready( QString ) ) );
 }
 
 void Table::setMatrix( QString newMatrix )
@@ -150,10 +151,10 @@ void Table::setMatrix( QString newMatrix )
 
 void Table::windowActivated()
 {
-	windowActivated(this);
+	windowActivated( this );
 }
 
-void Table::windowActivated(QWidget *w)
+void Table::windowActivated( QWidget *w )
 {
 	if( w != this)
 	{
@@ -172,20 +173,20 @@ void Table::windowActivated(QWidget *w)
 		}
 		else
 		{
-			command+=":";
+			command += ":";
 		}
 		
-		if( i< ( spinbox_dimensions.size()-1 ) )
+		if( i< ( spinbox_dimensions.size() - 1 ) )
 		{
-			command+=',';
+			command += ',';
 		}
 	}
 
-	command+=")";
+	command += ")";
 	
 	if( spinbox_dimensions.size() > 0 )
 	{
-		setMatrix(command);
+		setMatrix( command );
 	}
 	
 	command.clear();
@@ -233,7 +234,7 @@ void Table::windowActivated(QWidget *w)
 }
 
 
-void Table::reloadCell(int row, int col)
+void Table::reloadCell( int row , int col )
 {
 	QString command;
 		
