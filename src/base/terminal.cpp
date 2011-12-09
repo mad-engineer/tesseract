@@ -166,8 +166,7 @@ combo_box( new Autocomplete(this) )
 
 	error_format = normal_format;
 	error_format.setForeground( QColor( get_config( "terminal_error_color" ) ) );
-	
-	text->setHtml( tr( "Starting Octave...<br>" ) );
+
 	text->show();
 
 	combo_box->setSizePolicy( QSizePolicy::Expanding , QSizePolicy::Minimum );
