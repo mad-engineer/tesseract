@@ -569,16 +569,16 @@ void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 	QList<BaseWidget*> tools;
 	QHash<QString, WidgetType> tools_type;
 
-	tools_type["help"]=HELP;
-	tools_type["table"]=TABLE;
-	tools_type["editor"]=EDITOR;
-	tools_type["terminal"]=TERMINAL;
-	tools_type["svgcanvas"]=SVGCANVAS;
-	tools_type["navigator"]=NAVIGATOR;
-	tools_type["main_window"]=MAINWINDOW;
-	tools_type["command_list"]=COMMANDLIST;
-	tools_type["dynamic_help"]=DYNAMIC_HELP;
-	tools_type["variables_list"]=VARIABLESLIST;
+	tools_type["help"] = HELP;
+	tools_type["table"] = TABLE;
+	tools_type["editor"] = EDITOR;
+	tools_type["terminal"] = TERMINAL;
+	tools_type["svgcanvas"] = SVGCANVAS;
+	tools_type["navigator"] = NAVIGATOR;
+	tools_type["main_window"] = MAINWINDOW;
+	tools_type["command_list"] = COMMANDLIST;
+	tools_type["dynamic_help"] = DYNAMIC_HELP;
+	tools_type["variables_list"] = VARIABLESLIST;
 
 	while ( ! xml.atEnd() )
 	{
@@ -602,11 +602,11 @@ void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 
 				if( place == "window" ) 
 				{
-					parent=NULL;
+					parent = NULL;
 				}
 				else
 				{
-					parent=work_space; // place=="workspace"
+					parent = work_space; // place=="workspace"
 				}
 
 				if( type == "terminal" )
@@ -619,21 +619,21 @@ void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 				}
 				else if( tools.isEmpty() )
 				{
-					bw = createTool(tools_type[type], parent);
+					bw = createTool( tools_type[type] , parent );
 				}
 				else
 				{
-					bw = createTool(tools_type[type], tools.last());
+					bw = createTool( tools_type[type] , tools.last() );
 				}
 
-				QString title=attr.value("title").toString();
+				QString title = attr.value( "title" ).toString();
 				
 				if( ! title.isEmpty() )
 				{
-					bw->setWindowTitle(title);
+					bw->setWindowTitle( title );
 				}
 				
-				if(place!="window") //place=="workspace"
+				if( place != "window" ) //place=="workspace"
 				{
 					std::size_t y=0;
 					std::size_t x=0;
@@ -794,10 +794,9 @@ void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 	timer.start(5000);
 }
 
-
 void Main::initialPosition_callback()
 {
-	foreach(InitialPosition i, initialPositionList)
+	foreach( InitialPosition i , initialPositionList )
 	{
 		/*i.widget->move(i.x,i.y);
 		i.widget->resize(i.width, i.height);*/
@@ -805,8 +804,7 @@ void Main::initialPosition_callback()
 		{
 			i.widget->showMaximized();
 		}
-		
-		if(i.minimized) 
+		else if(i.minimized) 
 		{
 			i.widget->showMinimized();
 		}

@@ -60,8 +60,8 @@ CommandList::CommandList( QWidget * parent ):BaseWidget(parent)
 	connect(copy_clipboard, SIGNAL(triggered()), this, SLOT(copy_clipboard_callback()) );
 	context_menu->addAction(copy_clipboard);
 	
-	QAction *clean_history=new QAction(tr("Clean history"), this);
-	clean_history->setIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/eraser.png"));
+	QAction *clean_history = new QAction(tr("Clean history") , this );
+	clean_history->setIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/clean.png"));
 	connect(clean_history, SIGNAL(triggered()), this, SLOT(clean_history_callback()) );
 	context_menu->addAction(clean_history);
 	

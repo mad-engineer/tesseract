@@ -156,28 +156,28 @@ void MainWindow::createActions()
 	actionProjects->setIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/contents.png"));
 	actionProjects->setText(QApplication::tr("Projects"));
 
-	actionCompletionMatches= new QAction(this);
+	actionCompletionMatches = new QAction(this);
 	actionCompletionMatches->setIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/search.png"));
 	
-	actionCompletionMatches->setText(QApplication::tr("<b>Completion matches:</b><br> Generates possible completions given in comand line."));
+	actionCompletionMatches->setText(QApplication::tr("<b>Completion matches:</b><br> Generates possible completions given in command line."));
 
-	actionDynamicHelp= new QAction(this);
+	actionDynamicHelp = new QAction(this);
 	actionDynamicHelp->setIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/help_index.png"));
 	actionDynamicHelp->setText(QApplication::tr("Dynamic Help: Shows help of completions matches."));
 
-	actionStopProcess= new QAction(this);
+	actionStopProcess = new QAction(this);
 	actionStopProcess->setIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/button_cancel.png"));
-	actionStopProcess->setText(QApplication::tr("<b>Stops process:</b><br>Stops uncontroled process, infinite loops,..."));
+	actionStopProcess->setText(QApplication::tr("<b>Stops process:</b><br>Stops uncontrolled process, infinite loops,..."));
 
-	actionClearTerminal= new QAction(this);
-	actionClearTerminal->setIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/eraser.png"));
+	actionClearTerminal = new QAction(this);
+	actionClearTerminal->setIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/clean.png"));
 	actionClearTerminal->setText(QApplication::tr("Clear terminal"));
 
-	actionVariableList= new QAction(this);
+	actionVariableList = new QAction(this);
 	actionVariableList->setIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/variablelist.png"));
 	actionVariableList->setText(QApplication::tr("Variable List"));
 
-	actionNavigator= new QAction(this);
+	actionNavigator = new QAction(this);
 	actionNavigator->setIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/browser.png"));
 	actionNavigator->setText(QApplication::tr("Browser"));
 
@@ -197,10 +197,10 @@ void MainWindow::createActions()
 	//actionToolBarHelp->setCheckable(true);
 	//actionToolBarHelp->setChecked(true);
 
-	actionSaveWindowsLayout= new QAction(this);
+	actionSaveWindowsLayout = new QAction(this);
 	actionSaveWindowsLayout->setText(QApplication::tr("Save actual windows layout"));
 
-	actionDeleteWindowsLayout= new QAction(this);
+	actionDeleteWindowsLayout = new QAction(this);
 	actionDeleteWindowsLayout->setText(QApplication::tr("Delete some windows layout"));
 
 	//Matrix actions
