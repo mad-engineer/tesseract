@@ -49,16 +49,16 @@ Main::Main(QObject * parent ):QObject (parent)
 	{
 		QString oc;
 
-		if( get_config("octave_path").isEmpty() )
+		if( get_config( "octave_path" ).isEmpty() )
 		{
-			oc="octave";
+			oc = "octave";
 		}
 		else
 		{
-			oc=get_config("octave_path");
+			oc = get_config( "octave_path" );
 		}
 
-		QString command=
+		QString command =
 
 		"l=completion_matches('');"
 		"[nrows,ncols]=size(l);"
@@ -84,38 +84,38 @@ Main::Main(QObject * parent ):QObject (parent)
 
 	if( ! session_name.isEmpty() && session_name != "Empty" )
 	{
-		session.setProjectName(session_name);
+		session.setProjectName( session_name );
 	}
 
-	session.addTool(MAIN, this);
+	session.addTool( MAIN , this );
 
-	main_window = new MainWindow(oc.get(), &session);
+	main_window = new MainWindow( oc.get() , &session );
 
 	work_space=main_window->work_space;
 
-	window_list=NULL;
+	window_list = NULL;
 
-	if( get_config("octave_path").isEmpty() )
+	if( get_config( "octave_path" ).isEmpty() )
 	{
-		oc->setOctavePath("octave");
+		oc->setOctavePath( "octave" );
 	}
 	else
 	{
-		oc->setOctavePath(get_config("octave_path"));
+		oc->setOctavePath( get_config( "octave_path" ) );
 	}
 
 	Terminal *terminal = static_cast<Terminal*>( createTool( TERMINAL , work_space ) );
-	terminal->work_space=work_space;
-	terminal->setOctaveConnection(oc.get());
+	terminal->work_space = work_space;
+	terminal->setOctaveConnection( oc.get() );
 
 	oc->startOctave();
 
 	terminal->setProject();
 
 	//Show list of windows in workspace
-	window_list = new WindowList(work_space,main_window->toolBarDocks);
-	main_window->toolBarDocks->addWidget(window_list);
-	window_list->setSizePolicy(QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred));
+	window_list = new WindowList( work_space , main_window->toolBarDocks );
+	main_window->toolBarDocks->addWidget( window_list );
+	window_list->setSizePolicy( QSizePolicy( QSizePolicy::Expanding , QSizePolicy::Preferred ) );
 	window_list->show();
 	main_window->showMaximized();
 
@@ -216,7 +216,7 @@ Main::Main(QObject * parent ):QObject (parent)
 
 	connect(main_window->actionSvgCanvas, SIGNAL(triggered()), this, SLOT(svgcanvas_callback()));
 
-	if(oc!=NULL)
+	if(oc != NULL )
 	{
 		connect(oc.get(), SIGNAL(line_ready(QString)), this, SLOT(line_ready(QString)));
 	}
@@ -224,12 +224,12 @@ Main::Main(QObject * parent ):QObject (parent)
 	//main_window->showMaximized();
 }
 
-void Main::widget_activated(BaseWidget *w)
+void Main::widget_activated( BaseWidget *w )
 {
-	active_widget=w;
+	active_widget = w;
 }
 
-void Main::line_ready(const QString &line )
+void Main::line_ready( const QString &line )
 {
 	//Builds SvgCanvas if it's needed.
 	QRegExp re("~~svgcanvas: *(\\d+) +(.+)\n");
@@ -261,7 +261,7 @@ void Main::help_octave()
 {
 	if(get_config("qtinfo_ok").isEmpty() || get_config("qtinfo_ok")=="false" )
 	{
-		 oc->command_enter("qtinfo");
+		 oc->command_enter( "qtinfo" );
 	}
 	else
 	{
@@ -299,20 +299,20 @@ void Main::help_qtoctave()
 
 void Main::help_qtoctave_about()
 {
-	Help *help=static_cast<Help*>( createTool( HELP , work_space) );
+	Help *help = static_cast<Help*>( createTool( HELP , work_space) );
 
-	QFileInfo path(QTOCTAVE_HELP_PATH);
+	QFileInfo path( QTOCTAVE_HELP_PATH );
 
-	if(get_config("qtoctave_help_path").isEmpty())
+	if( get_config( "qtoctave_help_path" ).isEmpty() )
 	{
-		help->setSource( path.absoluteDir().path()+QDir::separator()+"about.html");
+		help->setSource( path.absoluteDir().path() + QDir::separator() + "about.html" );
 	}
 	else
 	{
-		help->setSource(get_config("qtoctave_help_path"),"about");
+		help->setSource( get_config( "qtoctave_help_path" ) , "about" );
 	}
 
-	help->setWindowTitle("QtOctave About");
+	help->setWindowTitle( "Tesseract About" );
 	help->show();
 }
 
@@ -322,14 +322,14 @@ void Main::table( QString text )
 
 	if( text.isEmpty() )
 	{
-		text = QInputDialog::getText(main_window, tr("Select table"),tr("Matrix name:"), QLineEdit::Normal, "", &ok);
+		text = QInputDialog::getText( main_window , tr( "Select table" ) , tr( "Matrix name:" ) , QLineEdit::Normal, "", &ok );
 	}
 
 	if ( ok && ( ! text.isEmpty() ) )
 	{
 		Table *table = static_cast<Table*>( createTool( TABLE , work_space ) );
 
-		table->setMatrix(text);
+		table->setMatrix( text );
 
 		table->show();
 		table->windowActivated();
@@ -338,28 +338,28 @@ void Main::table( QString text )
 
 void Main::run_file()
 {
-	QFileDialog openDialog(NULL, tr("Open"), ".");
+	QFileDialog openDialog( NULL , tr( "Open" ) , "." );
 	QStringList filters;
 
 	filters << "Octave (*.m; *.M)";
 
-	openDialog.setFilters(filters);
-	openDialog.setAcceptMode(QFileDialog::AcceptOpen);
-	openDialog.setDefaultSuffix("m");
+	openDialog.setFilters( filters );
+	openDialog.setAcceptMode( QFileDialog::AcceptOpen );
+	openDialog.setDefaultSuffix( "m" );
 
 	if( openDialog.exec() == QDialog::Accepted )
 	{
-		QFileInfo fileInfo(openDialog.selectedFiles().first());
+		QFileInfo fileInfo( openDialog.selectedFiles().first() );
 		QString cmd;
 		//OctaveConnection *oc = terminal->getOctaveConnection();
 
 		// Change dir
-		cmd = QString("cd \"") + fileInfo.dir().absolutePath() + QString("\"");
-		oc->command_enter(cmd);
+		cmd = QString( "cd \"" ) + fileInfo.dir().absolutePath() + QString( "\"" );
+		oc->command_enter( cmd );
 
 		// Execute file
 		cmd = fileInfo.baseName();
-		oc->command_enter(cmd);
+		oc->command_enter( cmd );
 	}
 }
 
@@ -383,7 +383,7 @@ void Main::commands_list()
 
 void Main::editor_callback()
 {
-	if( get_config("external_editor") != "true")
+	if( get_config( "external_editor" ) != "true" )
 	{
 		Editor *editor = static_cast<Editor*>( createTool( EDITOR , work_space ) );
 		editor->show();
@@ -412,7 +412,7 @@ void Main::svgcanvas_callback()
 /** set visible or not the dock of var list*/
 void Main::setVisibleVarList()
 {
-	main_window->dockListVar->setVisible(!main_window->dockListVar->isVisible());
+	main_window->dockListVar->setVisible( ! main_window->dockListVar->isVisible() );
 }
 
 /**this function show or not the Navigator dock*/
@@ -433,52 +433,53 @@ void Main::clear_terminal()
 	terminal->clear_callback();
 }
 
-BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
+BaseWidget *Main::createTool( WidgetType type , QWidget *parent )
 {
 	BaseWidget *w;
+
 	switch(type)
 	{
 		case TERMINAL:
 		{
-			Terminal *terminal=new Terminal(parent);
-			terminal->setSession(&session);
-			w=terminal;
+			Terminal *terminal = new Terminal( parent );
+			terminal->setSession( &session );
+			w = terminal;
 			break;
 		}
 
 		case HELP:
 		{
-			Help *help=new Help(parent);
-			help->setSession(&session);
-			w=help;
+			Help *help = new Help( parent );
+			help->setSession( &session );
+			w = help;
 			break;
 		}
 
 		case TABLE:
 		{
-			Table *table=new Table(parent);
-			table->setOctaveConnection(oc.get());
-			table->setSession(&session);
-			w=table;
+			Table *table = new Table( parent );
+			table->setOctaveConnection( oc.get() );
+			table->setSession( &session );
+			w = table;
 			break;
 		}
 
 		case VARIABLESLIST:
 		{
-			VariableList *variableList=new VariableList(parent);
-			variableList->setOctaveConnection(oc.get());
-			connect(variableList, SIGNAL(open_table(QString)), this, SLOT(table(QString)) );
-			variableList->setSession(&session);
+			VariableList *variableList = new VariableList( parent );
+			variableList->setOctaveConnection( oc.get() );
+			connect( variableList , SIGNAL( open_table( QString ) ) , this , SLOT( table( QString ) ) );
+			variableList->setSession( &session );
 			variableList->send_whos_command_to_octave();
-			w=variableList;
+			w = variableList;
 			break;
 		}
 
 		case DYNAMIC_HELP:
 		{
-			DynamicHelp *dynamic_help=new DynamicHelp(oc->getOctavePath(), parent);
-			dynamic_help->setSession(&session);
-			w=dynamic_help;
+			DynamicHelp *dynamic_help = new DynamicHelp( oc->getOctavePath() , parent );
+			dynamic_help->setSession( &session );
+			w = dynamic_help;
 			break;
 		}
 
@@ -486,10 +487,10 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 		{
 			//if( get_config("external_editor") != "true")
 			//{
-				Editor *editor = new Editor(parent);
-				editor->setSession(&session);
-				editor->setOctaveConnection(oc.get());
-				w=editor;
+				Editor *editor = new Editor( parent );
+				editor->setSession( &session );
+				editor->setOctaveConnection( oc.get() );
+				w = editor;
 			//}
 			break;
 		}
@@ -505,44 +506,57 @@ BaseWidget *Main::createTool(WidgetType type, QWidget *parent)
 
 		case COMMANDLIST:
 		{
-			CommandList *command_list=new CommandList(parent);
-			Autocomplete *line=((Terminal*)session.getFirstTool(TERMINAL))->getAutocomplete();
-			connect(line, SIGNAL(new_command_entered(QStringList)), command_list, SLOT(set_list(QStringList)) );
-			command_list->setSession(&session);
-			command_list->setLineEdit(line);
-			command_list->set_list(line->commands());
-			w=command_list;
+			CommandList *command_list = new CommandList( parent );
+			Autocomplete *line = static_cast<Terminal*>( session.getFirstTool( TERMINAL ) )->getAutocomplete();
+			
+			connect( line , SIGNAL( new_command_entered( QStringList ) ) , command_list , SLOT( set_list( QStringList ) ) );
+
+			command_list->setLineEdit( line );
+			command_list->setSession( &session );
+			command_list->set_list( line->commands() );
+
+			w = command_list;
+
 			break;
 		}
-
 		case SVGCANVAS:
 		{
-			SvgCanvas *svgcanvas = new SvgCanvas(parent);
-			svgcanvas->setOctaveConnection(oc.get());
-			svgcanvas->setSession(&session);
-			QVector<QObject*> tools=session.getTools(SVGCANVAS);
-			int min=1, num;
-			for(int i=0;i<tools.size();i++)
+			SvgCanvas *svgcanvas = new SvgCanvas( parent );
+
+			svgcanvas->setSession( &session );
+			svgcanvas->setOctaveConnection( oc.get() );
+
+			QVector< QObject *> tools = session.getTools( SVGCANVAS );
+			
+			int min = 1;
+
+			for(int i = 0 ; i < tools.size() ; i++ )
 			{
-				for(int j=0;j<tools.size();j++)
+				for( int j = 0 ; j < tools.size() ; j++ )
 				{
-					num=((SvgCanvas*)tools[j])->getCanvasNumber();
-					if(num==min) min++;
+					if( static_cast< SvgCanvas *>( tools[j] )->getCanvasNumber() == min )
+					{
+						min++;
+					}
 				}
 			}
-			svgcanvas->setCanvasNumber(min);
-			w=svgcanvas;
+
+			svgcanvas->setCanvasNumber( min );
+			w = svgcanvas;
+
 			break;
 		}
 		default:
+		{
 			return NULL;
+		}
 	}
 
-	if(parent==work_space)
+	if( parent == work_space )
 	{//Add window in workspace
-		QMdiSubWindow *mdi=work_space->addSubWindow(w);
-		mdi->setAttribute(Qt::WA_DeleteOnClose);
-		mdi->setWindowIcon(w->windowIcon());
+		QMdiSubWindow *mdi = work_space->addSubWindow( w );
+		mdi->setAttribute( Qt::WA_DeleteOnClose );
+		mdi->setWindowIcon( w->windowIcon() );
 	}
 
 	return w;
@@ -799,41 +813,6 @@ void Main::initialPosition_callback()
 	}
 }
 
-
-void Main::openFilesToEdit(QStringList files)
-{
-	if( files.isEmpty() )
-	{
-		return;
-	}
-
-	BaseWidget *bw = static_cast<BaseWidget*>( session.getFirstTool(EDITOR) );
-
-	if( bw == NULL )
-	{
-		bw = createTool( EDITOR , NULL );
-	}
-
-	Editor *editor = static_cast<Editor*>( bw );
-
-	editor->loadFiles(files);
-	editor->show();
-}
-
-/** Process comand line looking for files to open.
- */
-static QStringList command_line_find_files(int argn, char *argv[])
-{
-	QStringList files;
-	
-	for(int i=1;i<argn;i++)
-	{
-		files.append(argv[i]);
-	}
-	
-	return files;
-}
-
 int main( int argn , char **argv )
 {
 	QApplication a( argn , argv );
@@ -889,19 +868,14 @@ int main( int argn , char **argv )
 	//	locales.resize(2);
 	//}
 		
-	if(qtTranslator.load("qt_" + QLocale::system().name(),
-			     //"/usr/share/qt4/translations"
-			     QLibraryInfo::location(QLibraryInfo::TranslationsPath)
-			     ) )
+	if(qtTranslator.load("qt_" + QLocale::system().name(),QLibraryInfo::location(QLibraryInfo::TranslationsPath) ) )
 	{
 	  a.installTranslator(&qtTranslator);
-	  printf("[main()] Loaded QT Translation file for locale '%s'.\n",
-		 QLocale::system().name().toLocal8Bit().data());
+	  printf("[main()] Loaded QT Translation file for locale '%s'.\n",QLocale::system().name().toLocal8Bit().data());
 	}
 	else
 	{
-	  printf("[main()] Error loading the QT Translation file for locale '%s'.\n",
-		 QLocale::system().name().toLocal8Bit().data());
+	  printf("[main()] Error loading the QT Translation file for locale '%s'.\n", QLocale::system().name().toLocal8Bit().data());
 	}
 
 	// QtOctave translations
@@ -920,12 +894,6 @@ int main( int argn , char **argv )
 	// Load
 	a.processEvents();
 	Main m;
-	
-	//Open command line files
-	m.openFilesToEdit(command_line_find_files(argn,argv));
-	
-	//Destroy splash screnn
-	//splash->finish(m.mainWindowWidget());
-	//delete splash;
+
 	return a.exec();
 }

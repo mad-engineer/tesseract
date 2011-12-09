@@ -81,7 +81,6 @@ class Main : public QObject
 		/**Opens tools in config.*/
 		void openTools( QXmlStreamReader &xml , const QString &config_name=QString() );
 
-		void openFilesToEdit( QStringList files );
 
 	public slots:
 
