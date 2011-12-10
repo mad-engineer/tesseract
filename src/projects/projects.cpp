@@ -29,10 +29,31 @@ QString homePath()
 #	endif
 }
 
+QString pkgCmdSource()
+{
+	return configPath() + "pkg-commands.list";
+}
+
+QString helpPath()
+{
+	return 	homePath() +"help/";
+}
+
+QString helpSource()
+{
+	return 	helpPath() +"index.html";
+}
+
 QString scriptsPath()
 {
 	return 	homePath() +"scripts/";
 }
+
+QString langPath()
+{
+	return 	homePath() +"lang/";
+}
+
 
 QString configPath()
 {

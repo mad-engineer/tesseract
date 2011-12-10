@@ -68,7 +68,7 @@ QString OctaveConnection::getOctavePath()
 
 void OctaveConnection::startOctave(bool quiet)
 {
-	QString extra_args = get_config("octave_arguments");
+	QString extra_args = getConfig("octave_arguments");
 
 	instructions_left_no=0;
 	debugging = false;
@@ -152,9 +152,9 @@ void OctaveConnection::startOctave(bool quiet)
 
 	printf("[OctaveConnection::startOctave] Octave running\n");
 
-	if( get_config("easy_plot_active")=="true" )
+	if( getConfig("easy_plot_active")=="true" )
 	{
-		QString path=get_config("easy_plot_path");
+		QString path=getConfig("easy_plot_path");
 
 		if( path.isEmpty() )
 		{
@@ -175,7 +175,7 @@ void OctaveConnection::loadScripts()
 {
 	const QStringList filters("*.m");
 
-	const QFileInfoList list = QDir(QString(CONFIG_PATH) + "/scripts/").entryInfoList(filters);
+	const QFileInfoList list = QDir(scriptsPath()).entryInfoList( filters );
 	
 	QString _command("__qtoctave_ps2=PS2();PS2('');__qtoctave_ps1=PS1();PS1('');\n");
 

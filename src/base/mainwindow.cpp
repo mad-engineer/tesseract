@@ -865,7 +865,7 @@ void MainWindow::setWindowsLayout(QAction *action)
 
 			windowSettings["mode_work_area"]=config_name;
 
-			set_config(windowSettings);
+			setConfig(windowSettings);
 
 			if(closeMessage->exec() == QMessageBox::Yes)
 				close();
@@ -901,7 +901,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 		if(widget!=this) widget->close();
 	}
 
-	set_config(windowSettings);
+	setConfig(windowSettings);
 
 	QApplication::quit();
 }

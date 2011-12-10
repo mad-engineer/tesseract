@@ -76,7 +76,7 @@ class Main : public QObject
 		BaseWidget *active_widget;
 		
 		/**Open new tool of type type.*/
-		BaseWidget *createTool(WidgetType type, QWidget *parent);
+		BaseWidget *createTool( WidgetType type, QWidget *parent );
 
 		/**Opens tools in config.*/
 		void openTools( QXmlStreamReader &xml , const QString &config_name=QString() );
@@ -85,13 +85,10 @@ class Main : public QObject
 	public slots:
 
 		/**Shows Octave Help.*/
-		void help_octave();
-
-		/**Shows QtOctave Help.*/
-		void help_qtoctave();
+		void help();
 
 		/**Shows QtOctave About.*/
-		void help_qtoctave_about();
+		void about();
 
 		/**Shows Table.*/
 		void table( QString text = QString() );
@@ -123,12 +120,12 @@ class Main : public QObject
 		void svgcanvas_callback();
 
 		/**Reads output from Octave to build svg_canvas if it is needed.*/
-		void line_ready(const QString &line );
+		void line_ready( const QString &line );
 
 		/**Callback used for sets active_widget.
 		 * @param w widget activated.
 		*/
-		void widget_activated(BaseWidget *w);
+		void widget_activated( BaseWidget *w );
 		
 		/**Returns widget of main window*/
 		QWidget *mainWindowWidget();

@@ -50,24 +50,24 @@ syntaxCompleterModel( new QCompleter( completer , this ) )
 
 	connect(syntaxCompleterModel, SIGNAL(activated ( const QString &)), this, SLOT(activated ( const QString &)));
 	
-	if( get_config( "bracketsMatch" ) != "false" )
+	if( getConfig( "bracketsMatch" ) != "false" )
 	{
 		connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(cursorPositionChangedCallBack()));
 	}
 	
-	if( get_config( "autoCompletion" ) != "false" )
+	if( getConfig( "autoCompletion" ) != "false" )
 	{
 		connect( document() , SIGNAL( contentsChange( int , int , int ) ) , this , SLOT( autoComplete( int , int , int ) ) );
 	}
 	
-	auto_indent=( "false" != get_config( "autoindent" ) );
-	automatic_indention_statement_ok = get_config("autoindent_statements") == "true";
+	auto_indent=( "false" != getConfig( "autoindent" ) );
+	automatic_indention_statement_ok = getConfig("autoindent_statements") == "true";
 	
 	//Set editor's font
 		
 	QFont text_edit_font;
-  	QString font_name = get_config( "textEditFont" );
-	QString font_size = get_config( "textEditFontSize" );
+  	QString font_name = getConfig( "textEditFont" );
+	QString font_size = getConfig( "textEditFontSize" );
 	
 	if( font_name.isEmpty() )
 	{

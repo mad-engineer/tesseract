@@ -53,21 +53,21 @@ combo_box( new Autocomplete(this) )
 	setWindowTitle( tr( "Octave Terminal" ) );
 	setWindowIcon( QIcon(QApplication::applicationDirPath() + "/styles/default/images/console.png" ) );
 	
-	if( get_config( "lines_in_terminal" ).isEmpty() )
+	if( getConfig( "lines_in_terminal" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
 		c[ "lines_in_terminal" ] = "1000";
-		set_config( c );
+		setConfig( c );
 	}
 
-	if( get_config( "cols_in_terminal" ).isEmpty() )
+	if( getConfig( "cols_in_terminal" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
 		c["cols_in_terminal"] = "80";
-		set_config( c );
+		setConfig( c );
 	}
 
-	cols_in_terminal = get_config( "cols_in_terminal" ).toInt();
+	cols_in_terminal = getConfig( "cols_in_terminal" ).toInt();
 
 	// Limit input to positive numbers and a width limit of 1000
 	if( ( ! cols_in_terminal ) || cols_in_terminal > 1000 )
@@ -75,7 +75,7 @@ combo_box( new Autocomplete(this) )
 		cols_in_terminal = 1000;
 	}
 	
-	lines_in_terminal = get_config( "lines_in_terminal" ).toInt();
+	lines_in_terminal = getConfig( "lines_in_terminal" ).toInt();
 
 	// Same as above
 	if( ( ! lines_in_terminal ) || lines_in_terminal > 10000 )
@@ -87,85 +87,85 @@ combo_box( new Autocomplete(this) )
 	text->setLineWrapMode( QTextEdit::NoWrap );
 	//text->setLineWrapColumnOrWidth ( cols_in_terminal );
 
-	if( get_config( "show_ide_commands" ).isEmpty() )
+	if( getConfig( "show_ide_commands" ).isEmpty() )
 	{
 		show_ide_commands_ok = false;
 
 		QMap<QString,QString> c;
 
 		c[ "show_ide_commands" ] = "false";
-		set_config( c );
+		setConfig( c );
 	}
 	else
 	{ 
-		show_ide_commands_ok = get_config( "show_ide_commands" ) == "true" ;
+		show_ide_commands_ok = getConfig( "show_ide_commands" ) == "true" ;
 	}
 
-	if( get_config( "terminal_font" ).isEmpty() )
+	if( getConfig( "terminal_font" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
 
 		c[ "terminal_font" ] = "Courier New";
 
-		set_config( c );
+		setConfig( c );
 	}
 
-	if( get_config( "terminal_foreground_color" ).isEmpty() )
+	if( getConfig( "terminal_foreground_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
 
 		c[ "terminal_foreground_color" ] = "Black";
-		set_config( c );
+		setConfig( c );
 	}
 	
-	if( get_config( "terminal_background_color" ).isEmpty() )
+	if( getConfig( "terminal_background_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
 
 		c[ "terminal_background_color" ] = "White";
-		set_config( c );
+		setConfig( c );
 	}
 	
-	if( get_config( "terminal_error_color" ).isEmpty() )
+	if( getConfig( "terminal_error_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
 
 		c[ "terminal_error_color" ] = "Red";
-		set_config( c );
+		setConfig( c );
 	}
 	
-	if( get_config( "ide_command_color" ).isEmpty() )
+	if( getConfig( "ide_command_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
 
 		c[ "ide_command_color" ] = "lightGray";
-		set_config( c );
+		setConfig( c );
 	}
 	
 	//text->setTextColor(get_config("terminal_foreground_color"));
 	{
 		QPalette p = text->viewport ()->palette();
-		p.setColor( QPalette::Base , QColor( get_config( "terminal_background_color" ) ) );
+		p.setColor( QPalette::Base , QColor( getConfig( "terminal_background_color" ) ) );
 		text->viewport()->setPalette( p );
 	}
 
-	QFont font( get_config( "terminal_font" ) );
+	QFont font( getConfig( "terminal_font" ) );
 	
 	normal_format.setFont( font );
 	normal_format.setFontWeight( QFont::Normal );
+	normal_format.setFontPointSize( font.pointSize() );
 
 	ide_command_format = normal_format;
+	ide_command_format.setForeground( QColor( getConfig( "ide_command_color" ) ) );
 
-	ide_command_format.setFontPointSize( font.pointSize() );
-	ide_command_format.setForeground( QColor( get_config( "ide_command_color" ) ) );
-
-	normal_format.setForeground( QColor( get_config( "terminal_foreground_color" ) ) );
+	normal_format.setForeground( QColor( getConfig( "terminal_foreground_color" ) ) );
 	
 	command_format = normal_format;
 	command_format.setFontWeight( QFont::Bold );
 
 	error_format = normal_format;
-	error_format.setForeground( QColor( get_config( "terminal_error_color" ) ) );
+	command_format.setFontWeight( QFont::Bold );
+	error_format.setForeground( QColor( getConfig( "terminal_error_color" ) ) );
 
 	text->show();
 

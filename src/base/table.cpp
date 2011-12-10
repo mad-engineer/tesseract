@@ -1,4 +1,4 @@
-/* Copyright (C) 2006, 2007, 2008 P.L. Lucas
+/* Copyright (C) 2011 Tesseract Project
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,13 +28,13 @@
 #include "table.hpp"
 
 Table::Table( QWidget * parent ) : 
-BaseWidget( parent )
+BaseWidget( parent ),
+model( new ComplexNumberTableModel( this ) ),
+table_form( shared_ptr< TableForm >( new TableForm() ) )
 {
 	widget_type = TABLE;
 	
 	init_regular_expresions();
-
-	table_form = shared_ptr< TableForm >( new TableForm() );
 
 	table_form->setupUi( centralWidget() );
 
@@ -44,9 +44,7 @@ BaseWidget( parent )
 	table_form->reloadButton->setToolTip(tr("<b>Reload matrix.</b><br> Some operations change matrix, use reload to view changes."));
 	table_form->spinbox_widget->setLayout(new QHBoxLayout);
 	table_form->spinbox_widget->layout()->addWidget(new QLabel("Indexes showed:"));
-	table_form->spinbox_widget->layout()->setContentsMargins(0,0,0,0);
-	
-	model = new ComplexNumberTableModel( this );
+	table_form->spinbox_widget->layout()->setContentsMargins( 0 , 0 , 0 , 0 );
 
 	table_form->table_widget->setModel( model );
 	table_form->table_widget->setItemDelegate( new LineEditDelegate(this) );

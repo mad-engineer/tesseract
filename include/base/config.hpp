@@ -45,6 +45,7 @@
 #include "configure.hpp"
 #endif
 
+/*
 #ifndef HELP_PATH
 #define HELP_PATH "./octave_doc/index.html"
 #endif
@@ -64,6 +65,7 @@
 #ifndef PKG_CMD_PATH
 #define PKG_CMD_PATH "./config_files/pkg-commands.list"
 #endif
+*/
 
 #define PKG_ENABLED
 
@@ -87,13 +89,11 @@
  * @param parameter Parameter name.
  * @return A QString with parameter value.
  */
-const QString get_config(QString parameter);
+const QString getConfig( const QString &parameter );
 
 /**Sets config of parameter.
  * @param configuration Add a parameter with value. QMap key is parameter name. QMap value is parameter value.
  */
-void set_config(QMap<QString,QString> configuration);
-
-
+void setConfig( const QMap<QString,QString> &configuration );
 
 #endif

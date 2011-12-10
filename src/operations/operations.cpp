@@ -1275,7 +1275,7 @@ void Operations::show_projects_dialog()
 		QMap<QString,QString> configuration;
 		main_window->setWindowTitle("QtOctave ["+session->getProjectName()+"]");
 		configuration["session_name"]=projects.projectName();
-		set_config(configuration);
+		setConfig(configuration);
 	}
 }
 

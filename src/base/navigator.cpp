@@ -195,7 +195,7 @@ void Navigator::createLayout()
 	layout->addLayout(filterBox);
 	
 
-	QString paths=get_config("navigator_start_path"), path = QDir::currentPath();
+	QString paths=getConfig("navigator_start_path"), path = QDir::currentPath();
 	if(!paths.isEmpty())
 	{
 		QStringList values=paths.split('\n');
@@ -258,7 +258,7 @@ Navigator::~Navigator()
 		}
 	}
 	configuration["navigator_start_path"]=values;
-	set_config(configuration);
+	setConfig(configuration);
 	
 	Projects::saveNavigatorPath( project_name.isEmpty() ? "Empty" : project_name , getNavigatorCurrentPath() );
 }

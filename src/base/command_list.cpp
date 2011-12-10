@@ -100,9 +100,9 @@ void CommandList::set_list( const QStringList &list )
 	history << list;
 	int history_size=127;
 
-	if( ! get_config("lines_in_history").isEmpty() )
+	if( ! getConfig("lines_in_history").isEmpty() )
 	{
-		history_size=get_config("lines_in_history").toInt();
+		history_size=getConfig("lines_in_history").toInt();
 	}
 
 	while( history.size() > history_size )

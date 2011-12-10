@@ -29,8 +29,13 @@
 
 using namespace Ui;
 
+
+QString langPath();
+QString helpPath();
+QString helpSource();
 QString configPath();
 QString scriptsPath();
+QString pkgCmdSource();
 QString projectsPath();
 
 /** Shows config window for select or create a new project. Project is a set of ".m" files.

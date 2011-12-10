@@ -529,7 +529,7 @@ bool NumberedTextView::save( QString path )
 		return false;
 	}
 
-	if(get_config("simple_rcs")=="true")
+	if(getConfig("simple_rcs")=="true")
 	{
 		QString repository=path+"~~";
 		QString command("simplercs \""+repository+"\" \""+path+"\"");

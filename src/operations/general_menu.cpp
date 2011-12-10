@@ -28,16 +28,16 @@ General_Menu::General_Menu(QWidget *parent):QDialog(parent)
 	ui.setupUi(this);
 	
 	//Editor
-	ui.use_external_editor->setCheckState(CHECK_FROM_STRING(get_config("external_editor")));
-	ui.editor_lineEdit->setText(get_config("editor"));
+	ui.use_external_editor->setCheckState(CHECK_FROM_STRING(getConfig("external_editor")));
+	ui.editor_lineEdit->setText(getConfig("editor"));
 
-	if(get_config("autoindent_statements")=="true")
+	if(getConfig("autoindent_statements")=="true")
 	{
 		ui.no_autoindent_radioButton->setChecked(false);
 		ui.autoindent_radioButton->setChecked(false);
 		ui.autoindent_statements_radioButton->setChecked(true);
 	}
-	else if(get_config("autoindent")!="false")
+	else if(getConfig("autoindent")!="false")
 	{
 		ui.no_autoindent_radioButton->setChecked(false);
 		ui.autoindent_radioButton->setChecked(true);
@@ -50,12 +50,12 @@ General_Menu::General_Menu(QWidget *parent):QDialog(parent)
 		ui.autoindent_statements_radioButton->setChecked(false);
 	}
 
-	ui.bracketsMatch_checkBox->setCheckState(CHECK_FROM_STRING(get_config("bracketsMatch")));
-	ui.autoCompletion_checkBox->setCheckState(CHECK_FROM_STRING(get_config("autoCompletion")));
-	ui.simple_rcs_checkBox->setCheckState(CHECK_FROM_STRING(get_config("simple_rcs")));
+	ui.bracketsMatch_checkBox->setCheckState(CHECK_FROM_STRING(getConfig("bracketsMatch")));
+	ui.autoCompletion_checkBox->setCheckState(CHECK_FROM_STRING(getConfig("autoCompletion")));
+	ui.simple_rcs_checkBox->setCheckState(CHECK_FROM_STRING(getConfig("simple_rcs")));
 	
-	QString font_name=get_config("textEditFont");
-	QString font_size=get_config("textEditFontSize");
+	QString font_name=getConfig("textEditFont");
+	QString font_size=getConfig("textEditFontSize");
 
 	if(font_name.isEmpty())
 	{
@@ -73,46 +73,49 @@ General_Menu::General_Menu(QWidget *parent):QDialog(parent)
 	connect(ui.textEditFont_pushButton,SIGNAL(clicked()),this,SLOT(textEditFont_pushButton_callback()));
 	
 	//Help path
-	ui.help_path_lineEdit->setText(get_config("help_path"));
-	ui.qtinfo_ok_checkBox->setCheckState(CHECK_FROM_STRING(get_config("qtinfo_ok")));
+	ui.help_path_lineEdit->setText(getConfig("help_path"));
+	ui.qtinfo_ok_checkBox->setCheckState(CHECK_FROM_STRING(getConfig("qtinfo_ok")));
 	
 	//Terminal
 	
 	//Max. number of items in command line
-	ui.lines_in_history_lineEdit->setText(get_config("lines_in_history"));
+	ui.lines_in_history_lineEdit->setText(getConfig("lines_in_history"));
 	
-	if(!get_config("terminal_font").isEmpty()) config_font.fromString(get_config("terminal_font"));
+	if(!getConfig("terminal_font").isEmpty()) config_font.fromString(getConfig("terminal_font"));
 	
 	set_font_label();
 	
-	foreground_color.setNamedColor(get_config("terminal_foreground_color"));
-	background_color.setNamedColor(get_config("terminal_background_color"));
-	error_color.setNamedColor(get_config("terminal_error_color"));
+	foreground_color.setNamedColor(getConfig("terminal_foreground_color"));
+	background_color.setNamedColor(getConfig("terminal_background_color"));
+	error_color.setNamedColor(getConfig("terminal_error_color"));
 	
 	set_color_label();
 	
-	ui.max_line_num_lineEdit->setText(get_config("lines_in_terminal"));
-	ui.max_col_in_terminal_lineEdit->setText(get_config("cols_in_terminal"));
+	ui.max_line_num_lineEdit->setText(getConfig("lines_in_terminal"));
+	ui.max_col_in_terminal_lineEdit->setText(getConfig("cols_in_terminal"));
 
-	ui.show_ide_commands_checkBox->setCheckState(CHECK_FROM_STRING(get_config("show_ide_commands")));
+	ui.show_ide_commands_checkBox->setCheckState(CHECK_FROM_STRING(getConfig("show_ide_commands")));
 
 	// Octave
-	ui.octave_path_lineEdit->setText(get_config("octave_path"));
-	ui.octaveArgs_lineEdit->setText(get_config("octave_arguments"));
-	QStringList dirList = get_config("octave_folders").split(',', QString::SkipEmptyParts);
+	ui.octave_path_lineEdit->setText( getConfig ("octave_path" ) );
+	ui.octaveArgs_lineEdit->setText( getConfig( "octave_arguments" ) );
+	QStringList dirList = getConfig( "octave_folders" ).split( ',' , QString::SkipEmptyParts );
 	QString aux;
 
-	for(QStringList::const_iterator i = dirList.begin(); 
-	    i != dirList.end(); i++)
+	for(QStringList::const_iterator i = dirList.begin();  i != dirList.end(); i++)
 	{
-	  aux = i->trimmed();
-	  if(aux.startsWith('"'))
-	    aux = aux.mid(1, aux.length() - 2);
-	  ui.octaveDir_list->addItem(aux);
+		aux = i->trimmed();
+		
+		if( aux.startsWith( '"' ) )
+		{
+			aux = aux.mid( 1 , aux.length() - 2 );
+		}
+
+		ui.octaveDir_list->addItem( aux );
 	}
 	
-	ui.easy_plot_checkBox->setCheckState(CHECK_FROM_STRING(get_config("easy_plot_active")));
-	ui.easy_plot_path_lineEdit->setText(get_config("easy_plot_path"));
+	ui.easy_plot_checkBox->setCheckState(CHECK_FROM_STRING(getConfig("easy_plot_active")));
+	ui.easy_plot_path_lineEdit->setText(getConfig("easy_plot_path"));
 
 	// Connect
 	connect(ui.editor_select_button,SIGNAL(clicked()),this,SLOT(editor_select_button_callback()));
@@ -320,25 +323,25 @@ void General_Menu::apply_config()
 	config["easy_plot_active"] = CHECK_TO_STRING(ui.easy_plot_checkBox->checkState());
 	config["easy_plot_path"] = ui.easy_plot_path_lineEdit->text();
 	
-	set_config(config);
+	setConfig(config);
 
 	QMessageBox::information(this, "Note","Reload QtOctave to apply changes.");
 }
 
 void General_Menu::octave_path_button_callback()
 {
-	QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"./");
+	QString fileName = QFileDialog::getOpenFileName( this , tr("Open File") , "./" );
 	
 	if( fileName.isEmpty() )
 	{
-#		ifdef COMPILE_PORTABLE_TESSERACT
+#		ifdef TESSERACT_COMPILE_PORTABLE
 		ui.octave_path_lineEdit->setText( homePath() + "/octave/3.2.4_gcc-4.4.0/bin/octave.exe" );
 #		endif
 
 		return;
 	}
 
-	ui.octave_path_lineEdit->setText(fileName);
+	ui.octave_path_lineEdit->setText( fileName );
 }
 
 void General_Menu::textEditFont_pushButton_callback()

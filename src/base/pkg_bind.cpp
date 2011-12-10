@@ -2,6 +2,7 @@
 #include <QMessageBox>
 
 #include "config.hpp"
+#include "projects.hpp"
 #include "pkg_bind.hpp"
 
 PkgBind *PkgBind::instance = NULL;
@@ -10,76 +11,86 @@ PkgBind *PkgBind::instance = NULL;
  */
 PkgBind::PkgBind()
 {
-  loadCommandList();
-};
+	loadCommandList();
+}
 
 /* Get the unique instance
  * or create it if there isn't any
  */
 PkgBind *PkgBind::getInstance()
 {
-  if(instance==NULL)
-    instance = new PkgBind();
-  return instance;
+	// TODO: if( something == NULL ) <-- bad design
+	if( instance == NULL )
+	{
+		instance = new PkgBind();
+	}
+
+	return instance;
 }
 
-/* Load the command list from a file
+/** TODO: Transform this old C Style function to C++
+ * Load the command list from a file
  */
 void PkgBind::loadCommandList()
 {
-  QString path = PKG_CMD_PATH;
-  QFile file(path);
+	QFile file( pkgCmdSource() );
 
-  if(file.open(QIODevice::ReadOnly))
-  {
-    char buffer[1024];
-    int  len;
-    while((len = file.readLine(buffer, sizeof(buffer))) > -1)
-    {
-      if(buffer[len - 1] == '\n')
-	buffer[len - 1] = '\0';
+	if( file.open( QIODevice::ReadOnly ) )
+	{
+		int  len;
+		char buffer[1024];
 
-      commands << QString(buffer);
-    }
-    printf("[PkgBind::loadCommandList] '%s' loaded\n",
-	   path.toLocal8Bit().constData());
-  }else{
-    printf("[PkgBind::loadCommandList] '%s' can not be loaded\n",
-	   path.toLocal8Bit().constData());
-  }
+		while( ( len = file.readLine( buffer , sizeof( buffer ) ) )  > -1 )
+		{
+			if(buffer[len - 1] == '\n')
+			{
+				buffer[len - 1] = '\0';
+			}
+
+			commands << QString(buffer);
+		}
+		
+		printf("[PkgBind::loadCommandList] '%s' loaded\n",pkgCmdSource().toLocal8Bit().constData());
+	}
+	else
+	{
+		printf("[PkgBind::loadCommandList] '%s' can not be loaded\n",pkgCmdSource().toLocal8Bit().constData());
+	}
 }
 
 /* Check if a symbol is defined
- * as a funciont included in some package
+ * as a function included in some package
  */
-bool PkgBind::checkSymbol(const QString &s)
+bool PkgBind::checkSymbol( const QString &s )
 {
-  return commands.contains(s);
+	return commands.contains( s );
 }
 
 /* Invoke the package manager
  * for install the package with the command 
  * "cmd"
  */
-void PkgBind::invokePackageManager(const QString &s)
+void PkgBind::invokePackageManager( const QString &s )
 {
-  QMessageBox *msgBox = new QMessageBox(QMessageBox::Question, "Package Manager",
-					"There is a package that provides the command '"
-					+ s + "'\n"
-					"Do you want to try to install it now?",
-					QMessageBox::Yes | QMessageBox::No);
+	QMessageBox *msgBox = new QMessageBox(QMessageBox::Question, "Package Manager",
+				"There is a package that provides the command '"
+				+ s + "'\n"
+				"Do you want to try to install it now?",
+				QMessageBox::Yes | QMessageBox::No);
 
-  invokeCmd = QString("qtoctave_pkg -s ") + s + "&";
+	invokeCmd = QString("qtoctave_pkg -s ") + s + "&";
 
-  connect(msgBox, SIGNAL(finished(int)),
-	  this, SLOT(invokeResponse(int)));
-  msgBox->show();
+	connect( msgBox , SIGNAL( finished( int ) ) , this , SLOT( invokeResponse( int ) ) );
+
+	msgBox->show();
 }
 
 /* The dialog response
  */
-void PkgBind::invokeResponse(int result)
+void PkgBind::invokeResponse( int result )
 {
-  if(result == QMessageBox::Yes)
-    system(invokeCmd.toLocal8Bit().constData());
+	if( result == QMessageBox::Yes )
+	{
+		system( invokeCmd.toLocal8Bit().constData() );
+	}
 }

@@ -16,6 +16,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <iostream>
+
 #include <QMdiArea>
 #include <QTextCodec>
 #include <QFileDialog>
@@ -43,19 +45,21 @@
 extern QString syntaxPath();
 
 
-Main::Main(QObject * parent ):QObject (parent)
+Main::Main(QObject * parent ) : 
+QObject (parent),
+oc( shared_ptr<OctaveConnection>( new OctaveConnection() ) )
 {
 	//Build Octave commands list
 	{
 		QString oc;
 
-		if( get_config( "octave_path" ).isEmpty() )
+		if( getConfig( "octave_path" ).isEmpty() )
 		{
 			oc = "octave";
 		}
 		else
 		{
-			oc = get_config( "octave_path" );
+			oc = getConfig( "octave_path" );
 		}
 
 		QString command =
@@ -71,16 +75,14 @@ Main::Main(QObject * parent ):QObject (parent)
 
 		"fclose(out);";
 
-		printf("[Main::Main] Building commands list.\n");
+		std::cout << "[Main::Main] Building commands list.\n";
 
-		system(QString(oc+" --no-history -q  --eval \""+command+"\"").toLocal8Bit().data());
+		system( QString( oc + " --no-history -q  --eval \"" + command + "\"").toLocal8Bit().data() );
 
-		printf("[Main::Main] Commands list builded.\n");
+		std::cout << "[Main::Main] Commands list builded.\n";
 	}
 
-	oc = shared_ptr<OctaveConnection>( new OctaveConnection() );
-
-	QString session_name = get_config( "session_name" );
+	QString session_name = getConfig( "session_name" );
 
 	if( ! session_name.isEmpty() && session_name != "Empty" )
 	{
@@ -95,16 +97,16 @@ Main::Main(QObject * parent ):QObject (parent)
 
 	window_list = NULL;
 
-	if( get_config( "octave_path" ).isEmpty() )
+	if( getConfig( "octave_path" ).isEmpty() )
 	{
 		oc->setOctavePath( "octave" );
 	}
 	else
 	{
-		oc->setOctavePath( get_config( "octave_path" ) );
+		oc->setOctavePath( getConfig( "octave_path" ) );
 	}
 
-	Terminal *terminal = static_cast<Terminal*>( createTool( TERMINAL , work_space ) );
+	Terminal *terminal = static_cast< Terminal * >( createTool( TERMINAL , work_space ) );
 	terminal->work_space = work_space;
 	terminal->setOctaveConnection( oc.get() );
 
@@ -120,7 +122,7 @@ Main::Main(QObject * parent ):QObject (parent)
 	main_window->showMaximized();
 
 	{//Open tools from config
-		QString modeWorkArea=get_config("mode_work_area");
+		QString modeWorkArea=getConfig("mode_work_area");
 
 		QFile file(projectsPath()+"last_windows_layout.xml");
 		QFile wl_file(configPath()+"windows_layout.xml");
@@ -158,18 +160,18 @@ Main::Main(QObject * parent ):QObject (parent)
 				"</tool>"
 			"</tools_config>";
 
-			xml.addData(xmlConfig);
+			xml.addData( xmlConfig );
 			modeWorkArea.clear();
 		}
 
-		openTools(xml, modeWorkArea);
+		openTools( xml , modeWorkArea );
 
 		file.close();
 		wl_file.close();
 
 		QMap<QString, QString> windowSettings;
 		windowSettings["mode_work_area"]="last";
-		set_config(windowSettings);
+		setConfig( windowSettings );
 	}
 
 	connect(oc.get(), SIGNAL(clearScreen()), this, SLOT(clear_terminal()));
@@ -180,17 +182,17 @@ Main::Main(QObject * parent ):QObject (parent)
 	connect(main_window->actionStopProcess, SIGNAL(triggered()), terminal, SLOT(stop_process_callback()));
 	connect(main_window->actionClearTerminal, SIGNAL(triggered()), terminal, SLOT(clear_callback()));
 
-	operations=new Operations(this,&active_widget,main_window);
-	operations->setOctaveConnection(oc.get());
-	operations->setSession(&session);
+	operations = new Operations( this , &active_widget , main_window );
+	operations->setOctaveConnection( oc.get() );
+	operations->setSession( &session );
 
 	//Build menus from files
 
-	GenerateMenu generate_menu(main_window, operations);
-	generate_menu.setPath( QString(CONFIG_PATH) +QDir::separator()+ "menus");
+	GenerateMenu generate_menu( main_window , operations );
+	generate_menu.setPath( QApplication::applicationDirPath() + QDir::separator() + "menus" );
 	generate_menu.load_menu();
 
-	generate_menu.setPath( QString(projectsPath()+"menus") );
+	generate_menu.setPath( QString( projectsPath() + "menus" ) );
 	generate_menu.load_menu();
 
 	//generate_menu.setPath("./menus");
@@ -198,9 +200,9 @@ Main::Main(QObject * parent ):QObject (parent)
 
 	main_window->show_config_help_menus();
 
-	connect(main_window->actionOctave_help, SIGNAL(triggered()), this, SLOT(help_octave()));
+	connect(main_window->actionOctave_help, SIGNAL(triggered()), this, SLOT(help()));
 	connect(main_window->actions.value("qtoctave_help"),  SIGNAL(triggered()), this, SLOT(help_qtoctave()));
-	connect(main_window->actions.value("qtoctave_about"),  SIGNAL(triggered()), this, SLOT(help_qtoctave_about()));
+	connect(main_window->actions.value("qtoctave_about"),  SIGNAL(triggered()), this, SLOT(about()));
 	connect(main_window->actionTable, SIGNAL(triggered()), this, SLOT(table()));
 
 	connect(main_window->actionVariableList, SIGNAL(triggered()), this, SLOT(variable_list()));
@@ -216,7 +218,7 @@ Main::Main(QObject * parent ):QObject (parent)
 
 	connect(main_window->actionSvgCanvas, SIGNAL(triggered()), this, SLOT(svgcanvas_callback()));
 
-	if(oc != NULL )
+	if( oc != NULL )
 	{
 		connect(oc.get(), SIGNAL(line_ready(QString)), this, SLOT(line_ready(QString)));
 	}
@@ -242,7 +244,7 @@ void Main::line_ready( const QString &line )
 
 		for(int i=0;i<tools.size();i++)
 		{
-			if( static_cast<SvgCanvas*>(tools[i])->getCanvasNumber() == number ) 
+			if( static_cast<SvgCanvas*>( tools[i] )->getCanvasNumber() == number ) 
 			{
 				return;
 			}
@@ -252,64 +254,47 @@ void Main::line_ready( const QString &line )
 		SvgCanvas *svgcanvas = static_cast<SvgCanvas*>( createTool( SVGCANVAS , work_space ) );
 
 		svgcanvas->show();
-		svgcanvas->setCanvasNumber(number);
-		svgcanvas->line_ready(line);
+		svgcanvas->setCanvasNumber( number );
+		svgcanvas->line_ready( line );
 	}
 }
 
-void Main::help_octave()
+void Main::help()
 {
-	if(get_config("qtinfo_ok").isEmpty() || get_config("qtinfo_ok")=="false" )
+	if( getConfig( "qtinfo_ok" ).isEmpty() || getConfig( "qtinfo_ok" ) == "false" )
 	{
 		 oc->command_enter( "qtinfo" );
 	}
 	else
 	{
-		Help *help = static_cast<Help*>( createTool( HELP , work_space) );
+		Help *help = static_cast<Help*>( createTool( HELP , work_space ) );
 	
-		if(get_config("help_path").isEmpty())
+		if( getConfig( "help_path" ).isEmpty() )
 		{
-			help->setSource( HELP_PATH );
+			help->setSource( helpSource() );
 		}
 		else 
 		{
-			help->setSource(get_config("help_path"));
+			help->setSource( getConfig( "help_path" ) );
 		}
 
 		help->show();
 	}
 }
 
-void Main::help_qtoctave()
+void Main::about()
 {
-	Help *help = static_cast<Help*>( createTool( HELP , work_space) );
+	Help *help = static_cast< Help * >( createTool( HELP , work_space ) );
 
-	if( get_config( "qtoctave_help_path" ).isEmpty() )
+	QFileInfo path( helpPath() );
+
+	if( getConfig( "qtoctave_help_path" ).isEmpty() )
 	{
-		help->setSource( QTOCTAVE_HELP_PATH );
+		help->setSource( helpPath() + "about.html" );
 	}
 	else
 	{
-		help->setSource( get_config( "qtoctave_help_path" ) );
-	}
-
-	help->setWindowTitle("QtOctave Help");
-	help->show();
-}
-
-void Main::help_qtoctave_about()
-{
-	Help *help = static_cast<Help*>( createTool( HELP , work_space) );
-
-	QFileInfo path( QTOCTAVE_HELP_PATH );
-
-	if( get_config( "qtoctave_help_path" ).isEmpty() )
-	{
-		help->setSource( path.absoluteDir().path() + QDir::separator() + "about.html" );
-	}
-	else
-	{
-		help->setSource( get_config( "qtoctave_help_path" ) , "about" );
+		help->setSource( getConfig( "qtoctave_help_path" ) , "about" );
 	}
 
 	help->setWindowTitle( "Tesseract About" );
@@ -383,14 +368,14 @@ void Main::commands_list()
 
 void Main::editor_callback()
 {
-	if( get_config( "external_editor" ) != "true" )
+	if( getConfig( "external_editor" ) != "true" )
 	{
 		Editor *editor = static_cast<Editor*>( createTool( EDITOR , work_space ) );
 		editor->show();
 	}
 	else
 	{
-		const QString editor = get_config( "editor" );
+		const QString editor = getConfig( "editor" );
 
 		if( editor.isEmpty() )
 		{
@@ -437,7 +422,7 @@ BaseWidget *Main::createTool( WidgetType type , QWidget *parent )
 {
 	BaseWidget *w;
 
-	switch(type)
+	switch( type )
 	{
 		case TERMINAL:
 		{
@@ -713,15 +698,16 @@ void Main::openTools( QXmlStreamReader &xml , const QString &config_name )
 				{
 					case HELP:
 					{
-						{
-							Help *help=(Help*)bw;
-							if(get_config("help_path").isEmpty()) help->setSource( HELP_PATH );
-							else help->setSource(get_config("help_path"));
-						}
+						Help *help = static_cast< Help * >( bw );
+						if(getConfig("help_path").isEmpty()) help->setSource( helpSource() );
+						else help->setSource(getConfig("help_path"));
+
 						break;
 					}
 					default:
-					;
+					{
+						break;
+					}
 				}
 			}
 			else if( ! tools.isEmpty() )
@@ -816,7 +802,7 @@ int main( int argn , char **argv )
 	QApplication a( argn , argv );
 
 	//Se inicializa la configuración
-	get_config("");
+	getConfig("");
 
 #	ifndef DEBUG
 
@@ -877,7 +863,7 @@ int main( int argn , char **argv )
 	}
 
 	// QtOctave translations
-	if(qtoctaveTranslator.load("qtoctave_" + locales, LANG_PATH))
+	if( qtoctaveTranslator.load( "qtoctave_" + locales , langPath() ) )
 	{
 	  a.installTranslator(&qtoctaveTranslator);
 	  printf("[main()] Loaded translation file for locale '%s'.\n",
@@ -885,8 +871,9 @@ int main( int argn , char **argv )
 	}
 	else
 	{
-	  printf("[main()] Error loading the translation file for locale '%s'. Not found in %s \n",
-		 locales.toLocal8Bit().data(), LANG_PATH);
+	  std::cerr << "[main()] Error loading the translation file for locale" 
+				<< locales.toLocal8Bit().data() << "not found in" << langPath().toStdString()
+				<< std::endl;
 	}
 
 	// Load
