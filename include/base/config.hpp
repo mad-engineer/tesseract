@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 P.L. Lucas
+/* Copyright (C) 2011 Tesseract Project
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,68 +16,30 @@
  * Boston, MA 02111-1307, USA. 
  */
 
- /*! \mainpage QtOctave Index Page
- *
- * \section intro_sec Introduction
- *
- * QtOctave is a simple front-end for Octave. Octave is a Matlab like calculus application. <br>
- * QtOctave main page: <a href="qtoctave.wordpress.com">qtoctave.wordpress.com</a>
- *
- * \section modules_sec QtOctave modules.
- * QtOctave uses this module structure:<br>
- * Main module point of <a href="../styles/default/images/modules_main.png">view</a><br>
- * Visual tools point of view <a href="../styles/default/images/modules_basewidget.png">view</a><br>
- *
- * Main module controls all modules and interconnect them.<br>
-  * BaseWidget module is a base class for windows shown in QtOctave.
-  * 
- * \subsection operations_sec Operations module.
-  * 
-  * Operations module connects menus signals with callbacks. Contains some classes as Plot class and General_Menu class.
- */
-
 /** @file config.h
- * This file contains application's config parameters. Configuration is automaticly load and save from CONFIG_PATH/config.rc and from user home/.qtoctave.rc
+ * This file contains application's config parameters. Configuration is automatically load and save from CONFIG_PATH/config.rc and from user home/.qtoctave.rc
  */
 #pragma once
-
-#ifdef USER_CONFIG
-#include "configure.hpp"
-#endif
-
-/*
-#ifndef HELP_PATH
-#define HELP_PATH "./octave_doc/index.html"
-#endif
-
-#ifndef QTOCTAVE_HELP_PATH
-#define QTOCTAVE_HELP_PATH "./qtoctave_doc/index.html"
-#endif
-
-#ifndef CONFIG_PATH
-#define CONFIG_PATH "./"
-#endif
-
-#ifndef LANG_PATH
-#define LANG_PATH "./lang"
-#endif
-
-#ifndef PKG_CMD_PATH
-#define PKG_CMD_PATH "./config_files/pkg-commands.list"
-#endif
-*/
 
 #define PKG_ENABLED
 
 #ifndef TESSERACT_BASE_CONFIG_HPP
 #define TESSERACT_BASE_CONFIG_HPP
 
-//#undef QT_NO_DEBUG
-
 #include <cstdio>
 
 #include <QMap>
 #include <QString>
+
+#include <map>
+#include <string>
+#include <vector>
+
+#include <boost/lexical_cast.hpp>
+
+using std::map;
+using std::string;
+using std::vector;
 
 #ifdef TESSERACT_USE_VLD
 #	include <vld.h>
@@ -85,15 +47,116 @@
 
 #include "session.hpp"
 
-/**Gets config of parameter.
+namespace tesseract
+{
+
+class settings
+{
+	int id;
+
+	enum
+	{
+		ID_SETTINGS_ACTIVE,
+		ID_SETTINGS_DEFAULT
+	};
+
+	explicit settings( int newId ) :
+	id(newId) 
+	{
+
+	}
+
+
+	public:
+
+		int get() const;
+
+		static settings active()
+		{
+			return settings( ID_SETTINGS_ACTIVE );
+		}
+
+		static settings default()
+		{
+			return settings( ID_SETTINGS_DEFAULT );
+		}
+};
+
+class config : public QObject
+{
+	Q_OBJECT
+
+	typedef map< string , string > configmap;
+	typedef map< settings , configmap > configurations;
+	typedef std::pair< settings , configmap > configpair;
+
+	/**
+	*	
+	*/
+	configurations data;
+
+	public:
+
+		config();
+
+		/*
+			<param name="name">
+				Identification for needed parameter. A lookup will be started
+				which iterates through the all configurations. The function returns
+				on the first match.
+			</param>
+
+			<param name="val">
+				Reference to the variable which corresponds with the first parameter
+				'name'. The passed argument reference will be overwritten with the
+				right value if a valid parameter identification 'name' can be found
+				in any configurations.
+			</param>
+		*/
+		template< class T > void getProperty( const string &name , T &val ) const
+		{
+			//	Iterate through all settings
+			for(  configurations::const_iterator j = data.begin() ; j != data.end() ; j++ )
+			{
+				// try to find the requested parameter key
+				configmap::const_iterator i = (*j)->find( key );
+
+				// Enters if block when the parameter was found
+				if( i != (*j).end() )
+				{
+					try
+					{
+						// try to cast the parameter to the desired value
+						val = boost::lexical_cast< T >( *i );
+					}
+					catch ( bad_lexical_cast )
+					{
+						BOOST_ASSERT_MSG( false , tr( "Could not cast the value to the passed parameter: " ) + key );						
+					}
+					finally
+					{
+						return;
+					}
+				}
+			}
+
+			BOOST_ASSERT_MSG( false , tr( "Could not find the requested parameter: " ) + key );
+		}
+};
+
+}
+
+/**
+ * Gets config of parameter.
  * @param parameter Parameter name.
  * @return A QString with parameter value.
  */
 const QString getConfig( const QString &parameter );
 
-/**Sets config of parameter.
+/**
+ * Sets config of parameter.
  * @param configuration Add a parameter with value. QMap key is parameter name. QMap value is parameter value.
  */
-void setConfig( const QMap<QString,QString> &configuration );
+void setConfig( const QMap< QString , QString > &configuration );
 
 #endif

@@ -12,6 +12,27 @@
 #include "config.hpp"
 #include "projects.hpp"
 
+namespace tesseract
+{
+
+bool operator < ( settings const& lhs, settings const& rhs )
+{
+	return lhs.get() < rhs.get();
+}
+
+config::config()
+{
+	data.insert( configpair( settings::active()  , map< string , string >() ) );
+	data.insert( configpair( settings::default() , map< string , string >() ) );
+}
+
+int settings::get() const
+{
+	return id;
+}
+
+}
+
 static QMap<QString, QString> config;
 
 static QMap<QString, QString> load_config( const QString &file )
