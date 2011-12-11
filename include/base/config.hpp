@@ -34,6 +34,9 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <memory>
+
+using std::unique_ptr;
 
 #include <boost/lexical_cast.hpp>
 
@@ -57,7 +60,8 @@ class settings
 	enum
 	{
 		ID_SETTINGS_ACTIVE,
-		ID_SETTINGS_DEFAULT
+		ID_SETTINGS_DEFAULT,
+		ID_SETTINGS_LIMITS,
 	};
 
 	explicit settings( int newId ) :
@@ -80,24 +84,44 @@ class settings
 		{
 			return settings( ID_SETTINGS_DEFAULT );
 		}
+
+		static settings limits()
+		{
+			return settings( ID_SETTINGS_LIMITS );
+		}
 };
 
 class config : public QObject
 {
 	Q_OBJECT
 
-	typedef map< string , string > configmap;
-	typedef map< settings , configmap > configurations;
-	typedef std::pair< settings , configmap > configpair;
+	// the actual object node
+	string node;
 
-	/**
-	*	
-	*/
-	configurations data;
+	// how the xml document root node called
+	static const string rootname;
+
+	// where is the configuration file located
+	static const string filename;
+
+	void initActiveSettings();
+	void initDefaultSettings();
 
 	public:
 
-		config();
+		typedef map< string , string > configmap;
+		typedef map< settings , configmap > configurations;
+		typedef std::pair< settings , configmap > configpair;
+
+
+	private:
+		
+		configurations data;
+
+
+	public:
+
+		config( const string &node , const configmap &defaults );
 
 		/*
 			<param name="name">

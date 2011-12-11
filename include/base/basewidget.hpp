@@ -20,6 +20,9 @@
 #ifndef TESSERACT_BASE_BASEWIDGET_HPP
 #define TESSERACT_BASE_BASEWIDGET_HPP
 
+#include <memory>
+using std::tr1::shared_ptr;
+
 #include <QMenu>
 #include <QWidget>
 #include <QMainWindow>
@@ -30,8 +33,8 @@
 #	include <vld.h>
 #endif
 
+#include "config.hpp"
 #include "session.hpp"
-
 
 /** This class is base class for windows of Tesseract.
  */
@@ -40,7 +43,8 @@ class BaseWidget:public QMainWindow
 	Q_OBJECT
 
 	QMenu *dockMenu;
-	QVector<QObject*> docks;
+	QVector< QObject * > docks;
+	shared_ptr<tesseract::config> conf;
 	void addAllDocksTo( BaseWidget *w );
 
 
@@ -55,6 +59,8 @@ class BaseWidget:public QMainWindow
 		BaseWidget( QWidget *parent = NULL );
 		~BaseWidget();
 	
+		void setConfig2( const shared_ptr<tesseract::config> &conf );
+
 		/**WidgetType of base widget.
 		 * @return Type of widget.
 		*/

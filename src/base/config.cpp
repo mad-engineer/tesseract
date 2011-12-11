@@ -2,7 +2,20 @@
 #include <cstring>
 #include <cstdlib>
 
+#include <set>
+#include <fstream>
 #include <iostream>
+
+using std::set;
+using std::ifstream;
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+
+using boost::property_tree::ptree;
+using boost::property_tree::ptree_bad_path;
+using boost::property_tree::xml_parser_error;
+
 
 #include <QMap>
 #include <QDir>
@@ -15,15 +28,77 @@
 namespace tesseract
 {
 
-bool operator < ( settings const& lhs, settings const& rhs )
+const string config::rootname = "tesseract";
+const string config::filename = "config.xml";
+
+bool operator < ( settings const & lhs , settings const & rhs )
 {
 	return lhs.get() < rhs.get();
 }
 
-config::config()
+config::config( const string &nodeName , const configmap &defaults ) : 
+node( nodeName )
 {
-	data.insert( configpair( settings::active()  , map< string , string >() ) );
-	data.insert( configpair( settings::default() , map< string , string >() ) );
+	// the calling class passes their own default parameters
+	data.insert( configpair( settings::default() , defaults ) );
+
+	ifstream xmlfile( configPath().toStdString() + filename );
+
+	// If there exist something which has the same name
+	if( xmlfile.is_open() )
+	{
+		initActiveSettings();
+	}
+	else
+	{
+		// use the default settings if no configuration file can be found
+		data.insert( configpair( settings::active() , data[settings::default()] ) );
+	}
+}
+
+void config::initActiveSettings()
+{
+	try
+	{
+		ptree pt;
+		read_xml( configPath().toStdString() + filename , pt );
+
+		std::vector<string> defaultKeys;
+		std::vector<string> defaultValues;
+
+		const configmap &rmap = data[settings::default()];
+
+		for( configmap::const_iterator i = rmap.begin() ; i != rmap.end() ; i++ )
+		{
+			defaultKeys.push_back( i->first );
+			defaultValues.push_back( i->second );
+
+			try
+			{
+				string activeValue = pt.get<string>( rootname + "." + node + "." + i->first );
+			}
+			catch ( boost::exception * e )
+			{
+				int i = 0;
+			}
+		}
+
+		data.insert( configpair( settings::active()  , configmap() ) );
+	}
+	catch( ptree_bad_path * e )
+	{
+		int i = 0;
+	}
+	catch (	xml_parser_error * e )
+	{
+		string errormsg( "Error while parsing xml file (" + e->filename() + " )" );
+//		errormsg.append( "in line ( " + e->line() + ")." );
+		errormsg.append( "Message: ( " + e->message() );
+		errormsg.append( boost::lexical_cast<string,int>( e->line() ) );
+		errormsg.append( ". ( " + e->message() + ")." );
+		
+		BOOST_ASSERT_MSG( false , errormsg.c_str() );
+	}
 }
 
 int settings::get() const
@@ -43,8 +118,8 @@ static QMap<QString, QString> load_config( const QString &file )
 	
 	if( in == NULL ) 
 	{
-		// TODO: Add translation possibility
-		std::cout << "The config file :" << file.toStdString() << "does not exists" << std::endl; 
+		std::cout << "The config file :" << file.toStdString() 
+				  << "does not exists" << std::endl; 
 
 		return config;
 	}

@@ -71,7 +71,7 @@ class Terminal : public BaseWidget
 
 	/**Init most used regular expressions */
 	void init_regular_expresions();
-
+	void initConfig();
 
 	protected:
 

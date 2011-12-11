@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 P.L. Lucas
+/* Copyright (C) 2011 Tesseract Project
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,9 @@ diary_ok(false),
 text( new QTextEdit( this ) ),
 combo_box( new Autocomplete(this) )
 {
-	widget_type=TERMINAL;
+	initConfig();
+
+	widget_type = TERMINAL;
 	
 	init_regular_expresions();
 	
@@ -206,6 +208,22 @@ combo_box( new Autocomplete(this) )
 			setStyleSheet( QLatin1String( file.readAll() ) ) ;
 		}
 	}
+}
+
+void Terminal::initConfig()
+{
+	tesseract::config::configmap confmap;
+
+	confmap.insert( std::pair<string,string>("lines_in_terminal" , "1000") );
+	confmap.insert( std::pair<string,string>("cols_in_terminal" , "80") );
+	confmap.insert( std::pair<string,string>("show_ide_commands" , "false") );
+	confmap.insert( std::pair<string,string>("terminal_font" , "Courier New") );
+	confmap.insert( std::pair<string,string>("terminal_foreground_color" , "Black") );
+	confmap.insert( std::pair<string,string>("terminal_background_color" , "White") );
+	confmap.insert( std::pair<string,string>("terminal_error_color" , "Red") );
+	confmap.insert( std::pair<string,string>("ide_command_color" , "lightGray") );
+
+	setConfig2( shared_ptr<tesseract::config>( new tesseract::config("terminal",confmap) ) );
 }
 
 void Terminal::init_regular_expresions()
