@@ -58,8 +58,6 @@ class BaseWidget:public QMainWindow
 
 		BaseWidget( QWidget *parent = NULL );
 		~BaseWidget();
-	
-		void setConfig2( const shared_ptr<tesseract::config> &conf );
 
 		/**WidgetType of base widget.
 		 * @return Type of widget.
@@ -113,6 +111,8 @@ class BaseWidget:public QMainWindow
 		
 		/**Dynamic help required.*/
 		void dynamic_help_required( const QString &text );
+
+		void sendConfiguration( string const &node , shared_ptr<map<string,string>> const &defaults , shared_ptr<map<string,string>> const &limits );
 };
 
 #endif

@@ -36,7 +36,7 @@
 #include <vector>
 #include <memory>
 
-using std::unique_ptr;
+using std::shared_ptr;
 
 #include <boost/lexical_cast.hpp>
 
@@ -85,7 +85,7 @@ class settings
 			return settings( ID_SETTINGS_DEFAULT );
 		}
 
-		static settings limits()
+		static settings limit()
 		{
 			return settings( ID_SETTINGS_LIMITS );
 		}
@@ -95,33 +95,42 @@ class config : public QObject
 {
 	Q_OBJECT
 
-	// the actual object node
-	string node;
-
 	// how the xml document root node called
-	static const string rootname;
+	const string rootname;
 
 	// where is the configuration file located
-	static const string filename;
+	const string filename;
 
 	void initActiveSettings();
 	void initDefaultSettings();
 
-	public:
+	/*
+	*	Configmap represents the configuration map.
+	*	
+	*	The most outer string represents the node name
+	*	and will be stored like this:
+	*	
+	*	<root_node_name>
+	*		<parent_node_name_if_set>
+	*			<the_name_will_apear_here></the_name_will_apear_here>
+	*		</parent_node_name_if_set>
+	*	</root_node_name>
+	*
+	*/
+	typedef shared_ptr<map< string , string >> settingsmap;
+	typedef map< settings , settingsmap > configmap;
+	typedef map< string , configmap > configurations;
 
-		typedef map< string , string > configmap;
-		typedef map< settings , configmap > configurations;
-		typedef std::pair< settings , configmap > configpair;
+	typedef std::pair< string , configmap > configpair;
+	typedef std::pair< settings , settingsmap > settingspair;
 
-
-	private:
 		
-		configurations data;
+	configurations data;
 
 
 	public:
 
-		config( const string &node , const configmap &defaults );
+		config( string const &rootname , string const &filename );
 
 		/*
 			<param name="name">
@@ -166,6 +175,12 @@ class config : public QObject
 
 			BOOST_ASSERT_MSG( false , tr( "Could not find the requested parameter: " ) + key );
 		}
+
+
+	public slots:
+
+		// this slot receives new configurations
+		void receiveConfiguration( string const &node , settingsmap const &defaults , settingsmap const &limits );
 };
 
 }

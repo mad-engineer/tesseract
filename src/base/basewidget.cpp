@@ -19,7 +19,6 @@
 #include <QMenuBar>
 #include <QMdiSubWindow>
 
-#include "config.hpp"
 #include "basewidget.hpp"
 #include "mainwindow.hpp"
 
@@ -30,11 +29,6 @@ session( NULL )
 {
 	setAttribute( Qt::WA_DeleteOnClose );
 	setCentralWidget( new QWidget( this ) );
-}
-
-void BaseWidget::setConfig2( const shared_ptr<tesseract::config> &newConf )
-{
-	conf = newConf;
 }
 
 void BaseWidget::createMenuView()

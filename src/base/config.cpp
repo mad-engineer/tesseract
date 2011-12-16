@@ -28,32 +28,16 @@ using boost::property_tree::xml_parser_error;
 namespace tesseract
 {
 
-const string config::rootname = "tesseract";
-const string config::filename = "config.xml";
-
 bool operator < ( settings const & lhs , settings const & rhs )
 {
 	return lhs.get() < rhs.get();
 }
 
-config::config( const string &nodeName , const configmap &defaults ) : 
-node( nodeName )
+config::config( string const &newRootName , string const &newConfigPath ) : 
+rootname( newRootName ),
+filename( newConfigPath )
 {
-	// the calling class passes their own default parameters
-	data.insert( configpair( settings::default() , defaults ) );
 
-	ifstream xmlfile( configPath().toStdString() + filename );
-
-	// If there exist something which has the same name
-	if( xmlfile.is_open() )
-	{
-		initActiveSettings();
-	}
-	else
-	{
-		// use the default settings if no configuration file can be found
-		data.insert( configpair( settings::active() , data[settings::default()] ) );
-	}
 }
 
 void config::initActiveSettings()
@@ -62,28 +46,27 @@ void config::initActiveSettings()
 	{
 		ptree pt;
 		read_xml( configPath().toStdString() + filename , pt );
+		
+		vector<string> limitValues;
+		vector<string> defaultKeys;
+		vector<string> defaultValues;
 
-		std::vector<string> defaultKeys;
-		std::vector<string> defaultValues;
+		//for( configmap::const_iterator i = rmap.begin() ; i != rmap.end() ; i++ )
+		//{
+		//	defaultKeys.push_back( i->first );
+		//	defaultValues.push_back( i->second );
 
-		const configmap &rmap = data[settings::default()];
+		//	try
+		//	{
+		//		string activeValue = pt.get<string>( rootname + "." + node + "." + i->first );
+		//	}
+		//	catch ( boost::exception * e )
+		//	{
+		//		int shit = 0;
+		//	}
+		//}
 
-		for( configmap::const_iterator i = rmap.begin() ; i != rmap.end() ; i++ )
-		{
-			defaultKeys.push_back( i->first );
-			defaultValues.push_back( i->second );
-
-			try
-			{
-				string activeValue = pt.get<string>( rootname + "." + node + "." + i->first );
-			}
-			catch ( boost::exception * e )
-			{
-				int i = 0;
-			}
-		}
-
-		data.insert( configpair( settings::active()  , configmap() ) );
+//		data.insert( configpair( settings::active()  , configmap() ) );
 	}
 	catch( ptree_bad_path * e )
 	{
@@ -99,6 +82,19 @@ void config::initActiveSettings()
 		
 		BOOST_ASSERT_MSG( false , errormsg.c_str() );
 	}
+}
+
+// this slot receives new configurations
+void config::receiveConfiguration( string const &node , settingsmap const &defaults , settingsmap const &limits )
+{
+	configmap limmap;
+	configmap defmap;
+
+	limmap.insert( settingspair( settings::limit()   , limits   ) );
+	defmap.insert( settingspair( settings::default() , defaults ) );
+
+	data.insert( configpair( node , limmap ) );
+	data.insert( configpair( node , defmap ) );
 }
 
 int settings::get() const
