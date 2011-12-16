@@ -180,7 +180,7 @@ class config : public QObject
 	public slots:
 
 		// this slot receives new configurations
-		void receiveConfiguration( string const &node , settingsmap const &defaults , settingsmap const &limits );
+		void receiveConfiguration( string const &node , shared_ptr<map< string , string >> const &defaults , shared_ptr<map< string , string >> const &limits );
 };
 
 }
