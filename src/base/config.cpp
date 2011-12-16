@@ -45,7 +45,7 @@ void config::initActiveSettings()
 	try
 	{
 		ptree pt;
-		read_xml( configPath().toStdString() + filename , pt );
+		read_xml( filename , pt );
 		
 		vector<string> limitValues;
 		vector<string> defaultKeys;
@@ -85,7 +85,7 @@ void config::initActiveSettings()
 }
 
 // this slot receives new configurations
-void config::receiveConfiguration( string const &node , settingsmap const &defaults , settingsmap const &limits )
+void config::receiveConfiguration( string const &node , shared_ptr<map< string , string >> const &defaults , shared_ptr<map< string , string >> const &limits )
 {
 	configmap limmap;
 	configmap defmap;

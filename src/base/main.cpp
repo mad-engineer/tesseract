@@ -93,7 +93,7 @@ oc( shared_ptr<OctaveConnection>( new OctaveConnection() ) )
 
 	main_window = new MainWindow( oc.get() , &session );
 
-	work_space=main_window->work_space;
+	work_space = main_window->work_space;
 
 	window_list = NULL;
 

@@ -20,7 +20,13 @@
 #ifndef TESSERACT_BASE_MAIN_HPP
 #define TESSERACT_BASE_MAIN_HPP
 
+#include <map>
+#include <string>
 #include <memory>
+
+using std::map;
+using std::string;
+using std::shared_ptr;
 
 #include <QTimer>
 #include <QVector>
@@ -31,6 +37,7 @@
 #endif
 
 #include "session.hpp"
+#include "terminal.hpp"
 
 class QMdiArea;
 class MainWindow;
