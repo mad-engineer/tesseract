@@ -79,6 +79,10 @@ class Terminal : public BaseWidget
 		void dropEvent ( QDropEvent * event );
 		void dragEnterEvent( QDragEnterEvent *event );
 
+	signals:
+
+		void sendConfiguration( string const &node , shared_ptr<map<string,string>> const &defaults , shared_ptr<map<string,string>> const &limits );
+	
 	public:
 
 		Terminal( QWidget * parent = 0 );
