@@ -25,7 +25,6 @@ QMAKE_COMPILER_DEFINES += _MSC_VER=1500 WIN32
 
 QMAKE_CXXFLAGS += /GR-
 QMAKE_CXXFLAGS_RELEASE += -MP$(NUMBER_OF_PROCESSORS) /Ox /Ob2 /Oi /Ot /Oy /GL /arch:SSE2 /openmp /Zp16
-QMAKE_CXXFLAGS_DEBUG -= -MP$(NUMBER_OF_PROCESSORS)
 
 QMAKE_CXXFLAGS_DEBUG += /Fd$(IntDir)$(ProjectName)_c.pdb /Od /Gm
 QMAKE_LFLAGS_DEBUG += /PDB:$(IntDir)$(ProjectName)_l.pdb
@@ -60,8 +59,8 @@ ACT_PROJECTNAME = $$PROJECT_NAME
 DEFINES += TESSERACT_COMPILE_PORTABLE
 
 # Set debug and non debug variables
-CONFIG(Debug):DEFINES += DEBUG
-CONFIG(Release):DEFINES += NDEBUG
+CONFIG(Debug):DEFINES += DEBUG _DEBUG
+CONFIG(Release):DEFINES += NDEBUG _NDEBUG
 
 build_pass:CONFIG(debug, debug|release) {
 	unix: TARGET = $$join(TARGET,,,_debug)

@@ -4,7 +4,6 @@ QT += gui core svg xml
 
 TEMPLATE = vcapp
 PROJECT_NAME = base
-TARGET = base
 
 PROJECT_LANG_PATH = $$SOLUTION_LANG_PATH/$$PROJECT_NAME
 TRANSLATIONS += $$PROJECT_LANG_PATH/base_es.ts \
@@ -86,6 +85,8 @@ SOURCES  = $$PROJECT_SOURCE_PATH/autocomplete.cpp \
            $$PROJECT_SOURCE_PATH/terminal.cpp \
            $$PROJECT_SOURCE_PATH/variables_list.cpp \
            $$PROJECT_SOURCE_PATH/window_list.cpp
+
+	LIBS += -L$(BOOST)/stage/lib
 
 	CONFIG(Debug):LIBS += 	-lsvgcanvasd -loperationsd -lprojectsd -ldynamic_helpd \
 							-L$$PROJECT_LIB_PROJECTS_D \
