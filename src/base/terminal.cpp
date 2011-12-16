@@ -43,8 +43,6 @@ diary_ok(false),
 text( new QTextEdit( this ) ),
 combo_box( new Autocomplete(this) )
 {
-	initConfig();
-
 	widget_type = TERMINAL;
 	
 	init_regular_expresions();

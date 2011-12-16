@@ -111,8 +111,6 @@ class BaseWidget:public QMainWindow
 		
 		/**Dynamic help required.*/
 		void dynamic_help_required( const QString &text );
-
-		void sendConfiguration( string const &node , shared_ptr<map<string,string>> const &defaults , shared_ptr<map<string,string>> const &limits );
 };
 
 #endif

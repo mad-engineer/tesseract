@@ -45,8 +45,8 @@
 extern QString syntaxPath();
 
 
-Main::Main(QObject * parent ) : 
-QObject (parent),
+Main::Main( QObject * parent ) : 
+QObject( parent ),
 oc( shared_ptr<OctaveConnection>( new OctaveConnection() ) )
 {
 	//Build Octave commands list
@@ -106,7 +106,7 @@ oc( shared_ptr<OctaveConnection>( new OctaveConnection() ) )
 		oc->setOctavePath( getConfig( "octave_path" ) );
 	}
 
-	Terminal *terminal = static_cast< Terminal * >( createTool( TERMINAL , work_space ) );
+	terminal = static_cast< Terminal * >( createTool( TERMINAL , work_space ) );
 	terminal->work_space = work_space;
 	terminal->setOctaveConnection( oc.get() );
 
@@ -177,10 +177,10 @@ oc( shared_ptr<OctaveConnection>( new OctaveConnection() ) )
 	connect(oc.get(), SIGNAL(clearScreen()), this, SLOT(clear_terminal()));
 
 
-	connect(main_window->actionCompletionMatches, SIGNAL(triggered()), terminal, SLOT(completion_matches_callback()));
+	connect(main_window->actionCompletionMatches, SIGNAL(triggered()), terminal , SLOT(completion_matches_callback()));
 	connect(main_window->actionDynamicHelp, SIGNAL(triggered()), this, SLOT(dynamic_help()));
-	connect(main_window->actionStopProcess, SIGNAL(triggered()), terminal, SLOT(stop_process_callback()));
-	connect(main_window->actionClearTerminal, SIGNAL(triggered()), terminal, SLOT(clear_callback()));
+	connect(main_window->actionStopProcess, SIGNAL(triggered()), terminal , SLOT(stop_process_callback()));
+	connect(main_window->actionClearTerminal, SIGNAL(triggered()), terminal , SLOT(clear_callback()));
 
 	operations = new Operations( this , &active_widget , main_window );
 	operations->setOctaveConnection( oc.get() );
@@ -224,6 +224,11 @@ oc( shared_ptr<OctaveConnection>( new OctaveConnection() ) )
 	}
 
 	//main_window->showMaximized();
+}
+
+Terminal * Main::getTerminal()
+{
+	return terminal;
 }
 
 void Main::widget_activated( BaseWidget *w )
@@ -426,7 +431,7 @@ BaseWidget *Main::createTool( WidgetType type , QWidget *parent )
 	{
 		case TERMINAL:
 		{
-			Terminal *terminal = new Terminal( parent );
+			Terminal *terminal = new Terminal();
 			terminal->setSession( &session );
 			w = terminal;
 			break;
@@ -876,9 +881,24 @@ int main( int argn , char **argv )
 				<< std::endl;
 	}
 
+	// Create Terminal
+
 	// Load
 	a.processEvents();
+
 	Main m;
+	tesseract::config conf( "tesseract" , configPath().toStdString() + "config.xml" );
+
+	// Connect configuration
+	QObject::connect
+	( 
+		//m.getTerminal()	, SIGNAL( sendConfiguration( string const & ) ), 
+		//&conf			, SLOT ( receiveConfiguration( string const & ) )
+		m.getTerminal()	, SIGNAL( sendConfiguration( string const &, shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const &  ) ), 
+		&conf			, SLOT ( receiveConfiguration( string const &, shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const &  ) )
+	);
+
+	m.getTerminal()->initConfig();
 
 	return a.exec();
 }

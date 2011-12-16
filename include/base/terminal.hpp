@@ -71,7 +71,7 @@ class Terminal : public BaseWidget
 
 	/**Init most used regular expressions */
 	void init_regular_expresions();
-	void initConfig();
+
 
 	protected:
 
@@ -88,6 +88,7 @@ class Terminal : public BaseWidget
 		Terminal( QWidget * parent = 0 );
 		~Terminal();
 
+		void initConfig();
 		QTextEdit *getTextEdit();
 
 		OctaveConnection *getOctaveConnection();

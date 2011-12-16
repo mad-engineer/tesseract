@@ -69,6 +69,7 @@ class Main : public QObject
 
 	QTimer timer;
 	Session session;
+	Terminal* terminal;
 	QMdiArea *work_space;
 	Operations *operations;
 	MainWindow *main_window;
@@ -88,6 +89,7 @@ class Main : public QObject
 		/**Opens tools in config.*/
 		void openTools( QXmlStreamReader &xml , const QString &config_name=QString() );
 
+		Terminal * getTerminal();
 
 	public slots:
 
