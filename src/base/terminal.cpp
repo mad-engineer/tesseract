@@ -210,7 +210,8 @@ combo_box( new Autocomplete(this) )
 
 void Terminal::initConfig()
 {
-	shared_ptr<map<string,string>> limits( new map<string,string>() );
+	shared_ptr<map<string,string>> limitmin( new map<string,string>() );
+	shared_ptr<map<string,string>> limitmax( new map<string,string>() );
 	shared_ptr<map<string,string>> defaults( new map<string,string>() );
 
 	defaults->insert( std::pair<string,string>( "lines_in_terminal"			, "1000"		) );
@@ -222,7 +223,13 @@ void Terminal::initConfig()
 	defaults->insert( std::pair<string,string>( "terminal_error_color"		, "Red"			) );
 	defaults->insert( std::pair<string,string>( "ide_command_color"			, "lightGray"	) );
 
-	emit sendConfiguration( "terminal" , defaults , limits );
+	limitmax->insert( std::pair<string,string>( "lines_in_terminal" , "10000" ) );
+	limitmax->insert( std::pair<string,string>( "cols_in_terminal"  , "800"   ) );
+
+	limitmin->insert( std::pair<string,string>( "lines_in_terminal" , "100"   ) );
+	limitmin->insert( std::pair<string,string>( "cols_in_terminal"  , "80"    ) );
+
+	emit sendConfiguration( "terminal" , defaults , limitmin , limitmax );
 }
 
 void Terminal::init_regular_expresions()

@@ -33,7 +33,6 @@
 
 #include <map>
 #include <string>
-#include <vector>
 #include <memory>
 
 using std::shared_ptr;
@@ -42,7 +41,6 @@ using std::shared_ptr;
 
 using std::map;
 using std::string;
-using std::vector;
 
 #ifdef TESSERACT_USE_VLD
 #	include <vld.h>
@@ -61,7 +59,8 @@ class settings
 	{
 		ID_SETTINGS_ACTIVE,
 		ID_SETTINGS_DEFAULT,
-		ID_SETTINGS_LIMITS,
+		ID_SETTINGS_LIMITS_MIN,
+		ID_SETTINGS_LIMITS_MAX
 	};
 
 	explicit settings( int newId ) :
@@ -85,9 +84,14 @@ class settings
 			return settings( ID_SETTINGS_DEFAULT );
 		}
 
-		static settings limit()
+		static settings limitsMin()
 		{
-			return settings( ID_SETTINGS_LIMITS );
+			return settings( ID_SETTINGS_LIMITS_MIN );
+		}
+
+		static settings limitsMax()
+		{
+			return settings( ID_SETTINGS_LIMITS_MAX );
 		}
 };
 
@@ -101,11 +105,8 @@ class config : public QObject
 	// where is the configuration file located
 	const string filename;
 
-	void initActiveSettings();
-	void initDefaultSettings();
-
 	/*
-	*	Configmap represents the configuration map.
+	*	configmap represents the configuration map.
 	*	
 	*	The most outer string represents the node name
 	*	and will be stored like this:
@@ -180,7 +181,14 @@ class config : public QObject
 	public slots:
 
 		// this slot receives new configurations
-		void receiveConfiguration( string const &node , shared_ptr<map< string , string >> const &defaults , shared_ptr<map< string , string >> const &limits );
+
+		void receiveConfiguration
+		( 
+			string const &node, 
+			shared_ptr<map<string,string>> const &defaults, 
+			shared_ptr<map<string,string>> const &limitmin,
+			shared_ptr<map<string,string>> const &limitmax
+		);
 };
 
 }

@@ -81,7 +81,13 @@ class Terminal : public BaseWidget
 
 	signals:
 
-		void sendConfiguration( string const &node , shared_ptr<map<string,string>> const &defaults , shared_ptr<map<string,string>> const &limits );
+		void sendConfiguration
+		( 
+			string const &node, 
+			shared_ptr<map<string,string>> const &defaults, 
+			shared_ptr<map<string,string>> const &limitmin,
+			shared_ptr<map<string,string>> const &limitmax
+		);
 	
 	public:
 

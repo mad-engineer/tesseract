@@ -894,8 +894,8 @@ int main( int argn , char **argv )
 	( 
 		//m.getTerminal()	, SIGNAL( sendConfiguration( string const & ) ), 
 		//&conf			, SLOT ( receiveConfiguration( string const & ) )
-		m.getTerminal()	, SIGNAL( sendConfiguration( string const &, shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const &  ) ), 
-		&conf			, SLOT ( receiveConfiguration( string const &, shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const &  ) )
+		m.getTerminal()	, SIGNAL( sendConfiguration( string const &, shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const & ) ), 
+		&conf			, SLOT ( receiveConfiguration( string const &, shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const & ) )
 	);
 
 	m.getTerminal()->initConfig();
