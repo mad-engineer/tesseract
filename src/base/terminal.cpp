@@ -24,10 +24,14 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include <QLineEdit>
+#include <QTextBlock>
 #include <QTextStream>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QTextCursor>
+
+#include <signal.h>
+#include <sys/types.h>
 
 #include "config.hpp"
 #include "projects.hpp"
@@ -36,12 +40,12 @@
 
 QString projectsPath();
 
-Terminal::Terminal(QWidget * parent) : 
-BaseWidget(parent),
-octave_connection(NULL),
-diary_ok(false),
+Terminal::Terminal( QWidget * parent ) : 
+BaseWidget( parent ),
+octave_connection( NULL ),
+diary_ok( false ),
 text( new QTextEdit( this ) ),
-combo_box( new Autocomplete(this) )
+combo_box( new Autocomplete( this ) )
 {
 	widget_type = TERMINAL;
 	
@@ -110,6 +114,15 @@ combo_box( new Autocomplete(this) )
 		setConfig( c );
 	}
 
+	if( getConfig( "terminal_font_size" ).isEmpty() )
+	{
+		QMap<QString,QString> c;
+
+		c[ "terminal_font_size" ] = "10";
+
+		setConfig( c );
+	}
+
 	if( getConfig( "terminal_foreground_color" ).isEmpty() )
 	{
 		QMap<QString,QString> c;
@@ -133,6 +146,14 @@ combo_box( new Autocomplete(this) )
 		c[ "terminal_error_color" ] = "Red";
 		setConfig( c );
 	}
+
+	if( getConfig( "terminal_warning_color" ).isEmpty() )
+	{
+		QMap<QString,QString> c;
+
+		c[ "terminal_warning_color" ] = "#FF6400";
+		setConfig( c );
+	}
 	
 	if( getConfig( "ide_command_color" ).isEmpty() )
 	{
@@ -150,6 +171,7 @@ combo_box( new Autocomplete(this) )
 	}
 
 	QFont font( getConfig( "terminal_font" ) );
+	font.setPointSize( getConfig( "terminal_font_size").toInt() );
 	
 	normal_format.setFont( font );
 	normal_format.setFontWeight( QFont::Normal );
@@ -164,8 +186,12 @@ combo_box( new Autocomplete(this) )
 	command_format.setFontWeight( QFont::Bold );
 
 	error_format = normal_format;
-	command_format.setFontWeight( QFont::Bold );
+	error_format.setFontWeight( QFont::Bold );
 	error_format.setForeground( QColor( getConfig( "terminal_error_color" ) ) );
+
+	warning_format = normal_format;
+	warning_format.setFontWeight( QFont::Bold );
+	warning_format.setForeground( QColor( getConfig( "terminal_warning_color" ) ) );
 
 	text->show();
 
@@ -229,7 +255,7 @@ void Terminal::initConfig()
 	limitmin->insert( std::pair<string,string>( "lines_in_terminal" , "100"   ) );
 	limitmin->insert( std::pair<string,string>( "cols_in_terminal"  , "80"    ) );
 
-	emit sendConfiguration( "terminal" , defaults , limitmin , limitmax );
+	emit sendConfiguration( "terminal" , "int" , "0" , "100" ); 
 }
 
 void Terminal::init_regular_expresions()
@@ -241,12 +267,13 @@ void Terminal::init_regular_expresions()
 	re.setPattern("~~Diary: (.*) '(.*)'\n");
 }
 
-void Terminal::dragEnterEvent(QDragEnterEvent *event)
+void Terminal::dragEnterEvent( QDragEnterEvent *event )
 {
-	if (event->mimeData()->hasFormat("text/plain"))
+	if( event->mimeData()->hasFormat( "text/plain" ) )
+	{
 		event->acceptProposedAction();
+	}
 }
-
 
 void Terminal::dropEvent ( QDropEvent * event )
 {
@@ -284,16 +311,16 @@ Autocomplete *Terminal::getAutocomplete()
 	return combo_box;
 }
 
-void Terminal::setOctaveConnection(OctaveConnection *octave_connection)
+void Terminal::setOctaveConnection( OctaveConnection *oc )
 {
-	this->octave_connection=octave_connection;
+	this->octave_connection = oc;
 	
-	connect(octave_connection, SIGNAL(error_ready(QString)), this, SLOT(write_error(QString)));
-	connect(octave_connection, SIGNAL(output_ready(QString)), this, SLOT(write_output(QString)));
-	connect(octave_connection, SIGNAL(command_ready(QString)), this, SLOT(write_command(QString)));
-	connect(octave_connection, SIGNAL(ide_command_ready(QString)), this, SLOT(write_ide_command(QString)));
-	connect(octave_connection, SIGNAL(line_ready(QString)), this, SLOT(line_ready(QString)));
-	combo_box->set_octave_connection(octave_connection);
+	connect( oc , SIGNAL(error_ready(QString)), this, SLOT(write_error(QString)));
+	connect( oc , SIGNAL(output_ready(QString)), this, SLOT(write_output(QString)));
+	connect( oc , SIGNAL(command_ready(QString)), this, SLOT(write_command(QString)));
+	connect( oc , SIGNAL(ide_command_ready(QString)), this, SLOT(write_ide_command(QString)));
+	connect( oc , SIGNAL(line_ready(QString)), this, SLOT(line_ready(QString)));
+	combo_box->set_octave_connection( oc );
 	//setProject(); //This line loads variables
 }
 
@@ -302,20 +329,18 @@ OctaveConnection *Terminal::getOctaveConnection()
 	return octave_connection;
 }
 
-void Terminal::command_enter (const QString &command)
+void Terminal::command_enter( const QString &command )
 {
-	octave_connection->command_enter(command);
-	combo_box->setText("");
+	octave_connection->command_enter( command );
+	combo_box->setText( "" );
 
-	if( command.compare("clc",Qt::CaseInsensitive) == 0  )
+	if( command.compare( "clc" , Qt::CaseInsensitive ) == 0  )
 	{
 		clear_callback();
 	}
 }
 
-#include <QTextBlock>
-
-void Terminal::remove_lines(QTextCursor &cursor)
+void Terminal::remove_lines( QTextCursor &cursor )
 {
 	//Se cortan las líneas que sean demasiado largas
 	cursor.movePosition(QTextCursor::Start);
@@ -440,48 +465,88 @@ void Terminal::remove_lines(QTextCursor &cursor)
 	*/
 }
 
-void Terminal::write_output(QString output)
+void Terminal::write_output( QString output )
 {
-	QTextCursor cursor=text->textCursor();
-	cursor.beginEditBlock();
-	cursor.movePosition(QTextCursor::End);
-	
-	//QTextCharFormat format=cursor.charFormat();
-	//format.setFontWeight(QFont::Normal);
-	//format.setForeground(QColor(get_config("terminal_foreground_color")) );
-	//cursor.setCharFormat(format);
-	cursor.insertText(output, normal_format);
-	//text->setTextCursor( cursor );
-	//text->setTextColor( get_config("terminal_foreground_color") );
-	//text->setFontWeight ( QFont::Normal );
-	//text->insertPlainText(output);
-	remove_lines(cursor);
-	cursor.movePosition(QTextCursor::End);
-	cursor.endEditBlock();
-	text->setTextCursor( cursor );
-	if(diary_ok)
+	if( output.isEmpty() )
 	{
-		diary_file.write(output.toLocal8Bit());
+		return;
+	}
+
+	QTextCursor cursor = text->textCursor();
+
+	cursor.beginEditBlock();
+	cursor.movePosition( QTextCursor::End );
+	cursor.insertText( output , normal_format );
+
+	remove_lines( cursor );
+
+	cursor.movePosition( QTextCursor::End );
+	cursor.endEditBlock();
+
+	text->setTextCursor( cursor );
+
+	if( diary_ok )
+	{
+		diary_file.write( output.toLocal8Bit() );
 	}
 }
 
-void Terminal::write_error(QString error)
+void Terminal::write_warning( const QString &warn )
 {
-	QTextCursor cursor=text->textCursor();
+	if( warn.isEmpty() )
+	{
+		return;
+	}
+
+	QTextCursor cursor = text->textCursor();
+
 	cursor.beginEditBlock();
-	cursor.movePosition(QTextCursor::End);
-	//QTextCharFormat format=cursor.charFormat();
-	//format.setFontWeight(QFont::Normal);
-	//format.setForeground(QColor(get_config("terminal_error_color")) );
-	//cursor.setCharFormat(format);
-	cursor.insertText(error, error_format);
-	//text->setTextCursor( cursor );
-	//text->setTextColor( get_config("terminal_error_color") );
-	//text->setFontWeight ( QFont::Normal );
-	//text->insertPlainText(error);
+	cursor.movePosition( QTextCursor::End );
+	cursor.insertText( warn , warning_format );
+
+	remove_lines( cursor );
+	cursor.movePosition( QTextCursor::End );
+	cursor.endEditBlock();
+
+	text->setTextCursor( cursor );
+
+	if( diary_ok )
+	{
+		diary_file.write( warn.toLocal8Bit() );
+	}
+}
+
+void Terminal::write_error( QString error )
+{
+	if( error.isEmpty() )
+	{
+		return;
+	}
+
+	int test = error.toStdString().substr(0,8).compare("warning:");
+	std::string test2 = error.toStdString().substr(0,8);
+
+	if( error.isEmpty() )
+	{
+		return;
+	}
+	else if( error.toStdString().substr(0,8).compare("warning:") == 0 )
+	{
+		write_warning( error );
+		return;
+	}
+
+	QTextCursor cursor = text->textCursor();
+
+	cursor.beginEditBlock();
+	cursor.movePosition( QTextCursor::End );
+	cursor.insertText( error , error_format );
+
 	remove_lines(cursor);
+
 	cursor.movePosition(QTextCursor::End);
 	cursor.endEditBlock();
+
 	text->setTextCursor( cursor );
 
 #ifdef PKG_ENABLED
@@ -496,53 +561,57 @@ void Terminal::write_error(QString error)
 #endif
 }
 
-void Terminal::write_command(QString command)
+void Terminal::write_command( QString command )
 {
-	QTextCursor cursor=text->textCursor();
+	if( command.isEmpty() )
+	{
+		return;
+	}
+
+	QTextCursor cursor = text->textCursor();
+	
 	cursor.beginEditBlock();
-	cursor.movePosition(QTextCursor::End);
-	//QTextCharFormat format=cursor.charFormat();
-	//format.setFontWeight(QFont::Bold);
-	//format.setForeground(QColor(get_config("terminal_foreground_color")) );
-	//cursor.setCharFormat(format);
-	cursor.insertText(command, command_format);
-	//text->setTextCursor( cursor );
-	//text->setTextColor( get_config("terminal_foreground_color") );
-	//text->setFontWeight ( QFont::Bold );
-	//text->insertPlainText(command);
-	//text->setFontWeight ( QFont::Normal );
-	remove_lines(cursor);
-	cursor.movePosition(QTextCursor::End);
+	cursor.movePosition( QTextCursor::End );
+	cursor.insertText( command , command_format );
+
+	remove_lines( cursor );
+	
+	cursor.movePosition( QTextCursor::End );
 	cursor.endEditBlock();
+
 	text->setTextCursor( cursor );
+	
 	if(diary_ok)
 	{
-		diary_file.write(command.toLocal8Bit());
+		diary_file.write( command.toLocal8Bit() );
 	}
 }
 
-void Terminal::write_ide_command(QString command)
+void Terminal::write_ide_command( QString command )
 {
-	if(!show_ide_commands_ok) return;
-	QTextCursor cursor=text->textCursor();
+	if( ! show_ide_commands_ok )
+	{
+		return;
+	}
+	else if( command.isEmpty() )
+	{
+		return;
+	}
+
+	QTextCursor cursor = text->textCursor();
+	
 	cursor.beginEditBlock();
-	cursor.movePosition(QTextCursor::End);
-	//QTextCharFormat format=cursor.charFormat();
-	//format.setFontWeight(QFont::Bold);
-	//format.setForeground(Qt::lightGray);
-	//cursor.setCharFormat(format);
-	cursor.movePosition(QTextCursor::StartOfBlock, QTextCursor::KeepAnchor);
-	cursor.setCharFormat(ide_command_format);
-	cursor.movePosition(QTextCursor::End);
-	cursor.insertText(command, ide_command_format);
-	//text->setTextCursor( cursor );
-	//text->setTextColor( get_config("terminal_foreground_color") );
-	//text->setFontWeight ( QFont::Bold );
-	//text->insertPlainText(command);
-	//text->setFontWeight ( QFont::Normal );
+	cursor.movePosition( QTextCursor::End );
+	cursor.movePosition( QTextCursor::StartOfBlock , QTextCursor::KeepAnchor );
+	cursor.setCharFormat( ide_command_format );
+	cursor.movePosition( QTextCursor::End );
+	cursor.insertText( command , ide_command_format );
+
 	remove_lines(cursor);
+
 	cursor.movePosition(QTextCursor::End);
 	cursor.endEditBlock();
+
 	text->setTextCursor( cursor );
 }
 
@@ -562,10 +631,6 @@ void Terminal::completion_matches_callback()
 	
 	octave_connection->command_enter(command,false);
 }
-
-
-#include <sys/types.h>
-#include <signal.h>
 
 void Terminal::stop_process_callback()
 {

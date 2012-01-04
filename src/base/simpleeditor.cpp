@@ -76,7 +76,7 @@ syntaxCompleterModel( new QCompleter( completer , this ) )
 	
 	if( font_size.isEmpty() )
 	{
-		font_size = QString::number( text_edit_font.pointSize() );
+		font_size = 10;
 	}
 	
 	text_edit_font.setFamily( font_name );
