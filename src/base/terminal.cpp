@@ -277,19 +277,11 @@ void Terminal::dragEnterEvent( QDragEnterEvent *event )
 
 void Terminal::dropEvent ( QDropEvent * event )
 {
-	QString path=event->mimeData()->text();
+	QString path = event->mimeData()->text();
 	
-	QFileInfo fileInfo(path);
-	
-	QString cmd;
-	
-	// Change dir
-	cmd = QString("cd \"") + fileInfo.dir().absolutePath() +"\"";
-	octave_connection->command_enter(cmd);
-	
-	// Execute file
-	cmd = fileInfo.baseName();
-	octave_connection->command_enter(cmd);
+	QFileInfo fileInfo( path );
+	octave_connection->command_enter( QString("cd \"") + fileInfo.dir().absolutePath() +"\"" );
+	octave_connection->command_enter( fileInfo.baseName() );
 
 	event->acceptProposedAction();
 }
@@ -331,12 +323,14 @@ OctaveConnection *Terminal::getOctaveConnection()
 
 void Terminal::command_enter( const QString &command )
 {
-	octave_connection->command_enter( command );
-	combo_box->setText( "" );
-
 	if( command.compare( "clc" , Qt::CaseInsensitive ) == 0  )
 	{
 		clear_callback();
+	}
+	else
+	{
+		octave_connection->command_enter( command );
+		combo_box->setText( "" );
 	}
 }
 
@@ -382,8 +376,8 @@ void Terminal::remove_lines( QTextCursor &cursor )
 
 	while( lines > lines_in_terminal )
 	{
-		cursor.movePosition(QTextCursor::Start);
-		cursor.movePosition(QTextCursor::EndOfBlock,QTextCursor::KeepAnchor);
+		cursor.movePosition( QTextCursor::Start );
+		cursor.movePosition( QTextCursor::EndOfBlock , QTextCursor::KeepAnchor );
 		//printf("line %d: %s\n",lines, cursor.selectedText().toLocal8Bit().data());
 		
 		if(cursor.hasSelection())
@@ -403,16 +397,16 @@ void Terminal::remove_lines( QTextCursor &cursor )
 	//Merge all octave:X> in only one
 	//QRegExp regexp_octave_prompt("((octave:[0-9]+>)|(octave:[0-9]+\\+>))"); //PS1 or PS2
 	
-	cursor.movePosition(QTextCursor::Start);
+	cursor.movePosition( QTextCursor::Start );
 
 	if( !text->isVisible() )
 	{
 		return;
 	}
 
-	cursor = text->document()->find(regexp_octave_prompt,cursor);
+	cursor = text->document()->find( regexp_octave_prompt , cursor );
 
-	while( cursor.position()>=0 )
+	while( cursor.position() >= 0 )
 	{
 		QTextCharFormat format=cursor.charFormat();
 
@@ -522,14 +516,6 @@ void Terminal::write_error( QString error )
 	{
 		return;
 	}
-
-	int test = error.toStdString().substr(0,8).compare("warning:");
-	std::string test2 = error.toStdString().substr(0,8);
-
-	if( error.isEmpty() )
-	{
-		return;
-	}
 	else if( error.toStdString().substr(0,8).compare("warning:") == 0 )
 	{
 		write_warning( error );
@@ -607,9 +593,9 @@ void Terminal::write_ide_command( QString command )
 	cursor.movePosition( QTextCursor::End );
 	cursor.insertText( command , ide_command_format );
 
-	remove_lines(cursor);
+	remove_lines( cursor );
 
-	cursor.movePosition(QTextCursor::End);
+	cursor.movePosition( QTextCursor::End );
 	cursor.endEditBlock();
 
 	text->setTextCursor( cursor );
@@ -617,7 +603,7 @@ void Terminal::write_ide_command( QString command )
 
 void Terminal::closeEvent(QCloseEvent *event)
 {
-	if(session->getTools(TERMINAL).size()<2)
+	if( session->getTools( TERMINAL ).size() < 2 )
 	{
 		//Ignorar este evento
 		event->ignore();
@@ -627,9 +613,9 @@ void Terminal::closeEvent(QCloseEvent *event)
 void Terminal::completion_matches_callback()
 {
 	QString command;
-	QTextStream(&command) << "completion_matches(\"" << combo_box/*->lineEdit()*/->text() << "\")";
+	QTextStream( &command ) << "completion_matches(\"" << combo_box/*->lineEdit()*/->text() << "\")";
 	
-	octave_connection->command_enter(command,false);
+	octave_connection->command_enter( command , false );
 }
 
 void Terminal::stop_process_callback()

@@ -1,4 +1,4 @@
-/* Copyright (C) 2006, 2007, 2008 P.L. Lucas
+/* Copyright (C) 2011 Tesseract Project
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,23 +29,25 @@
 extern QString configPath();
 extern QString projectsPath();
 
-void Sleep::micro_sleep(unsigned long u_seconds)
+using std::unique_ptr;
+
+void Sleep::micro_sleep( unsigned long u_seconds )
 {
-	usleep(u_seconds);
+	usleep( u_seconds );
 }
 
-OctaveConnection::OctaveConnection(QObject * parent )
-: QProcess(parent)
+OctaveConnection::OctaveConnection( QObject * parent )
+: QProcess( parent )
 {
 	octave_path.clear();
 
 	init_regular_expresions();
 
-	error_buffer.open(QBuffer::ReadOnly);
+	error_buffer.open( QBuffer::ReadOnly );
 
-	QObject::connect(this, SIGNAL(readyReadStandardOutput()), this, SLOT(octaveOutputSlot()));
-	QObject::connect(this, SIGNAL(readyReadStandardError()), this, SLOT(octaveErrorOutputSlot()));
-	QObject::connect(this, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(octaveFinished(int, QProcess::ExitStatus)) );
+	QObject::connect( this , SIGNAL( readyReadStandardOutput()), this, SLOT(octaveOutputSlot()));
+	QObject::connect( this , SIGNAL( readyReadStandardError()), this, SLOT(octaveErrorOutputSlot()));
+	QObject::connect( this , SIGNAL( finished(int, QProcess::ExitStatus)), this, SLOT(octaveFinished(int, QProcess::ExitStatus)) );
 }
 
 void OctaveConnection::init_regular_expresions()
@@ -56,9 +58,9 @@ void OctaveConnection::init_regular_expresions()
 	regexp_actual_debug_line_column.setPattern("^([a-zA-Z_]\\w*:)+ line ([0-9]+), column ([0-9]+)$");
 }
 
-void OctaveConnection::setOctavePath(const QString &path)
+void OctaveConnection::setOctavePath( const QString &path )
 {
-	octave_path=path;
+	octave_path = path;
 }
 
 QString OctaveConnection::getOctavePath()
@@ -66,7 +68,7 @@ QString OctaveConnection::getOctavePath()
 	return octave_path;
 }
 
-void OctaveConnection::startOctave(bool quiet)
+void OctaveConnection::startOctave( bool quiet )
 {
 	QString extra_args = getConfig("octave_arguments");
 
@@ -75,7 +77,7 @@ void OctaveConnection::startOctave(bool quiet)
 
 	bool ok;
 
-	QString version = tr("Not found");
+	QString version = tr( "Not found" );
 
 	{
 		QProcess in(this);
@@ -106,9 +108,9 @@ void OctaveConnection::startOctave(bool quiet)
 
 	if( ! ok )
 	{
-		printf("Exit code %d\n",ok);
+		printf( "Exit code %d\n" , ok );
 
-		QMessageBox* msgBox = new QMessageBox();
+		unique_ptr<QMessageBox> msgBox( new QMessageBox() );
 		msgBox->setAttribute( Qt::WA_DeleteOnClose ); //makes sure the msgbox is deleted automatically when closed
 		msgBox->setStandardButtons( QMessageBox::Ok );
 		msgBox->setWindowTitle( tr("Warning") );
@@ -130,7 +132,7 @@ void OctaveConnection::startOctave(bool quiet)
 		return;
 	}
 
-	if(quiet)
+	if( quiet )
 	{
 		start("\""+octave_path+"\" --eval \"PS1(\'\');PS2(\'\');\" --persist --no-history -q -i "+extra_args);
 	}
@@ -166,25 +168,23 @@ void OctaveConnection::startOctave(bool quiet)
 		}
 	}
 
-	//Load scripts
 	loadScripts();
 }
 
-
 void OctaveConnection::loadScripts()
 {
-	const QStringList filters("*.m");
+	const QStringList filters( "*.m" );
 
 	const QFileInfoList list = QDir(scriptsPath()).entryInfoList( filters );
 	
-	QString _command("__qtoctave_ps2=PS2();PS2('');__qtoctave_ps1=PS1();PS1('');\n");
+	QString _command( "__qtoctave_ps2=PS2();PS2('');__qtoctave_ps1=PS1();PS1('');\n" );
 
-	for (int i = 0; i < list.size(); ++i) 
+	for ( int i = 0 ; i < list.size() ; ++i ) 
 	{
 		const QFileInfo fileInfo = list.at(i);
 		QFile file(fileInfo.absoluteFilePath());
 		
-		if ( ! file.open(QIODevice::ReadOnly | QIODevice::Text) )
+		if ( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) )
 		{
 			continue;
 		}
@@ -199,11 +199,21 @@ void OctaveConnection::loadScripts()
 }
 
 
-void OctaveConnection::command_enter (const QString &command, bool show)
+void OctaveConnection::command_enter( const QString &command , bool show )
 {
-	QString _command(command+'\n');
+	if( command.isEmpty() )
+	{
+		return;
+	}
+
+	QString _command;
 	
-	if(show)
+	if( command.at(command.size() - 1) != '\n' )
+	{
+		_command = command + '\n';
+	}
+	
+	if( show )
 	{
 		//Count number of instructions
 		if( ! debugging )
@@ -212,7 +222,6 @@ void OctaveConnection::command_enter (const QString &command, bool show)
 			{
 				instructions_left_no=_command.count('\n');
 			}
-
 			else
 			{
 				instructions_left_no+=_command.count('\n');
@@ -221,14 +230,14 @@ void OctaveConnection::command_enter (const QString &command, bool show)
 
 		//printf("instructions_left_no=%d añadida\n",instructions_left_no);
 
-		emit command_ready(' '+_command);
+		emit command_ready( ' ' + _command );
 	}
 	else
 	{
-		emit ide_command_ready(' '+_command);
+		emit ide_command_ready( ' ' + _command );
 	}
 
-	write(_command.toLocal8Bit() );
+	write( _command.toLocal8Bit() );
 }
 
 /*
@@ -239,7 +248,7 @@ void OctaveConnection::command_enter (const QString &command, bool show)
 
 	TODO: Find away to avoid this ugly hack
 */
-void OctaveConnection::tabHack( QString &buffer, QStringList &lines )
+QString &OctaveConnection::tabHack( QString &buffer , QStringList &lines )
 {
 	const std::size_t tabsize = 4;
 
@@ -252,7 +261,7 @@ void OctaveConnection::tabHack( QString &buffer, QStringList &lines )
 		QString tmpstr( *i );
 
 		// Find the first index of the '\t' character
-		std::size_t found = tmpstr.indexOf('\t');
+		std::size_t found = tmpstr.indexOf( '\t' );
 
 		/*
 			If at least one '\t' character is found.
@@ -266,7 +275,7 @@ void OctaveConnection::tabHack( QString &buffer, QStringList &lines )
 			tmpstr.replace( found , 1 , QString( left ? left : tabsize , ' ' ) );
 
 			changedSomething = true;
-			found = tmpstr.indexOf('\t');
+			found = tmpstr.indexOf( '\t' );
 		}
 
 		if( changedSomething )
@@ -279,8 +288,10 @@ void OctaveConnection::tabHack( QString &buffer, QStringList &lines )
 
 	for(QStringList::const_iterator i = lines.begin() ; i != lines.end() ; i++ )
 	{
-		buffer.append(*i + '\n');
+		buffer.append( *i + '\n' );
 	}
+
+	return buffer;
 }
 
 void OctaveConnection::octaveOutputSlot()
@@ -292,11 +303,9 @@ void OctaveConnection::octaveOutputSlot()
 	QString buffer = QString::fromLocal8Bit( readAllStandardOutput().data() );	
 	QStringList lines = buffer.split('\n');
 
-	tabHack( buffer , lines );
+	emit output_ready( tabHack( buffer , lines ) );
 
-	emit output_ready(buffer);
-
-	Sleep::micro_sleep(200);
+	Sleep::micro_sleep( 200 );
 
 	if( lines.empty() )
 	{
@@ -401,7 +410,7 @@ void OctaveConnection::octaveOutputSlot()
 
 	// Meter en el buffer de línea el último elemento si la cadena
 	// no terminaba en \n
-	if(!buffer.endsWith('\n'))
+	if( ! buffer.endsWith( '\n' ) )
 	{
 		line_buffer = lines.last();
 	}
