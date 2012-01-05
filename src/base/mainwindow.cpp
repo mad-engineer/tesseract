@@ -35,9 +35,9 @@
 
 MainWindow::MainWindow(OctaveConnection *oc, Session *session, QWidget *parent):BaseWidget(parent)
 {
-	widget_type=MAINWINDOW;
+	widget_type = MAINWINDOW;
 	setSession(session);
-	setWindowIcon(QIcon(QApplication::applicationDirPath() + "/styles/default/images/qtoctave.png"));
+	setWindowIcon( QIcon( QApplication::applicationDirPath() + "/styles/default/images/qtoctave.png" ) );
 
 	menuBar()->clear();
 

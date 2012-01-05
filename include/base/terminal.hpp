@@ -51,7 +51,7 @@ class Terminal : public BaseWidget
 	OctaveConnection *octave_connection;
 
 	//Formats of entries
-	QTextCharFormat normal_format, error_format,
+	QTextCharFormat normal_format, error_format, warning_format,
 		command_format, ide_command_format;
 
 	bool diary_ok; //Controls diary output
@@ -71,7 +71,7 @@ class Terminal : public BaseWidget
 
 	/**Init most used regular expressions */
 	void init_regular_expresions();
-
+	void write_warning( const QString &warn );
 
 	protected:
 
@@ -83,10 +83,10 @@ class Terminal : public BaseWidget
 
 		void sendConfiguration
 		( 
-			string const &node, 
-			shared_ptr<map<string,string>> const &defaults, 
-			shared_ptr<map<string,string>> const &limitmin,
-			shared_ptr<map<string,string>> const &limitmax
+			string const &node , 
+			string const &datatype, 
+			string const &minval, 
+			string const &maxval 
 		);
 	
 	public:

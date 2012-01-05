@@ -72,7 +72,7 @@ void OctaveConnection::startOctave( bool quiet )
 {
 	QString extra_args = getConfig("octave_arguments");
 
-	instructions_left_no=0;
+	instructions_left_no = 0;
 	debugging = false;
 
 	bool ok;
@@ -139,32 +139,25 @@ void OctaveConnection::startOctave( bool quiet )
 	else
 	{
 		QString command("\""+octave_path+"\"  --eval \"PS1(\'octave:\\#>\');PS2(\'octave:\\#+>\');addpath('" + scriptsPath() + "')\"  --persist --no-history -i "+extra_args);
-
-
-		printf("[OctaveConnection::startOctave] Starting octave: %s\n",command.toLocal8Bit().data() );
 		start(command);
 	}
-
-	//printf("Waiting octave\n");
 
 	if( ! waitForStarted() )
 	{
 		QMessageBox::critical (NULL, tr("Warning"), tr("QtOctave in:\n")+octave_path+tr("\nCouldn't be opened."));
 	}
 
-	printf("[OctaveConnection::startOctave] Octave running\n");
-
-	if( getConfig("easy_plot_active")=="true" )
+	if( getConfig( "easy_plot_active" ) == "true" )
 	{
-		QString path=getConfig("easy_plot_path");
+		QString path = getConfig( "easy_plot_path" );
 
 		if( path.isEmpty() )
 		{
-			command_enter("gnuplot_binary(\"easy_plot\")");
+			command_enter( "gnuplot_binary(\"easy_plot\")" );
 		}
 		else
 		{
-			command_enter("gnuplot_binary(\""+path+"\")");
+			command_enter( "gnuplot_binary(\"" + path + "\")" );
 		}
 	}
 
@@ -181,8 +174,8 @@ void OctaveConnection::loadScripts()
 
 	for ( int i = 0 ; i < list.size() ; ++i ) 
 	{
-		const QFileInfo fileInfo = list.at(i);
-		QFile file(fileInfo.absoluteFilePath());
+		const QFileInfo fileInfo = list.at( i );
+		QFile file( fileInfo.absoluteFilePath() );
 		
 		if ( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) )
 		{
@@ -208,7 +201,7 @@ void OctaveConnection::command_enter( const QString &command , bool show )
 
 	QString _command;
 	
-	if( command.at(command.size() - 1) != '\n' )
+	if( command.at( command.size() - 1 ) != '\n' )
 	{
 		_command = command + '\n';
 	}
@@ -218,13 +211,13 @@ void OctaveConnection::command_enter( const QString &command , bool show )
 		//Count number of instructions
 		if( ! debugging )
 		{
-			if(instructions_left_no<0)
+			if( instructions_left_no < 0 )
 			{
-				instructions_left_no=_command.count('\n');
+				instructions_left_no = _command.count( '\n' );
 			}
 			else
 			{
-				instructions_left_no+=_command.count('\n');
+				instructions_left_no += _command.count( '\n' );
 			}
 		}
 
@@ -336,45 +329,45 @@ void OctaveConnection::octaveOutputSlot()
 	  //printf("line >%s<\n", i->toLocal8Bit().data());
 
 	  // PS1 = octave:X>
-	  if(regexp_octave_prompt.indexIn(*i) > -1)
+	  if( regexp_octave_prompt.indexIn( *i ) > -1 )
 	  {
 
-	    instructions_left_no-=i->count(regexp_octave_prompt);
+	    instructions_left_no -= i->count( regexp_octave_prompt );
 
 	    //i->remove(0, regexp_octave_prompt.matchedLength());
-	    i->remove(regexp_octave_prompt);
+	    i->remove( regexp_octave_prompt );
 
 	    //printf("instructions_left_no=%d eliminada\n",instructions_left_no);
 	    //printf("line eliminada >%s<\n", i->toLocal8Bit().data());
 
-	    if(debugging)
+	    if( debugging )
 	    {
 	      debugging = false;
 	      emit endDebug();
 	    }
-	    else if(instructions_left_no==0)
+	    else if( instructions_left_no == 0 )
 	    {
 	    	//printf("Comando terminado\n");
-	    	instructions_left_no=0;
+	    	instructions_left_no = 0;
 	    	emit command_finished();
 	    }
 	  }
 
 	  // PS2 = octave:X+>
-	  if(regexp_octave_prompt2.indexIn(*i) > -1)
+	  if( regexp_octave_prompt2.indexIn( *i ) > -1 )
 	  {
 
-	    instructions_left_no-=i->count(regexp_octave_prompt2);
+	    instructions_left_no-=i->count( regexp_octave_prompt2 );
 
 	    //i->remove(0, regexp_octave_prompt.matchedLength());
-	    i->remove(regexp_octave_prompt2);
+	    i->remove( regexp_octave_prompt2 );
 
 	    //printf("instructions_left_no=%d eliminada PS2\n",instructions_left_no);
 	    //printf("line eliminada PS2 >%s<\n", i->toLocal8Bit().data());
 	  }
 
 	  // Línea y columna cuando va a parar
-	  if(regexp_actual_debug_line_column.exactMatch(*i))
+	  if( regexp_actual_debug_line_column.exactMatch( *i ) )
 	  {
 	     int start;
 
@@ -385,24 +378,24 @@ void OctaveConnection::octaveOutputSlot()
 		//}
 
 	    // Extraer la línea
-	    start=regexp_actual_debug_line_column.numCaptures()-1;
+	    start = regexp_actual_debug_line_column.numCaptures()-1;
 	    
-		if(!regexp_actual_debug_line_column.cap(start).isEmpty())
+		if(!regexp_actual_debug_line_column.cap( start ).isEmpty())
 		{
-			lineno=regexp_actual_debug_line_column.cap(start).toInt();
+			lineno=regexp_actual_debug_line_column.cap( start ).toInt();
 		}
 
 	    // Extraer la columna
-	    start=regexp_actual_debug_line_column.numCaptures();
+	    start = regexp_actual_debug_line_column.numCaptures();
 	    
-		if(!regexp_actual_debug_line_column.cap(start).isEmpty())
+		if(!regexp_actual_debug_line_column.cap( start ).isEmpty())
 		{
-			colno=regexp_actual_debug_line_column.cap(start).toInt();
+			colno=regexp_actual_debug_line_column.cap( start ).toInt();
 		}
 
 	  }
 		// Code of clc (clean screen)
-		if(*i == QString("\033[H\033[2J"))
+		if( *i == QString( "\033[H\033[2J" ) )
 		{
 			emit clearScreen();
 		}

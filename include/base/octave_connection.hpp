@@ -50,17 +50,17 @@ class OctaveConnection : public QProcess
 	/**Load scripts from qtoctave/scripts.*/
 	void loadScripts();
 
-	/**Regular expresions:*/
+	/**Regular expressions:*/
 
 	QRegExp regexp_octave_prompt; //Used in octaveOutputSlot
 	QRegExp regexp_octave_prompt2; //Used in octaveOutputSlot
 	QRegExp regexp_actual_debug_line_column; //Used in octaveOutputSlot
 
-	/**Init most used regular expresions*/
+	/**Init most used regular expressions*/
 	void init_regular_expresions();
 
 	// Tab Hack to convert '\t' to x-empty spaces
-	void tabHack( QString &buffer , QStringList &lines );
+	QString &tabHack( QString &buffer , QStringList &lines );
 
 	public:
 		OctaveConnection(QObject * parent = 0);
@@ -75,8 +75,8 @@ class OctaveConnection : public QProcess
 		 * @param text Command to send.
 		 * @param show Shows command in Terminal or not.
 		 */
-		void command_enter(const QString &text, bool show=true);
-		/**Reset number of instrucions left to send signal command_finished.
+		void command_enter( const QString &text , bool show = true );
+		/**Reset number of instructions left to send signal command_finished.
 		 */
 		void reset_instrutions_left() {instructions_left_no=0;};
 	

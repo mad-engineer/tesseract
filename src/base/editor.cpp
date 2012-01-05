@@ -93,12 +93,12 @@ project_name( tr( "Empty" ) )
 	connect(list_files,SIGNAL(clicked (const QModelIndex &)), this, SLOT(file_selected(const QModelIndex &)) );
 
 	//Clipboard list
-	QDockWidget *list_clipboard_dock=new QDockWidget(tr("Small Clipboard"), this);
-	list_clipboard_dock->setObjectName(list_clipboard_dock->windowTitle());
-	addDockWidget(Qt::LeftDockWidgetArea, list_clipboard_dock);
+	QDockWidget *list_clipboard_dock = new QDockWidget(tr("Small Clipboard") , this );
+	list_clipboard_dock->setObjectName( list_clipboard_dock->windowTitle() );
+	addDockWidget( Qt::LeftDockWidgetArea , list_clipboard_dock );
 
-	list_clipboard=new ClipboardListView(list_clipboard_dock);
-	list_clipboard_dock->setWidget(list_clipboard);
+	list_clipboard = new ClipboardListView( list_clipboard_dock );
+	list_clipboard_dock->setWidget( list_clipboard );
 	list_clipboard_dock->show();
 
 	connect(list_clipboard,SIGNAL(doubleClicked (const QModelIndex &)), this, SLOT(clipboard_double_clicked(const QModelIndex &)) );

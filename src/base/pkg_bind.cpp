@@ -5,7 +5,7 @@
 #include "projects.hpp"
 #include "pkg_bind.hpp"
 
-PkgBind *PkgBind::instance = NULL;
+unique_ptr<PkgBind> PkgBind::instance = unique_ptr<PkgBind>( new PkgBind() );
 
 /* Constructor
  */
@@ -17,14 +17,8 @@ PkgBind::PkgBind()
 /* Get the unique instance
  * or create it if there isn't any
  */
-PkgBind *PkgBind::getInstance()
+const unique_ptr<PkgBind> &PkgBind::getInstance()
 {
-	// TODO: if( something == NULL ) <-- bad design
-	if( instance == NULL )
-	{
-		instance = new PkgBind();
-	}
-
 	return instance;
 }
 

@@ -38,8 +38,6 @@ build/qtcreator/4.7/UpgradeLog*.xml
 build/qtcreator/4.7/_UpgradeREport_Files/*
 build/msw/vc9/UpgradeLog*.XML
 build/msw/vc9/_UpgradeReport_Files/*
-*.vcproj
-*.vsprops
 resources/base/config/last_windows_layout.xml
 resources/base/config/config.rc
 resources/base/config/SmallClipboard.xml
@@ -52,3 +50,4 @@ build/qtcreator/4.7/operations/operations.vcxproj
 *.filters
 *.rc
 build/qtcreator/4.7/tesseract.sln
+*.vcxproj
