@@ -6,8 +6,7 @@ CONFIG -= dll
 
 PROJECT_NAME = dynamic_help
 
-QT += core \
-	  gui
+QT += core gui xml
 
 # Includes
 PROJECT_INCLUDE_PATH = $$SOLUTION_INCLUDE_PATH/$$PROJECT_NAME

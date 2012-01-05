@@ -4,18 +4,13 @@ TEMPLATE = vclib
 CONFIG += staticlib
 CONFIG -= dll
 
-QT -= gui
-QT -= core
+QT += gui core svg xml
  
 PROJECT_NAME = svgcanvas
 
 # Includes
 PROJECT_INCLUDE_PATH = $$SOLUTION_INCLUDE_PATH/$$PROJECT_NAME
-INCLUDEPATH += 	$(QTDIR2008)/include/QtXml \
-				$(QTDIR2008)/include/QtSvg \
-				$(QTDIR2008)/include/QtCore \
-				$(QTDIR2008)/include/QtGui \
-				../../../../include/base
+INCLUDEPATH += 	../../../../include/base
 
 HEADERS = $$PROJECT_INCLUDE_PATH/svgcanvas.hpp
 
@@ -26,10 +21,6 @@ FORMS = $$PROJECT_FORMS_PATH/export_to_dialog.ui
 # Sources
 PROJECT_SOURCE_PATH = $$SOLUTION_SOURCE_PATH/$$PROJECT_NAME
 SOURCES = $$PROJECT_SOURCE_PATH/svgcanvas.cpp
-
-# Lib input		   
-CONFIG(Debug):LIBS += -lQtSvgd4 -lQtXmld4
-CONFIG(Release):LIBS += -lQtSvg4 -lQtXml4
 
 win32 {
 

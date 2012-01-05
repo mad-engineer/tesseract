@@ -4,25 +4,29 @@ TEMPLATE = vclib
 CONFIG += staticlib
 CONFIG -= dll
 
-QT += core \
-      gui
+QT += gui core xml
 
-PROJECT_NAME = projects
+PROJECT_NAME = operations
 
-# Input
+# Other includes
 PROJECT_INCLUDE_PATH = $$SOLUTION_INCLUDE_PATH/$$PROJECT_NAME
-INCLUDEPATH  += $$SOLUTION_INCLUDE_PATH\\base
-HEADERS = 	$$PROJECT_INCLUDE_PATH\\projects.hpp
-		   
+INCLUDEPATH += $$SOLUTION_INCLUDE_PATH/base \
+			   $$SOLUTION_INCLUDE_PATH/projects
+
+# Own includes
+HEADERS += $$PROJECT_INCLUDE_PATH/general_menu.hpp \
+           $$PROJECT_INCLUDE_PATH/table_plot.hpp
 # Forms
-PROJECT_FORMS_PATH = $$SOLUTION_FORMS_PATH/$$PROJECT_NAME	 
-FORMS = 	$$PROJECT_FORMS_PATH\\projects.ui \
-			$$PROJECT_FORMS_PATH\\newprojectdialog.ui
+PROJECT_FORMS_PATH = $$SOLUTION_FORMS_PATH/$$PROJECT_NAME	   
+FORMS  = $$PROJECT_FORMS_PATH/general_menu.ui
 
 #Sources		
 PROJECT_SOURCE_PATH = $$SOLUTION_SOURCE_PATH/$$PROJECT_NAME
-SOURCES = 	$$PROJECT_SOURCE_PATH/projects.cpp
-
+SOURCES = $$PROJECT_SOURCE_PATH/general_menu.cpp \
+           $$PROJECT_SOURCE_PATH/operations.cpp \
+           $$PROJECT_SOURCE_PATH/plot.cpp \
+           $$PROJECT_SOURCE_PATH/table_plot.cpp
+		   
 win32 {
 
 CONFIG(Debug):DESTDIR = $$SOLUTION_LIB_PATH/$$ARCHITECTURE_PATH_DEBUG/$(ProjectName)
