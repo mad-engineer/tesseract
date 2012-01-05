@@ -2,166 +2,136 @@
 #include <cstring>
 #include <cstdlib>
 
+#include <memory>
 #include <vector>
 #include <fstream>
 #include <iostream>
-
-using std::vector;
-using std::ifstream;
-
-#include <boost/lexical_cast.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
-
-using boost::property_tree::ptree;
-using boost::property_tree::ptree_bad_path;
-using boost::property_tree::xml_parser_error;
 
 #include <QMap>
 #include <QDir>
 #include <QString>
 #include <QTranslator>
+#include <QTextStream>
 
 #include "config.hpp"
 #include "projects.hpp"
 
+#include <boost/lexical_cast.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+
+using std::vector;
+using std::ifstream;
+using std::unique_ptr;
+using boost::property_tree::ptree;
+using boost::property_tree::ptree_bad_path;
+using boost::property_tree::xml_parser_error;
+
+
+
 namespace tesseract
 {
 
-bool operator < ( settings const & lhs , settings const & rhs )
+bool operator < ( const settings & lhs , const settings & rhs )
 {
 	return lhs.get() < rhs.get();
 }
 
-config::config( string const &newRootName , string const &newConfigPath ) : 
+config::config( const string &newRootName , const string &newConfigPath ) : 
 rootname( newRootName ),
 filename( newConfigPath )
 {
-
+	data.insert( settingspair( settings::defVal() , QDomDocument() ) );
+	data.insert( settingspair( settings::limMin() , QDomDocument() ) );
+	data.insert( settingspair( settings::limMax() , QDomDocument() ) );
 }
 
 // this slot receives new configurations
-void config::receiveConfiguration( string const &node, settingsmap const &defaults, settingsmap const &limitmin, settingsmap const &limitmax )
+void config::receiveConfiguration( const string &node , const string &prop , const string &datatype , const string &defval , const string &minval , const string &maxval )
 {
-	configmap defmap;
-	configmap limminmap;
-	configmap limmaxmap;
-	settingsmap activemap = shared_ptr<map<string,string>>( new map<string,string>() );
+	QDomDocument & defdoc = data[settings::defVal()];
+	QDomDocument & mindoc = data[settings::limMin()];
+	QDomDocument & maxdoc = data[settings::limMax()];
 
-	defmap.insert( settingspair( settings::default() , defaults		 ) );
-	limminmap.insert( settingspair( settings::limitsMin() , limitmin ) );
-	limmaxmap.insert( settingspair( settings::limitsMax() , limitmax ) );
+	QDomNodeList defnodelist = defdoc.elementsByTagName( node.c_str() );
+	QDomNodeList minnodelist = defdoc.elementsByTagName( node.c_str() );
+	QDomNodeList maxnodelist = defdoc.elementsByTagName( node.c_str() );
 
-	data.insert( configpair( node , defmap ) );
-	data.insert( configpair( node , limminmap ) );
-	data.insert( configpair( node , limmaxmap ) );
-
-	try
+	QDomElement elem;
+	
+	if( defnodelist.isEmpty() )
 	{
-		ptree pt;
+		elem = defdoc.createElement( node.c_str() );
+	}
+	else
+	{
+		elem = defdoc.firstChildElement( node.c_str() );
+	}
 
-		read_xml( filename , pt );
+	QDomElement attr = defdoc.createElement( prop.c_str() );
 
-		vector<string> defaultKeys;
-		vector<string> defaultValues;
-		vector<string> limitMaxValues;
-		vector<string> limitMinValues;
+	attr.setAttribute( "type"  , datatype.c_str() );
+	attr.setAttribute( "value" , defval.c_str()   );
+	
+	elem.appendChild( attr );
+	defdoc.appendChild( elem );
 
-		for( map<string,string>::const_iterator i = defaults->begin() ; i != defaults->end() ; i++ )
+	if( minval.size() )
+	{
+		if( minnodelist.isEmpty() )
 		{
-			const string key = i->first;
-			const string val = i->second;
-
-			try
-			{
-				const string activeValue = pt.get<string>( rootname + "." + node + "." + key );
-
-				map<string,string>::const_iterator foundMin = limitmin->find( key );
-				map<string,string>::const_iterator foundMax = limitmax->find( key );
-
-				int limitMinVal = -1;
-				int limitMaxVal = -1;
-
-				if( foundMin != limitmin->end() )
-				{
-					limitMinVal = boost::lexical_cast<int,string>( foundMin->second );
-				}
-
-				if( foundMax != limitmax->end() )
-				{
-					limitMaxVal = boost::lexical_cast<int,string>( foundMax->second );
-				}
-
-				if( limitMinVal != -1 )
-				{
-					try
-					{
-						const int testValue = boost::lexical_cast<int,string>( activeValue );
-
-						if( ( testValue <= limitMaxVal ) && ( testValue >= limitMinVal ) )
-						{
-							activemap->insert( std::pair<string,string>( key , activeValue ) );
-						}
-						else
-						{
-							activemap->insert( std::pair<string,string>( key , val ) );
-						}
-
-					}
-					catch ( boost::bad_lexical_cast )
-					{
-						BOOST_ASSERT_MSG
-						( 
-							false , 
-							string
-							(
-								string( "Could not cast numeric key: \"" ) 
-								+ key + string( "\"" ) + string( " with value: \"" ) 
-								+ val + string( "\"" )
-							).c_str()
-						);
-					}
-					catch( ... )
-					{
-						BOOST_ASSERT_MSG( false , "Caught unknown exception." );
-					}
-				}
-				
-				// if the value is not numeric 
-				// or an exception was thrown before
-				if( activemap->find( key ) == activemap->end() )
-				{
-					activemap->insert( std::pair<string,string>( key , val ) );
-				}
-			}
-			catch( ... )
-			{
-				BOOST_ASSERT_MSG( false , "Caught unknown exception." );
-			}
+			elem = mindoc.createElement( node.c_str() );
 		}
-	}
-	catch( ptree_bad_path * e )
-	{
-		BOOST_ASSERT_MSG( false , e->what() );
-	}
-	catch (	xml_parser_error * e )
-	{
-		string errormsg( "Error while parsing xml file (" + e->filename() + " )" );
-		//		errormsg.append( "in line ( " + e->line() + ")." );
-		errormsg.append( "Message: ( " + e->message() );
-		errormsg.append( boost::lexical_cast<string,int>( e->line() ) );
-		errormsg.append( ". ( " + e->message() + ")." );
+		else
+		{
+			elem = mindoc.firstChildElement( node.c_str() );
+		}
 
-		BOOST_ASSERT_MSG( false , errormsg.c_str() );
-	}
-	catch( ... )
-	{
-		BOOST_ASSERT_MSG( false , "Caught unknown exception." );
+		QDomElement attr = mindoc.createElement( prop.c_str() );
+
+		attr.setAttribute( "type"  , datatype.c_str() );
+		attr.setAttribute( "value" , minval.c_str()   );
+
+		elem.appendChild( attr );
+		mindoc.appendChild( elem );
 	}
 
-	configmap actmap;
-	actmap.insert( settingspair( settings::active()  , activemap ) );
-	data.insert( configpair( node , actmap ) );
+	if( maxval.size() )
+	{
+		if( maxnodelist.isEmpty() )
+		{
+			elem = maxdoc.createElement( node.c_str() );
+		}
+		else
+		{
+			elem = maxdoc.firstChildElement( node.c_str() );
+		}
+
+		QDomElement attr = maxdoc.createElement( prop.c_str() );
+
+		attr.setAttribute( "type"  , datatype.c_str() );
+		attr.setAttribute( "value" , maxval.c_str()   );
+
+		elem.appendChild( attr );
+		maxdoc.appendChild( elem );
+	}
+
+	QFile file( filename.c_str() );
+
+	if( ! file.open( QFile::WriteOnly ) )
+	{
+		int test = 0;
+	}
+
+	QTextStream ts( &file );
+	ts << defdoc.toString();
+
+	file.close();
+}
+
+void config::requestAttribute( const string &node , string &propVal )
+{
+
 }
 
 int settings::get() const

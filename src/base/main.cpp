@@ -44,7 +44,6 @@
 
 extern QString syntaxPath();
 
-
 Main::Main( QObject * parent ) : 
 QObject( parent ),
 oc( shared_ptr<OctaveConnection>( new OctaveConnection() ) )
@@ -892,10 +891,14 @@ int main( int argn , char **argv )
 	// Connect configuration
 	QObject::connect
 	( 
-		//m.getTerminal()	, SIGNAL( sendConfiguration( string const & ) ), 
-		//&conf			, SLOT ( receiveConfiguration( string const & ) )
-		m.getTerminal()	, SIGNAL( sendConfiguration( string const &, shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const & ) ), 
-		&conf			, SLOT ( receiveConfiguration( string const &, shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const & , shared_ptr<map<string,string>> const & ) )
+		m.getTerminal()	, SIGNAL( sendConfiguration( const string & , const string &, const string &, const string &, const string &, const string & ) ), 
+		&conf		  , SLOT    ( receiveConfiguration( const string & , const string &, const string &, const string &, const string &, const string & ) )
+	);
+
+	QObject::connect
+	( 
+		m.getTerminal()	, SIGNAL( receiveAttribute( const string & , string & ) ), 
+		&conf		    , SLOT  ( requestAttribute( const string & , string & ) )
 	);
 
 	m.getTerminal()->initConfig();

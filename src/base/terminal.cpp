@@ -255,7 +255,14 @@ void Terminal::initConfig()
 	limitmin->insert( std::pair<string,string>( "lines_in_terminal" , "100"   ) );
 	limitmin->insert( std::pair<string,string>( "cols_in_terminal"  , "80"    ) );
 
-	emit sendConfiguration( "terminal" , "int" , "0" , "100" ); 
+	emit sendConfiguration( "terminal" , "MaxLines"        , "size"  , "1000"        , "100" , "10000" );
+	emit sendConfiguration( "terminal" , "MaxCols"         , "size"  , "80"          , "80"  , "800"   ); 
+	emit sendConfiguration( "terminal" , "ShowIdeCommands" , "bool"	 , "false"       , ""    , ""      );
+	emit sendConfiguration( "terminal" , "Font"			   , "font"  , "Courier New" , ""    , ""	   );
+	emit sendConfiguration( "terminal" , "ForegroundColor" , "color" , "Black"       , ""    , ""	   );
+	emit sendConfiguration( "terminal" , "BackgroundColor" , "color" , "White"       , ""    , ""      );
+	emit sendConfiguration( "terminal" , "ErrorColor"      , "color" , "Red"         , ""    , ""      );
+	emit sendConfiguration( "terminal" , "IdeColor"        , "color" , "LightGray"	 , ""    , ""      );
 }
 
 void Terminal::init_regular_expresions()

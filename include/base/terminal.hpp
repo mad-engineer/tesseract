@@ -83,10 +83,18 @@ class Terminal : public BaseWidget
 
 		void sendConfiguration
 		( 
-			string const &node , 
-			string const &datatype, 
-			string const &minval, 
-			string const &maxval 
+			const string &node, 
+			const string &prop,
+			const string &datatype,
+			const string &defval,
+			const string &minval, 
+			const string &maxval 
+		);
+
+		void requestAttribute
+		( 
+			const string &node, 
+			const string &prop
 		);
 	
 	public:

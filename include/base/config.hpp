@@ -30,12 +30,10 @@
 
 #include <QMap>
 #include <QString>
+#include <QDomDocument>
 
 #include <map>
 #include <string>
-#include <memory>
-
-using std::shared_ptr;
 
 #include <boost/lexical_cast.hpp>
 
@@ -74,22 +72,22 @@ class settings
 
 		int get() const;
 
-		static settings active()
+		static settings actVal()
 		{
 			return settings( ID_SETTINGS_ACTIVE );
 		}
 
-		static settings default()
+		static settings defVal()
 		{
 			return settings( ID_SETTINGS_DEFAULT );
 		}
 
-		static settings limitsMin()
+		static settings limMin()
 		{
 			return settings( ID_SETTINGS_LIMITS_MIN );
 		}
 
-		static settings limitsMax()
+		static settings limMax()
 		{
 			return settings( ID_SETTINGS_LIMITS_MAX );
 		}
@@ -105,28 +103,10 @@ class config : public QObject
 	// where is the configuration file located
 	const string filename;
 
-	/*
-	*	configmap represents the configuration map.
-	*	
-	*	The most outer string represents the node name
-	*	and will be stored like this:
-	*	
-	*	<root_node_name>
-	*		<parent_node_name_if_set>
-	*			<the_name_will_apear_here></the_name_will_apear_here>
-	*		</parent_node_name_if_set>
-	*	</root_node_name>
-	*
-	*/
-	typedef shared_ptr<map< string , string >> settingsmap;
-	typedef map< settings , settingsmap > configmap;
-	typedef map< string , configmap > configurations;
+	typedef map< settings , QDomDocument > configmap;
+	typedef std::pair< settings , QDomDocument > settingspair;
 
-	typedef std::pair< string , configmap > configpair;
-	typedef std::pair< settings , settingsmap > settingspair;
-
-		
-	configurations data;
+	configmap data;
 
 
 	public:
@@ -147,7 +127,7 @@ class config : public QObject
 				in any configurations.
 			</param>
 		*/
-		template< class T > void getProperty( const string &name , T &val ) const
+		template< class T > void requestProperty( const string &name , T &val ) const
 		{
 			//	Iterate through all settings
 			for(  configurations::const_iterator j = data.begin() ; j != data.end() ; j++ )
@@ -181,14 +161,17 @@ class config : public QObject
 	public slots:
 
 		// this slot receives new configurations
-
 		void receiveConfiguration
 		( 
-			string const &node, 
-			shared_ptr<map<string,string>> const &defaults, 
-			shared_ptr<map<string,string>> const &limitmin,
-			shared_ptr<map<string,string>> const &limitmax
+			const string &node, 
+			const string &prop,
+			const string &datatype,
+			const string &defval,
+			const string &minval = "", 
+			const string &maxval = "" 
 		);
+
+		void requestAttribute( const string &node , string &propVal );
 };
 
 }
