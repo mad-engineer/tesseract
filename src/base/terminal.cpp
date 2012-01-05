@@ -263,6 +263,10 @@ void Terminal::initConfig()
 	emit sendConfiguration( "terminal" , "BackgroundColor" , "color" , "White"       , ""    , ""      );
 	emit sendConfiguration( "terminal" , "ErrorColor"      , "color" , "Red"         , ""    , ""      );
 	emit sendConfiguration( "terminal" , "IdeColor"        , "color" , "LightGray"	 , ""    , ""      );
+
+	string teststring = "MaxLines";
+	emit requestAttribute( "terminal" , teststring );
+	string shit = "shit";
 }
 
 void Terminal::init_regular_expresions()

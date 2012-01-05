@@ -93,8 +93,8 @@ class Terminal : public BaseWidget
 
 		void requestAttribute
 		( 
-			const string &node, 
-			const string &prop
+			const string &node,
+			string &prop
 		);
 	
 	public:

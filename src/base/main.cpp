@@ -897,7 +897,7 @@ int main( int argn , char **argv )
 
 	QObject::connect
 	( 
-		m.getTerminal()	, SIGNAL( receiveAttribute( const string & , string & ) ), 
+		m.getTerminal()	, SIGNAL( requestAttribute( const string & , string & ) ), 
 		&conf		    , SLOT  ( requestAttribute( const string & , string & ) )
 	);
 

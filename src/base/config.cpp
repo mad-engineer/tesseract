@@ -131,7 +131,66 @@ void config::receiveConfiguration( const string &node , const string &prop , con
 
 void config::requestAttribute( const string &node , string &propVal )
 {
+	QFile file( filename.c_str() );
 
+	if( ! file.open( QFile::ReadOnly ) )
+	{
+		// TODO: Return the default value
+		// TODO: Write error to terminal (via signal)
+	}
+
+	QDomDocument actdoc;
+
+	if( ! actdoc.setContent( & file ) )
+	{
+		// TODO: Return default value
+		// TODO: Write error to terminal (via signal)
+	}
+
+	QDomNodeList nodelist = actdoc.elementsByTagName( node.c_str() );
+
+	if( nodelist.isEmpty() )
+	{
+		// TODO: Return default value
+		// TODO: Write error to terminal (via signal)
+	}
+
+	QDomNode elem = nodelist.at( 0 );
+
+	if( ! elem.hasChildNodes() )
+	{
+		// TODO: Return default value
+		// TODO: Write error to terminal (via signal)
+		// Could not find the requested property in the config file
+	}
+
+	elem = elem.firstChildElement( propVal.c_str() );
+
+	if( ! elem.hasAttributes() )
+	{
+		// TODO: Return default value
+		// TODO: Write error to terminal (via signal)
+		// The node has no attributes
+	}
+
+	QDomNamedNodeMap attrmap = elem.attributes();
+
+	if( ! attrmap.contains( "value" ) )
+	{
+		// TODO: Return default value
+		// TODO: Write error to terminal (via signal)
+		// The node does not contain value attribute
+	}
+
+	string valuetype = "size";
+
+	if( valuetype == "size" )
+	{
+		QDomNode tmp = attrmap.namedItem( "value" );
+
+		int test = tmp.nodeValue().toInt();
+		propVal = tmp.nodeValue().toStdString();
+	}
 }
 
 int settings::get() const
