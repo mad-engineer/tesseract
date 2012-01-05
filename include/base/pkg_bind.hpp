@@ -20,6 +20,9 @@
 #ifndef TESSERACT_BASE_PKG_BIND_HPP
 #define TESSERACT_BASE_PKG_BIND_HPP
 
+#include <memory>
+using std::unique_ptr;
+
 #include <QSet>
 #include <QString>
 
@@ -33,7 +36,7 @@ class PkgBind: private QObject
  private:
   QString invokeCmd;
   QSet<QString> commands;
-  static PkgBind *instance;
+  static unique_ptr<PkgBind> instance;
 
   /* Constructor
    * Singleton
@@ -43,14 +46,14 @@ class PkgBind: private QObject
   /* Get the unique instance
    * or create it if there isn't any
    */
-  static PkgBind *getInstance();
+  static const unique_ptr<PkgBind> &getInstance();
 
   /* Load the command list from a file
    */
   void loadCommandList();
 
   /* Check if a symbol is defined
-   * as a funciont included in some package
+   * as a function included in some package
    */
   bool checkSymbol(const QString &s);
 
