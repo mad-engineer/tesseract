@@ -50,6 +50,47 @@ class BaseWidget:public QMainWindow
 
 	protected:
 
+		class baseProperty
+		{
+			string name;
+			string prop;
+			string type;
+			string actVal;
+			string minVal;
+			string maxVal;
+
+
+			public:
+
+				baseProperty
+				(
+					const string &name ,
+					const string &prop ,
+					const string &type , 
+					const string &actVal , 
+					const string &minVal = string() , 
+					const string &maxVal = string() 
+				);
+
+				const string& getName() const;
+				void setName( const string &name );
+
+				const string& getProp() const;
+				void setProp( const string &prop );
+
+				const string& getType() const;
+				void setType( const string &type );
+
+				const string& getActVal() const;
+				void setActVal( const string &actVal );
+
+				const string& getMinVal() const;
+				void setMinVal( const string &minVal );
+
+				const string& getMaxVal() const;
+				void setMaxVal( const string &actVal );
+		};
+
 		Session *session;
 		WidgetType widget_type;
 
