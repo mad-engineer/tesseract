@@ -20,6 +20,7 @@
 using std::vector;
 
 #include <boost/assert.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <QDir>
 #include <QMap>
@@ -34,6 +35,7 @@ using std::vector;
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QTextCursor>
+#include <QApplication>
 
 #include <signal.h>
 #include <sys/types.h>

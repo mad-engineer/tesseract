@@ -4,20 +4,21 @@ TEMPLATE = vclib
 CONFIG += staticlib
 CONFIG -= dll
 
-PROJECT_NAME = dynamic_help
+# gui because of "still" depending on projects
+QT += core xml gui
 
-QT += core gui xml
+PROJECT_NAME = config
 
-# Includes
+# Input
 PROJECT_INCLUDE_PATH = $$SOLUTION_INCLUDE_PATH/$$PROJECT_NAME
-INCLUDEPATH  += $$SOLUTION_INCLUDE_PATH/base \
-				$$SOLUTION_INCLUDE_PATH/config
+INCLUDEPATH  += $$SOLUTION_INCLUDE_PATH\\projects
 
-HEADERS = $$PROJECT_INCLUDE_PATH/dynamic_help.hpp
+# Headers
+HEADERS = 	$$PROJECT_INCLUDE_PATH\\config.hpp
 
-# Sources
+# Sources		
 PROJECT_SOURCE_PATH = $$SOLUTION_SOURCE_PATH/$$PROJECT_NAME
-SOURCES = $$PROJECT_SOURCE_PATH/dynamic_help.cpp
+SOURCES = 	$$PROJECT_SOURCE_PATH/config.cpp
 
 win32 {
 

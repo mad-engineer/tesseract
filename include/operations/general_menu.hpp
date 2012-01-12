@@ -8,7 +8,6 @@
 #	include <vld.h>
 #endif
 
-#include "config.hpp"
 #include "ui_general_menu.hpp"
 
 using namespace Ui;

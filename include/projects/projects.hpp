@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 P.L. Lucas
+/* Copyright (C) 2011 Tesseract Project
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,15 +20,18 @@
 #ifndef TESSERACT_PROJECTS_PROJECTS_HPP
 #define TESSERACT_PROJECTS_PROJECTS_HPP
 
+#include <QDialog>
+#include <QString>
+#include <QListWidgetItem>
+
 #ifdef TESSERACT_USE_VLD
 #	include <vld.h>
 #endif
 
-#include "config.hpp"
-#include "ui_projects.hpp"
-
-using namespace Ui;
-
+namespace Ui
+{
+	class Ui_Projects;
+}
 
 QString langPath();
 QString helpPath();
@@ -40,11 +43,11 @@ QString projectsPath();
 
 /** Shows config window for select or create a new project. Project is a set of ".m" files.
  */
-class Projects: public QDialog
+class Projects : public QDialog
 {
 	Q_OBJECT
 	QString project_name;
-	Ui_Projects ui;
+	std::unique_ptr<Ui::Ui_Projects> ui;
 	QMenu *context_menu;
 	QAction *new_project, *modify_project, *delete_project;
 	

@@ -13,7 +13,6 @@
 #endif
 
 // qtoctave project
-#include "config.hpp"
 #include "basewidget.hpp"
 #include "octave_connection.hpp"
 

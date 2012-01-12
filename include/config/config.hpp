@@ -23,19 +23,16 @@
 
 #define PKG_ENABLED
 
-#ifndef TESSERACT_BASE_CONFIG_HPP
-#define TESSERACT_BASE_CONFIG_HPP
-
-#include <cstdio>
+#ifndef TESSERACT_CONFIG_CONFIG_HPP
+#define TESSERACT_CONFIG_CONFIG_HPP
 
 #include <QMap>
 #include <QString>
+#include <QObject>
 #include <QDomDocument>
 
 #include <map>
 #include <string>
-
-#include <boost/lexical_cast.hpp>
 
 using std::map;
 using std::string;
@@ -43,8 +40,6 @@ using std::string;
 #ifdef TESSERACT_USE_VLD
 #	include <vld.h>
 #endif
-
-#include "session.hpp"
 
 namespace tesseract
 {

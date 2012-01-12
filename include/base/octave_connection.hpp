@@ -29,9 +29,6 @@
 #	include <vld.h>
 #endif
 
-#include "config.hpp"
-
-
 /** This class build QProcess and exec Octave. Octave input and output are controlled by this class.
 */
 class OctaveConnection : public QProcess

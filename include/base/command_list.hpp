@@ -33,7 +33,6 @@ using std::tr1::shared_ptr;
 #	include <vld.h>
 #endif
 
-#include "config.hpp"
 #include "basewidget.hpp"
 
 /**Model for non editable QStringListModel*/

@@ -21,6 +21,7 @@
 #include <QListWidget>
 #include <QApplication>
 
+#include "config.hpp"
 #include "terminal.hpp"
 #include "projects.hpp"
 #include "command_list.hpp"

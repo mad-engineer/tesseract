@@ -21,6 +21,7 @@
 #include <QFileInfo>
 #include <QTextBlock>
 #include <QTextStream>
+#include <QApplication>
 
 #include "config.hpp"
 #include "projects.hpp"

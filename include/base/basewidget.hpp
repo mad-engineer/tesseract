@@ -20,6 +20,9 @@
 #ifndef TESSERACT_BASE_BASEWIDGET_HPP
 #define TESSERACT_BASE_BASEWIDGET_HPP
 
+#include <string>
+using std::string;
+
 #include <memory>
 using std::tr1::shared_ptr;
 
@@ -33,8 +36,11 @@ using std::tr1::shared_ptr;
 #	include <vld.h>
 #endif
 
-#include "config.hpp"
 #include "session.hpp"
+
+namespace tesseract{
+class config;
+}
 
 /** This class is base class for windows of Tesseract.
  */

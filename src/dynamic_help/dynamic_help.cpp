@@ -5,23 +5,24 @@
 #include <QTextCursor>
 #include <QApplication>
 
+#include "config.hpp"
 #include "dynamic_help.hpp"
 
 DynamicHelp::DynamicHelp(QString octave_path, QWidget *parent):BaseWidget(parent)
 {
-	widget_type=DYNAMIC_HELP;
-	this->octave_path=octave_path;
+	widget_type = DYNAMIC_HELP;
+	this->octave_path = octave_path;
 	
 	setWindowIcon( QIcon( QApplication::applicationDirPath() + "/styles/default/images/help_index.png" ) );
 	setWindowTitle("Dynamic Help");
 	
-	textEdit=new QTextEdit(this);
+	textEdit = new QTextEdit(this);
 	textEdit->show();
 	textEdit->setReadOnly(true);
 	textEdit->setPlainText("Dynamic help...");
 	textEdit->setLineWrapMode (QTextEdit::NoWrap);
 	
-	stop_help =new QCheckBox("Stop dynamic help", this);
+	stop_help = new QCheckBox("Stop dynamic help", this);
 	
 	QVBoxLayout *layout = new QVBoxLayout;
 	
@@ -29,10 +30,10 @@ DynamicHelp::DynamicHelp(QString octave_path, QWidget *parent):BaseWidget(parent
 	layout->addWidget(stop_help);
 	centralWidget()->setLayout(layout);
 	
-	octave=new OctaveConnection(this);
-	octave->setOctavePath(octave_path);
-	
-	octave-> startOctave(true);
+	octave=new OctaveConnection( this );
+	octave->setOctavePath( octave_path );
+	octave->startOctave( true );
+
 	/*
 	QString command;
 	QTextStream(&command)

@@ -11,7 +11,8 @@ PROJECT_NAME = operations
 # Other includes
 PROJECT_INCLUDE_PATH = $$SOLUTION_INCLUDE_PATH/$$PROJECT_NAME
 INCLUDEPATH += $$SOLUTION_INCLUDE_PATH/base \
-			   $$SOLUTION_INCLUDE_PATH/projects
+			   $$SOLUTION_INCLUDE_PATH/projects \
+			   $$SOLUTION_INCLUDE_PATH/config
 
 # Own includes
 HEADERS += $$PROJECT_INCLUDE_PATH/general_menu.hpp \

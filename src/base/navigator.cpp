@@ -31,6 +31,7 @@
 #include <QPushButton>
 #include <QModelIndex>
 #include <QMessageBox>
+#include <QApplication>
 
 #include <boost/assert.hpp>
 

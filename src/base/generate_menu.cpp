@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QTranslator>
 
+#include "config.hpp"
 #include "generate_menu.hpp"
 
 GenerateMenu::GenerateMenu(MainWindow *mainwindow, Operations *operations):QObject(mainwindow)

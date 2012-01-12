@@ -1,6 +1,7 @@
 include(tesseract.pri)
 
 SUBDIRS = base \
+		  config \
 		  projects \
 		  operations \
 		  svgcanvas \
@@ -9,6 +10,7 @@ SUBDIRS = base \
 tesseract.depends = base
 
 base.depends = 	projects \
+				config \
 				operations \
 				svgcanvas \
 				dynamic_help

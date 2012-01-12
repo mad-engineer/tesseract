@@ -14,18 +14,16 @@
 #include <QTextStream>
 
 #include "config.hpp"
-#include "projects.hpp"
 
+#include <boost/assert.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
+
+// TODO: Remove this if old config is finally replaced
+#include "projects.hpp"
 
 using std::vector;
 using std::ifstream;
 using std::unique_ptr;
-using boost::property_tree::ptree;
-using boost::property_tree::ptree_bad_path;
-using boost::property_tree::xml_parser_error;
 
 namespace tesseract
 {
@@ -123,19 +121,16 @@ void config::receiveConfiguration( string node , string prop , string datatype ,
 	if( ! deffile.open( QFile::WriteOnly ) )
 	{
 		BOOST_ASSERT_MSG( false , "Caught unknown exception." );
-		int test = 0;
 	}
 
 	if( ! minfile.open( QFile::WriteOnly ) )
 	{
 		BOOST_ASSERT_MSG( false , "Caught unknown exception." );
-		int test = 0;
 	}
 
 	if( ! maxfile.open( QFile::WriteOnly ) )
 	{
 		BOOST_ASSERT_MSG( false , "Caught unknown exception." );
-		int test = 0;
 	}
 
 	QTextStream defts( &deffile );
@@ -366,8 +361,8 @@ basewidgetconfig::~basewidgetconfig()
 	// Connect configuration
 	bool terminalConfigurationConnection = QObject::disconnect
 	( 
-		this , SIGNAL( requestTerminalAttribute( string , string  ) ) , 
-		this , SLOT( requestAttribute( string , string  ) )
+		this , SIGNAL( sendAttribute( string , string , string ) ) , 
+		this , SLOT( receiveAttribute( string , string , string ) )
 	);
 
 	BOOST_ASSERT_MSG

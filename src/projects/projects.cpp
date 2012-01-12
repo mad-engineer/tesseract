@@ -2,6 +2,7 @@
 #include <QHash>
 #include <QFile>
 #include <QMenu>
+#include <QDialog>
 #include <QMenuBar>
 #include <QDateTime>
 #include <QMessageBox>
@@ -9,6 +10,7 @@
 #include <QXmlStreamWriter>
 
 #include "projects.hpp"
+#include "ui_projects.hpp"
 #include "ui_newprojectdialog.hpp"
 
 struct Project
@@ -175,24 +177,24 @@ static void _save_projects( const QHash<QString, Project> &projects )
 	file.close();
 }
 
-Projects::Projects(QWidget *parent):QDialog(parent)
+Projects::Projects( QWidget *parent ) : 
+QDialog( parent ) ,
+ui( std::unique_ptr<Ui::Ui_Projects>( new Ui::Ui_Projects() ) ),
+context_menu( new QMenu( "Projects" , this ) ) ,
+new_project( new QAction( tr( "New Project" ) , this ) ) ,
+modify_project( new QAction( tr( "Modify Project" ) , this ) ) ,
+delete_project( new QAction( tr( "Delete Project" ) , this ) )
 {
-	ui.setupUi(this);
+	ui->setupUi(this);
 	
-	ui.projects_listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+	ui->projects_listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-	connect(ui.open_pushButton, SIGNAL(clicked()), this, SLOT(activate_project_callback()));
+	connect(ui->open_pushButton, SIGNAL(clicked()), this, SLOT(activate_project_callback()));
 	//connect(ui.projects_listWidget, SIGNAL( customContextMenuRequested ( const QPoint & )  ), this, SLOT( contextMenu_cb( const QPoint & ) ) );
 	//connect(ui.projects_listWidget, SIGNAL(currentItemChanged ( QListWidgetItem *, QListWidgetItem *)), this, SLOT(show_description_callback(QListWidgetItem *, QListWidgetItem *)));
 	//connect(ui.projects_listWidget, SIGNAL(itemDoubleClicked ( QListWidgetItem *)), this, SLOT(activate_project_callback(QListWidgetItem *)));
-	
-	context_menu=new QMenu("Projects",this);
-	
-	new_project=new QAction(tr("New Project"), this);
 	connect(new_project, SIGNAL(triggered()), this, SLOT(new_button_callback()) );
-	modify_project=new QAction(tr("Modify Project"), this);
 	connect(modify_project, SIGNAL(triggered()), this, SLOT(modify_project_callback()) );
-	delete_project=new QAction(tr("Delete Project"), this);
 	connect(delete_project, SIGNAL(triggered()), this, SLOT(delete_project_callback()) );
 	
 	QList<QAction *> actions;
@@ -205,7 +207,7 @@ Projects::Projects(QWidget *parent):QDialog(parent)
 	QHBoxLayout *layout=new QHBoxLayout();
 	layout->setSpacing(0);
 	layout->setContentsMargins(0,0,0,0);
-	ui.menu_widget->setLayout(layout);
+	ui->menu_widget->setLayout(layout);
 	
 	QMenuBar *menu_bar=new QMenuBar(this);
 	layout->addWidget(menu_bar);
@@ -234,17 +236,17 @@ void Projects::fill_projects_list()
 		list << key;
 	}
 	
-	disconnect(ui.projects_listWidget, SIGNAL( customContextMenuRequested ( const QPoint & )  ), this, SLOT( contextMenu_cb( const QPoint & ) ) );
-	disconnect(ui.projects_listWidget, SIGNAL(currentItemChanged ( QListWidgetItem *, QListWidgetItem *)), this, SLOT(show_description_callback(QListWidgetItem *, QListWidgetItem *)));
-	disconnect(ui.projects_listWidget, SIGNAL(itemDoubleClicked ( QListWidgetItem *)), this, SLOT(activate_project_callback(QListWidgetItem *)));
+	disconnect(ui->projects_listWidget, SIGNAL( customContextMenuRequested ( const QPoint & )  ), this, SLOT( contextMenu_cb( const QPoint & ) ) );
+	disconnect(ui->projects_listWidget, SIGNAL(currentItemChanged ( QListWidgetItem *, QListWidgetItem *)), this, SLOT(show_description_callback(QListWidgetItem *, QListWidgetItem *)));
+	disconnect(ui->projects_listWidget, SIGNAL(itemDoubleClicked ( QListWidgetItem *)), this, SLOT(activate_project_callback(QListWidgetItem *)));
 	
-	ui.projects_listWidget->clear();
+	ui->projects_listWidget->clear();
 	
-	connect(ui.projects_listWidget, SIGNAL( customContextMenuRequested ( const QPoint & )  ), this, SLOT( contextMenu_cb( const QPoint & ) ) );
-	connect(ui.projects_listWidget, SIGNAL(currentItemChanged ( QListWidgetItem *, QListWidgetItem *)), this, SLOT(show_description_callback(QListWidgetItem *, QListWidgetItem *)));
-	connect(ui.projects_listWidget, SIGNAL(itemDoubleClicked ( QListWidgetItem *)), this, SLOT(activate_project_callback(QListWidgetItem *)));
+	connect(ui->projects_listWidget, SIGNAL( customContextMenuRequested ( const QPoint & )  ), this, SLOT( contextMenu_cb( const QPoint & ) ) );
+	connect(ui->projects_listWidget, SIGNAL(currentItemChanged ( QListWidgetItem *, QListWidgetItem *)), this, SLOT(show_description_callback(QListWidgetItem *, QListWidgetItem *)));
+	connect(ui->projects_listWidget, SIGNAL(itemDoubleClicked ( QListWidgetItem *)), this, SLOT(activate_project_callback(QListWidgetItem *)));
 	
-	ui.projects_listWidget->addItems(list);
+	ui->projects_listWidget->addItems(list);
 }
 
 QStringList Projects::listFiles(const QString &project_name )
@@ -368,7 +370,7 @@ void Projects::modify_project_callback()
 	dialog.setWindowTitle( tr("Modify Project") );
 	
 	QHash<QString, Project> projects=load_projects();
-	QString name=ui.projects_listWidget->currentItem()->text();
+	QString name = ui->projects_listWidget->currentItem()->text();
 	
 	ui_np.description_textEdit->setPlainText(projects[name].description);
 	ui_np.name_lineEdit->setText(name);
@@ -399,7 +401,7 @@ void Projects::modify_project_callback()
 
 void Projects::delete_project_callback()
 {
-	QString name=ui.projects_listWidget->currentItem()->text();
+	QString name=ui->projects_listWidget->currentItem()->text();
 	
 	QString message="Project "+name+" will be erased. Continue?" ;
 	
@@ -422,7 +424,7 @@ void Projects::activate_project_callback(QListWidgetItem * item)
 {
 	if(item==NULL)
 	{
-		item=ui.projects_listWidget->currentItem();
+		item=ui->projects_listWidget->currentItem();
 		if(item==NULL) return;
 	}
 	QString name=item->text();
@@ -435,7 +437,7 @@ void Projects::show_description_callback(QListWidgetItem * current, QListWidgetI
 {
 	QString name=current->text();
 	QHash<QString, Project> projects=load_projects();
-	ui.description_textEdit->setPlainText(projects[name].description);
+	ui->description_textEdit->setPlainText(projects[name].description);
 }
 
 void Projects::contextMenu_cb( const QPoint & /*pos*/)
