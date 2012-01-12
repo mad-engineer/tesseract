@@ -53,6 +53,10 @@ class settings
 {
 	int id;
 
+	/*	Do not change this order. 
+	*	It is importing
+	*	To parse xml document.
+	*/
 	enum
 	{
 		ID_SETTINGS_ACTIVE,
@@ -107,55 +111,25 @@ class config : public QObject
 	typedef std::pair< settings , QDomDocument > settingspair;
 
 	configmap data;
+	
+	void getValue
+	( 
+		const settings &conf, 
+		const string &node, 
+		string &propType,
+		string &propVal 
+	);
+
+
+	signals:
+
+		void sendAttribute( string node , string prop , string propVal );
 
 
 	public:
 
-		config( string const &rootname , string const &filename );
-
-		/*
-			<param name="name">
-				Identification for needed parameter. A lookup will be started
-				which iterates through the all configurations. The function returns
-				on the first match.
-			</param>
-
-			<param name="val">
-				Reference to the variable which corresponds with the first parameter
-				'name'. The passed argument reference will be overwritten with the
-				right value if a valid parameter identification 'name' can be found
-				in any configurations.
-			</param>
-		*/
-		template< class T > void requestProperty( const string &name , T &val ) const
-		{
-			//	Iterate through all settings
-			for(  configurations::const_iterator j = data.begin() ; j != data.end() ; j++ )
-			{
-				// try to find the requested parameter key
-				configmap::const_iterator i = (*j)->find( key );
-
-				// Enters if block when the parameter was found
-				if( i != (*j).end() )
-				{
-					try
-					{
-						// try to cast the parameter to the desired value
-						val = boost::lexical_cast< T >( *i );
-					}
-					catch ( bad_lexical_cast )
-					{
-						BOOST_ASSERT_MSG( false , tr( "Could not cast the value to the passed parameter: " ) + key );						
-					}
-					finally
-					{
-						return;
-					}
-				}
-			}
-
-			BOOST_ASSERT_MSG( false , tr( "Could not find the requested parameter: " ) + key );
-		}
+		config( const string &rootname , const string &filename );
+		virtual ~config() { };
 
 
 	public slots:
@@ -163,15 +137,37 @@ class config : public QObject
 		// this slot receives new configurations
 		void receiveConfiguration
 		( 
-			const string &node, 
-			const string &prop,
-			const string &datatype,
-			const string &defval,
-			const string &minval = "", 
-			const string &maxval = "" 
+			string node, 
+			string prop,
+			string datatype,
+			string defval,
+			string minval = "", 
+			string maxval = "" 
 		);
 
-		void requestAttribute( const string &node , string &propVal );
+		void requestAttribute( string node , string propVal );
+};
+
+class basewidgetconfig : public config
+{
+	Q_OBJECT
+
+
+	signals:
+
+		void sendTerminalAttribute( string node , string propVal );
+
+
+	public:
+
+		basewidgetconfig( const string &rootname , const string &filename );
+		~basewidgetconfig();
+
+
+	public slots:
+
+		void receiveAttribute( string node , string prop , string propVal );
+		void requestTerminalAttribute( string node , string propVal );
 };
 
 }

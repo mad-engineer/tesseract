@@ -73,30 +73,33 @@ class Terminal : public BaseWidget
 	void init_regular_expresions();
 	void write_warning( const QString &warn );
 
+
 	protected:
 
 		//Drag and drop
 		void dropEvent ( QDropEvent * event );
 		void dragEnterEvent( QDragEnterEvent *event );
 
+
 	signals:
 
 		void sendConfiguration
 		( 
-			const string &node, 
-			const string &prop,
-			const string &datatype,
-			const string &defval,
-			const string &minval, 
-			const string &maxval 
+			string node, 
+			string prop,
+			string datatype,
+			string defval,
+			string minval, 
+			string maxval 
 		);
 
 		void requestAttribute
 		( 
-			const string &node,
-			string &prop
+			string node,
+			string prop
 		);
-	
+
+
 	public:
 
 		Terminal( QWidget * parent = 0 );
@@ -134,6 +137,7 @@ class Terminal : public BaseWidget
 		void textChanged( const QString &text );
 		void write_ide_command( QString command );
 		void setProject( QString project = QString() );
+		void receiveAttribute( string node , string propVal );
 };
 
 #endif

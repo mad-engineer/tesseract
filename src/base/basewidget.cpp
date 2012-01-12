@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 P.L. Lucas
+/* Copyright (C) 2011 Tesseract Project
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,94 @@
  * Boston, MA 02111-1307, USA. 
  */
 
+#include <boost/assert.hpp>
+
 #include <QMenuBar>
 #include <QMdiSubWindow>
 
 #include "basewidget.hpp"
 #include "mainwindow.hpp"
 
+
+BaseWidget::baseProperty::baseProperty( const string &newName , const string &newProp, const string &newType , const string &newActVal , const string &newMinVal , const string &newMaxVal ) : 
+name( newName ) ,
+prop( newProp ) ,
+type( newType ) ,
+actVal( newActVal ) ,
+minVal( newMinVal ) ,
+maxVal( newMaxVal )
+{
+	BOOST_ASSERT_MSG( name.size() , "Empty string as name passed" );
+	BOOST_ASSERT_MSG( type.size() , "Empty string as type passed" );
+	BOOST_ASSERT_MSG( prop.size() , "Empty string as property passed" );
+	BOOST_ASSERT_MSG( actVal.size() , "Empty string as default value passed" );
+}
+
+const string& BaseWidget::baseProperty::getName() const
+{
+	return name;
+}
+
+void BaseWidget::baseProperty::setName( const string &newName )
+{
+	BOOST_ASSERT_MSG( newName.size() , "Empty string as name passed" );
+	name = newName;
+}
+
+const string& BaseWidget::baseProperty::getProp() const
+{
+	return prop;
+}
+
+void BaseWidget::baseProperty::setProp( const string &newProp )
+{
+	BOOST_ASSERT_MSG( newProp.size() , "Empty string as property passed" );
+	prop = newProp;
+}
+
+const string& BaseWidget::baseProperty::getType() const
+{
+	return type;
+}
+
+void BaseWidget::baseProperty::setType( const string &newType )
+{
+	BOOST_ASSERT_MSG( newType.size() , "Empty string as type passed" );
+	type = newType;
+}
+
+const string& BaseWidget::baseProperty::getActVal() const
+{
+	return actVal;
+}
+
+void BaseWidget::baseProperty::setActVal( const string &newActVal )
+{
+	BOOST_ASSERT_MSG( newActVal.size() , "Empty string as default value passed" );
+	actVal = newActVal;
+}
+
+const string& BaseWidget::baseProperty::getMinVal() const
+{
+	return minVal;
+}
+
+void BaseWidget::baseProperty::setMinVal( const string &newMinVal )
+{
+	BOOST_ASSERT_MSG( newMinVal.size() , "Empty string as minimal value passed" );
+	minVal = newMinVal;
+}
+
+const string& BaseWidget::baseProperty::getMaxVal() const
+{
+	return maxVal;
+}
+
+void BaseWidget::baseProperty::setMaxVal( const string &newMaxVal )
+{
+	BOOST_ASSERT_MSG( newMaxVal.size() , "Empty string as maximal value passed" );
+	maxVal = newMaxVal;
+}
 
 BaseWidget::BaseWidget( QWidget *parent ) : 
 QMainWindow( parent ),
@@ -34,13 +116,17 @@ session( NULL )
 void BaseWidget::createMenuView()
 {
 	QMenu *menuView = menuBar()->addMenu( tr( "View" ) );
+
 	dockMenu = menuView->addMenu( tr( "Add to..." ) );
 
-	connect( menuView->addAction(tr("Show outside of main window") ) , SIGNAL( triggered()           ) , this , SLOT( show_out_main_window_callback() ) );
-	connect( menuView->addAction(tr("Show inside of main window")  ) , SIGNAL( triggered()           ) , this , SLOT( show_in_main_window_callback()  ) );
-	connect( menuView												 , SIGNAL( aboutToShow()         ) , this , SLOT( showDockableObjects()           ) );
-	connect( menuView												 , SIGNAL( aboutToHide()         ) , this , SLOT( hideDockableObjects()           ) );
-	connect( dockMenu												 , SIGNAL( triggered( QAction* ) ) , this , SLOT( dockObject(QAction*)            ) );
+	QAction *tmpAct01 = menuView->addAction( tr( "Show outside of main window" ) );
+	QAction *tmpAct02 = menuView->addAction( tr( "Show inside of main window" ) );
+
+	connect( tmpAct01 , SIGNAL( triggered()           ) , this , SLOT( show_out_main_window_callback() ) );
+	connect( tmpAct02 , SIGNAL( triggered()           ) , this , SLOT( show_in_main_window_callback()  ) );
+	connect( menuView , SIGNAL( aboutToShow()         ) , this , SLOT( showDockableObjects()           ) );
+	connect( menuView , SIGNAL( aboutToHide()         ) , this , SLOT( hideDockableObjects()           ) );
+	connect( dockMenu , SIGNAL( triggered( QAction* ) ) , this , SLOT( dockObject(QAction*)            ) );
 }
 
 BaseWidget::~BaseWidget()

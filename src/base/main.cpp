@@ -26,6 +26,8 @@
 #include <QLibraryInfo>
 #include <QMdiSubWindow>
 
+#include <boost/assert.hpp>
+
 #include "main.hpp"
 #include "help.hpp"
 #include "table.hpp"
@@ -803,7 +805,7 @@ void Main::initialPosition_callback()
 
 int main( int argn , char **argv )
 {
-	QApplication a( argn , argv );
+	QApplication tesseractApplication( argn , argv );
 
 	//Se inicializa la configuración
 	getConfig("");
@@ -846,62 +848,86 @@ int main( int argn , char **argv )
 	// Translations
 	QString transFile;
 	QTranslator qtTranslator, qtoctaveTranslator;
-
-	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+	QTextCodec::setCodecForTr( QTextCodec::codecForName( "UTF-8" ) );
 
 	// Qt translations
-	QString locales=QLocale::system().name();
+	QString locales = QLocale::system().name();
 	//if(locales.length()>2)
 	//{
 	//	locales.resize(2);
 	//}
 		
-	if(qtTranslator.load("qt_" + QLocale::system().name(),QLibraryInfo::location(QLibraryInfo::TranslationsPath) ) )
+	if( qtTranslator.load( "qt_" + QLocale::system().name() , QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) )
 	{
-	  a.installTranslator(&qtTranslator);
-	  printf("[main()] Loaded QT Translation file for locale '%s'.\n",QLocale::system().name().toLocal8Bit().data());
+		tesseractApplication.installTranslator(&qtTranslator);
+		printf("[main()] Loaded QT Translation file for locale '%s'.\n",QLocale::system().name().toLocal8Bit().data());
 	}
 	else
 	{
-	  printf("[main()] Error loading the QT Translation file for locale '%s'.\n", QLocale::system().name().toLocal8Bit().data());
+		printf("[main()] Error loading the QT Translation file for locale '%s'.\n", QLocale::system().name().toLocal8Bit().data());
 	}
 
 	// QtOctave translations
 	if( qtoctaveTranslator.load( "qtoctave_" + locales , langPath() ) )
 	{
-	  a.installTranslator(&qtoctaveTranslator);
-	  printf("[main()] Loaded translation file for locale '%s'.\n",
-		 QLocale::system().name().toLocal8Bit().data());
+		tesseractApplication.installTranslator( &qtoctaveTranslator );
+		printf( "[main()] Loaded translation file for locale '%s'.\n" , QLocale::system().name().toLocal8Bit().data() );
 	}
 	else
 	{
-	  std::cerr << "[main()] Error loading the translation file for locale" 
-				<< locales.toLocal8Bit().data() << "not found in" << langPath().toStdString()
-				<< std::endl;
+	std::cerr << "[main()] Error loading the translation file for locale" 
+			<< locales.toLocal8Bit().data() << "not found in" << langPath().toStdString()
+			<< std::endl;
 	}
 
 	// Create Terminal
+	tesseractApplication.processEvents();
 
-	// Load
-	a.processEvents();
+	Main mainWindow;
+	tesseract::basewidgetconfig configuration( "tesseract" , configPath().toStdString() + "config.xml" );
 
-	Main m;
-	tesseract::config conf( "tesseract" , configPath().toStdString() + "config.xml" );
-
-	// Connect configuration
-	QObject::connect
+	/*
+	*	This part connects the terminal with the configuration interface.
+	*/
+	bool terminalConfiguration = QObject::connect
 	( 
-		m.getTerminal()	, SIGNAL( sendConfiguration( const string & , const string &, const string &, const string &, const string &, const string & ) ), 
-		&conf		  , SLOT    ( receiveConfiguration( const string & , const string &, const string &, const string &, const string &, const string & ) )
+		mainWindow.getTerminal(), SIGNAL( sendConfiguration( string , string , string , string , string , string ) ), 
+		&configuration		    , SLOT ( receiveConfiguration( string , string , string , string , string , string ) )
 	);
 
-	QObject::connect
+	BOOST_ASSERT_MSG
 	( 
-		m.getTerminal()	, SIGNAL( requestAttribute( const string & , string & ) ), 
-		&conf		    , SLOT  ( requestAttribute( const string & , string & ) )
+		terminalConfiguration , 
+		"Something went wrong while connection terminal with configuration" 
 	);
 
-	m.getTerminal()->initConfig();
+	// Connect attribute request
+	bool terminalConfigurationRequest = QObject::connect
+	( 
+		mainWindow.getTerminal() , SIGNAL( requestAttribute( string , string  ) ) , 
+		&configuration , SLOT( requestTerminalAttribute( string , string  ) )
+	);
 
-	return a.exec();
+	BOOST_ASSERT_MSG
+	( 
+		terminalConfigurationRequest , 
+		"Something went wrong while connection terminal with attribute requester." 
+	);
+
+	// Connect attribute send
+	bool terminalConfigurationSend = QObject::connect
+	( 
+		&configuration , SIGNAL( sendTerminalAttribute( string , string  ) ) , 
+		mainWindow.getTerminal() , SLOT( receiveAttribute( string , string  ) )
+	);
+
+	BOOST_ASSERT_MSG
+	( 
+		terminalConfigurationSend , 
+		"Something went wrong while connection terminal with attribute receiver." 
+	);
+
+	mainWindow.getTerminal()->initConfig();
+
+	return tesseractApplication.exec();
 }

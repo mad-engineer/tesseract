@@ -16,6 +16,11 @@
  * Boston, MA 02111-1307, USA. 
  */
 
+#include <vector>
+using std::vector;
+
+#include <boost/assert.hpp>
+
 #include <QDir>
 #include <QMap>
 #include <QIcon>
@@ -33,7 +38,6 @@
 #include <signal.h>
 #include <sys/types.h>
 
-#include "config.hpp"
 #include "projects.hpp"
 #include "pkg_bind.hpp"
 #include "terminal.hpp"
@@ -48,150 +52,16 @@ text( new QTextEdit( this ) ),
 combo_box( new Autocomplete( this ) )
 {
 	widget_type = TERMINAL;
-	
-	init_regular_expresions();
-	
+
 	menuBar()->hide();
-	
+
+	init_regular_expresions();
+
 	// TODO: Translate this comment: Se crea la ventana del terminal
 	setWindowTitle( tr( "Octave Terminal" ) );
 	setWindowIcon( QIcon(QApplication::applicationDirPath() + "/styles/default/images/console.png" ) );
 	
-	if( getConfig( "lines_in_terminal" ).isEmpty() )
-	{
-		QMap<QString,QString> c;
-		c[ "lines_in_terminal" ] = "1000";
-		setConfig( c );
-	}
-
-	if( getConfig( "cols_in_terminal" ).isEmpty() )
-	{
-		QMap<QString,QString> c;
-		c["cols_in_terminal"] = "80";
-		setConfig( c );
-	}
-
-	cols_in_terminal = getConfig( "cols_in_terminal" ).toInt();
-
-	// Limit input to positive numbers and a width limit of 1000
-	if( ( ! cols_in_terminal ) || cols_in_terminal > 1000 )
-	{
-		cols_in_terminal = 1000;
-	}
-	
-	lines_in_terminal = getConfig( "lines_in_terminal" ).toInt();
-
-	// Same as above
-	if( ( ! lines_in_terminal ) || lines_in_terminal > 10000 )
-	{
-		lines_in_terminal = 10000;
-	}
-
-	text->setReadOnly( true );
-	text->setLineWrapMode( QTextEdit::NoWrap );
-	//text->setLineWrapColumnOrWidth ( cols_in_terminal );
-
-	if( getConfig( "show_ide_commands" ).isEmpty() )
-	{
-		show_ide_commands_ok = false;
-
-		QMap<QString,QString> c;
-
-		c[ "show_ide_commands" ] = "false";
-		setConfig( c );
-	}
-	else
-	{ 
-		show_ide_commands_ok = getConfig( "show_ide_commands" ) == "true" ;
-	}
-
-	if( getConfig( "terminal_font" ).isEmpty() )
-	{
-		QMap<QString,QString> c;
-
-		c[ "terminal_font" ] = "Courier New";
-
-		setConfig( c );
-	}
-
-	if( getConfig( "terminal_font_size" ).isEmpty() )
-	{
-		QMap<QString,QString> c;
-
-		c[ "terminal_font_size" ] = "10";
-
-		setConfig( c );
-	}
-
-	if( getConfig( "terminal_foreground_color" ).isEmpty() )
-	{
-		QMap<QString,QString> c;
-
-		c[ "terminal_foreground_color" ] = "Black";
-		setConfig( c );
-	}
-	
-	if( getConfig( "terminal_background_color" ).isEmpty() )
-	{
-		QMap<QString,QString> c;
-
-		c[ "terminal_background_color" ] = "White";
-		setConfig( c );
-	}
-	
-	if( getConfig( "terminal_error_color" ).isEmpty() )
-	{
-		QMap<QString,QString> c;
-
-		c[ "terminal_error_color" ] = "Red";
-		setConfig( c );
-	}
-
-	if( getConfig( "terminal_warning_color" ).isEmpty() )
-	{
-		QMap<QString,QString> c;
-
-		c[ "terminal_warning_color" ] = "#FF6400";
-		setConfig( c );
-	}
-	
-	if( getConfig( "ide_command_color" ).isEmpty() )
-	{
-		QMap<QString,QString> c;
-
-		c[ "ide_command_color" ] = "lightGray";
-		setConfig( c );
-	}
-	
-	//text->setTextColor(get_config("terminal_foreground_color"));
-	{
-		QPalette p = text->viewport ()->palette();
-		p.setColor( QPalette::Base , QColor( getConfig( "terminal_background_color" ) ) );
-		text->viewport()->setPalette( p );
-	}
-
-	QFont font( getConfig( "terminal_font" ) );
-	font.setPointSize( getConfig( "terminal_font_size").toInt() );
-	
-	normal_format.setFont( font );
-	normal_format.setFontWeight( QFont::Normal );
-	normal_format.setFontPointSize( font.pointSize() );
-
-	ide_command_format = normal_format;
-	ide_command_format.setForeground( QColor( getConfig( "ide_command_color" ) ) );
-
-	normal_format.setForeground( QColor( getConfig( "terminal_foreground_color" ) ) );
-	
-	command_format = normal_format;
-	command_format.setFontWeight( QFont::Bold );
-
-	error_format = normal_format;
-	error_format.setFontWeight( QFont::Bold );
-	error_format.setForeground( QColor( getConfig( "terminal_error_color" ) ) );
-
-	warning_format = normal_format;
-	warning_format.setFontWeight( QFont::Bold );
-	warning_format.setForeground( QColor( getConfig( "terminal_warning_color" ) ) );
+	initConfig();
 
 	text->show();
 
@@ -201,20 +71,20 @@ combo_box( new Autocomplete( this ) )
 	//Se captura el "intro" para pasar comandos al octave
 	QLineEdit *line_edit = combo_box/*->lineEdit()*/;
 
-	connect( line_edit, SIGNAL(returnPressed() ) , this , SLOT( return_pressed() ) );
+	connect( line_edit, SIGNAL( returnPressed() ) , this , SLOT( return_pressed() ) );
 	connect( line_edit, SIGNAL( textChanged ( const QString &) ) , this, SLOT( textChanged ( const QString &) ) );
 	
 	line_edit->setText( tr( "Insert your commands here..." ) );
 	line_edit->selectAll();
 	line_edit->setToolTip( tr( "Insert your commands here. Use arrows and tab key to commands navigation." ) );
 	
-	connect( combo_box , SIGNAL(selectionChanged ()) , this , SLOT(clear_command_line_first_time() ) );
+	connect( combo_box , SIGNAL(selectionChanged ()) , this , SLOT( clear_command_line_first_time() ) );
 	
 	QVBoxLayout *layout = new QVBoxLayout();
 	QHBoxLayout *line_layout = new QHBoxLayout();
 
-	layout->addWidget(text);
-	layout->addLayout(line_layout);
+	layout->addWidget( text );
+	layout->addLayout( line_layout );
 	
 	line_layout->addWidget( new QLabel( "<b>" + tr( "<Command line" ) + "&gt;&gt;</b>" , this ) );
 	line_layout->addWidget( combo_box );
@@ -236,37 +106,349 @@ combo_box( new Autocomplete( this ) )
 
 void Terminal::initConfig()
 {
-	shared_ptr<map<string,string>> limitmin( new map<string,string>() );
-	shared_ptr<map<string,string>> limitmax( new map<string,string>() );
-	shared_ptr<map<string,string>> defaults( new map<string,string>() );
+	const string keyDefaultFont = "DefaultFont";
+	const string valDefaultFont = "Courier New";
+	const string keyDefaultForegroundColor = "DefaultForegroundColor";
+	const string valDefaultForegroundColor = "Black";
+	const string keyDefaultBackgroundColor = "DefaultBackgroundColor";
+	const string valDefaultBackgroundColor = "White";
+	const string keyDefaultFontSize = "DefaultFontSize";
+	const string valDefaultDefFontSize = "10";
+	const string valDefaultMinFontSize = "6";
+	const string valDefaultMaxFontSize = "64";
+	const string keyDefaultFontWeight = "DefaultFontWeight";
+	const string valDefaultFontWeight = "Normal";
 
-	defaults->insert( std::pair<string,string>( "lines_in_terminal"			, "1000"		) );
-	defaults->insert( std::pair<string,string>( "cols_in_terminal"			, "80"			) );
-	defaults->insert( std::pair<string,string>( "show_ide_commands"			, "false"		) );
-	defaults->insert( std::pair<string,string>( "terminal_font"				, "Courier New"	) );
-	defaults->insert( std::pair<string,string>( "terminal_foreground_color"	, "Black"		) );
-	defaults->insert( std::pair<string,string>( "terminal_background_color"	, "White"		) );
-	defaults->insert( std::pair<string,string>( "terminal_error_color"		, "Red"			) );
-	defaults->insert( std::pair<string,string>( "ide_command_color"			, "lightGray"	) );
+	const string keyWarningFont = "WarningFont";
+	const string valWarningFont = "Courier New";
+	const string keyWarningForegroundColor = "WarningForegroundColor";
+	const string valWarningForegroundColor = "#FF6400";
+	const string keyWarningBackgroundColor = "WarningBackgroundColor";
+	const string valWarningBackgroundColor = "White";
+	const string keyWarningFontSize = "WarningFontSize";
+	const string valWarningDefFontSize = "10";
+	const string valWarningMinFontSize = "6";
+	const string valWarningMaxFontSize = "64";
+	const string keyWarningFontWeight = "WarningFontWeight";
+	const string valWarningFontWeight = "Normal";
 
-	limitmax->insert( std::pair<string,string>( "lines_in_terminal" , "10000" ) );
-	limitmax->insert( std::pair<string,string>( "cols_in_terminal"  , "800"   ) );
+	const string keyErrorFont = "ErrorFont";
+	const string valErrorFont = "Courier New";
+	const string keyErrorForegroundColor = "ErrorForegroundColor";
+	const string valErrorForegroundColor = "Red";
+	const string keyErrorBackgroundColor = "ErrorBackgroundColor";
+	const string valErrorBackgroundColor = "White";
+	const string keyErrorFontSize = "ErrorFontSize";
+	const string valErrorDefFontSize = "10";
+	const string valErrorMinFontSize = "6";
+	const string valErrorMaxFontSize = "64";
+	const string keyErrorFontWeight = "ErrorFontWeight";
+	const string valErrorFontWeight = "Normal";
 
-	limitmin->insert( std::pair<string,string>( "lines_in_terminal" , "100"   ) );
-	limitmin->insert( std::pair<string,string>( "cols_in_terminal"  , "80"    ) );
+	const string keyCommandFont = "CommandFont";
+	const string valCommandFont = "Courier New";
+	const string keyCommandForegroundColor = "CommandForegroundColor";
+	const string valCommandForegroundColor = "LightGray";
+	const string keyCommandBackgroundColor = "CommandBackgroundColor";
+	const string valCommandBackgroundColor = "White";
+	const string keyCommandFontSize = "CommandFontSize";
+	const string valCommandDefFontSize = "10";
+	const string valCommandMinFontSize = "6";
+	const string valCommandMaxFontSize = "64";
+	const string keyCommandFontWeight = "CommandFontWeight";
+	const string valCommandFontWeight = "Normal";
 
-	emit sendConfiguration( "terminal" , "MaxLines"        , "size"  , "1000"        , "100" , "10000" );
-	emit sendConfiguration( "terminal" , "MaxCols"         , "size"  , "80"          , "80"  , "800"   ); 
-	emit sendConfiguration( "terminal" , "ShowIdeCommands" , "bool"	 , "false"       , ""    , ""      );
-	emit sendConfiguration( "terminal" , "Font"			   , "font"  , "Courier New" , ""    , ""	   );
-	emit sendConfiguration( "terminal" , "ForegroundColor" , "color" , "Black"       , ""    , ""	   );
-	emit sendConfiguration( "terminal" , "BackgroundColor" , "color" , "White"       , ""    , ""      );
-	emit sendConfiguration( "terminal" , "ErrorColor"      , "color" , "Red"         , ""    , ""      );
-	emit sendConfiguration( "terminal" , "IdeColor"        , "color" , "LightGray"	 , ""    , ""      );
+	const string keyIdeFont = "IdeFont";
+	const string valIdeFont = "Courier New";
+	const string keyIdeForegroundColor = "IdeForegroundColor";
+	const string valIdeForegroundColor = "LightGray";
+	const string keyIdeBackgroundColor = "IdeBackgroundColor";
+	const string valIdeBackgroundColor = "White";
+	const string keyIdeFontSize = "IdeFontSize";
+	const string valIdeDefFontSize = "10";
+	const string valIdeMinFontSize = "6";
+	const string valIdeMaxFontSize = "64";
+	const string keyIdeFontWeight = "IdeFontWeight";
+	const string valIdeFontWeight = "Normal";
 
-	string teststring = "MaxLines";
-	emit requestAttribute( "terminal" , teststring );
-	string shit = "shit";
+	const string keyMaxCols = "MaxCols";
+	const string valDefMaxCols = "80";
+	const string valMinMaxCols = "80";
+	const string valMaxMaxCols = "800";
+
+	const string keyMaxLines = "MaxLines";
+	const string valDefMaxLines = "1000";
+	const string valMinMaxLines = "100";
+	const string valMaxMaxLines = "10000";
+
+	const string keyShowIdeCommands = "ShowIdeCommands";
+	const string valShowIdeCommands = "0";
+
+	vector<baseProperty> props;
+	props.push_back( baseProperty( "terminal" , keyDefaultFont            , "font"    , valDefaultFont ) );
+	props.push_back( baseProperty( "terminal" , keyDefaultFontWeight      , "fontopt" , valDefaultFontWeight ) );
+	props.push_back( baseProperty( "terminal" , keyDefaultForegroundColor , "color"   , valDefaultForegroundColor ) );
+	props.push_back( baseProperty( "terminal" , keyDefaultBackgroundColor , "color"   , valDefaultBackgroundColor ) );
+	props.push_back( baseProperty( "terminal" , keyDefaultFontSize        , "size"    , valDefaultDefFontSize , valDefaultMinFontSize , valDefaultMaxFontSize ) );
+
+	props.push_back( baseProperty( "terminal" , keyWarningFont            , "font"    , valWarningFont ) );
+	props.push_back( baseProperty( "terminal" , keyWarningFontWeight      , "fontopt" , valWarningFontWeight ) );
+	props.push_back( baseProperty( "terminal" , keyWarningForegroundColor , "color"   , valWarningForegroundColor ) );
+	props.push_back( baseProperty( "terminal" , keyWarningBackgroundColor , "color"   , valWarningBackgroundColor ) );
+	props.push_back( baseProperty( "terminal" , keyWarningFontSize        , "size"    , valWarningDefFontSize , valWarningMinFontSize , valWarningMaxFontSize ) );
+
+	props.push_back( baseProperty( "terminal" , keyErrorFont              , "font"    , valErrorFont ) );
+	props.push_back( baseProperty( "terminal" , keyErrorFontWeight        , "fontopt" , valErrorFontWeight ) );
+	props.push_back( baseProperty( "terminal" , keyErrorForegroundColor   , "color"   , valErrorForegroundColor ) );
+	props.push_back( baseProperty( "terminal" , keyErrorBackgroundColor   , "color"   , valErrorBackgroundColor ) );
+	props.push_back( baseProperty( "terminal" , keyErrorFontSize          , "size"    , valErrorDefFontSize , valErrorMinFontSize , valErrorMaxFontSize ) );
+
+	props.push_back( baseProperty( "terminal" , keyCommandFont            , "font"    , valCommandFont ) );
+	props.push_back( baseProperty( "terminal" , keyCommandFontWeight      , "fontopt" , valCommandFontWeight ) );
+	props.push_back( baseProperty( "terminal" , keyCommandForegroundColor , "color"   , valCommandForegroundColor ) );
+	props.push_back( baseProperty( "terminal" , keyCommandBackgroundColor , "color"   , valCommandBackgroundColor ) );
+	props.push_back( baseProperty( "terminal" , keyCommandFontSize        , "size"    , valCommandDefFontSize , valCommandMinFontSize , valCommandMaxFontSize ) );
+
+	props.push_back( baseProperty( "terminal" , keyIdeFont                , "font"    , valIdeFont ) );
+	props.push_back( baseProperty( "terminal" , keyIdeFontWeight          , "fontopt" , valIdeFontWeight ) );
+	props.push_back( baseProperty( "terminal" , keyIdeForegroundColor     , "color"   , valIdeForegroundColor ) );
+	props.push_back( baseProperty( "terminal" , keyIdeBackgroundColor     , "color"   , valIdeBackgroundColor ) );
+	props.push_back( baseProperty( "terminal" , keyIdeFontSize            , "size"    , valIdeDefFontSize , valIdeMinFontSize , valIdeMaxFontSize ) );
+
+	props.push_back( baseProperty( "terminal" , keyShowIdeCommands	      , "bool"  , valShowIdeCommands ) );
+	props.push_back( baseProperty( "terminal" , keyMaxCols			      , "size"  , valDefMaxCols  , valMinMaxCols  , valMaxMaxCols  ) );
+	props.push_back( baseProperty( "terminal" , keyMaxLines			      , "size"  , valDefMaxLines , valMinMaxLines , valMaxMaxLines ) );
+
+	using boost::lexical_cast;
+	using boost::bad_lexical_cast;
+
+	cols_in_terminal = lexical_cast<int>( valDefMaxCols.c_str() );
+	lines_in_terminal = lexical_cast<int>( valDefMaxLines.c_str() );
+	show_ide_commands_ok = static_cast<bool>( lexical_cast<int>( valShowIdeCommands.c_str() ) );
+
+	normal_format.setFontWeight( QFont::Normal );
+	normal_format.setFont( QFont( valDefaultFont.c_str() ) );
+	normal_format.setForeground( QColor( valDefaultForegroundColor.c_str() ) );
+	normal_format.setBackground( QColor( valDefaultBackgroundColor.c_str() ) );
+	normal_format.setFontPointSize( lexical_cast<int>( valDefaultDefFontSize.c_str() ) );
+
+	warning_format.setFontWeight( QFont::Normal );
+	warning_format.setFont( QFont( valWarningFont.c_str() ) );
+	warning_format.setForeground( QColor( valWarningForegroundColor.c_str() ) );
+	warning_format.setBackground( QColor( valWarningBackgroundColor.c_str() ) );
+	warning_format.setFontPointSize( lexical_cast<int>( valWarningDefFontSize.c_str() ) );
+
+	error_format.setFontWeight( QFont::Bold );
+	error_format.setFont( QFont( valErrorFont.c_str() ) );
+	error_format.setForeground( QColor( valErrorForegroundColor.c_str() ) );
+	error_format.setBackground( QColor( valErrorBackgroundColor.c_str() ) );
+	error_format.setFontPointSize( lexical_cast<int>( valErrorDefFontSize.c_str() ) );
+
+	command_format.setFontWeight( QFont::Bold );
+	command_format.setFont( QFont( valCommandFont.c_str() ) );
+	command_format.setForeground( QColor( valCommandForegroundColor.c_str() ) );
+	command_format.setBackground( QColor( valCommandBackgroundColor.c_str() ) );
+	command_format.setFontPointSize( lexical_cast<int>( valCommandDefFontSize.c_str() ) );
+
+	ide_command_format.setFontWeight( QFont::Bold );
+	ide_command_format.setFont( QFont( valIdeFont.c_str() ) );
+	ide_command_format.setForeground( QColor( valIdeForegroundColor.c_str() ) );
+	ide_command_format.setBackground( QColor( valIdeBackgroundColor.c_str() ) );
+	ide_command_format.setFontPointSize( lexical_cast<int>( valIdeDefFontSize.c_str() ) );
+
+	QPalette p = text->viewport()->palette();
+	p.setColor( QPalette::Base , normal_format.background().color() );
+	text->viewport()->setPalette( p );
+
+	for( vector<baseProperty>::const_iterator i = props.begin() ; i != props.end() ; i++ )
+	{
+		emit sendConfiguration( i->getName() , i->getProp() , i->getType() , i->getActVal() , i->getMinVal() , i->getMaxVal() );
+		emit requestAttribute( i->getName() , i->getProp() );
+	}
+
+	text->setReadOnly( true );
+	text->setLineWrapMode( QTextEdit::NoWrap );
+	//text->setLineWrapColumnOrWidth ( cols_in_terminal );
+}
+
+void Terminal::receiveAttribute( string prop , string propVal )
+{
+	if( prop == "MaxLines" )
+	{
+		lines_in_terminal = QString( propVal.c_str() ).toInt();
+	}
+	else if( prop == "MaxCols" )
+	{
+		cols_in_terminal = QString( propVal.c_str() ).toInt();
+	}
+	else if( prop == "ShowIdeCommands" )
+	{
+		show_ide_commands_ok = static_cast<bool>( QString( propVal.c_str() ).toInt() );
+	}
+	else if( prop == "DefaultFont" )
+	{
+		normal_format.setFont( QFont( propVal.c_str() ) );
+	}
+	else if( prop == "DefaultFontSize" )
+	{
+		normal_format.setFontPointSize( QString( propVal.c_str() ).toInt() );
+	}
+	else if( prop == "DefaultForegroundColor" )
+	{
+		normal_format.setForeground( QColor( propVal.c_str() ) );
+	}
+	else if( prop == "DefaultBackgroundColor" )
+	{
+		normal_format.setBackground( QColor( propVal.c_str() ) );
+	}
+	else if( prop == "DefaultFontWeight" )
+	{
+		if( propVal == "Normal" )
+		{
+			normal_format.setFontWeight( QFont::Normal );
+		}
+		else if( propVal == "Bold" )
+		{
+			normal_format.setFontWeight( QFont::Bold );
+		}
+		else
+		{
+			BOOST_ASSERT_MSG( false , "Unknown font weight passed as argument");
+		}
+	}
+	//
+	else if( prop == "WarningFont" )
+	{
+		warning_format.setFont( QFont( propVal.c_str() ) );
+	}
+	else if( prop == "WarningFontSize" )
+	{
+		warning_format.setFontPointSize( QString( propVal.c_str() ).toInt() );
+	}
+	else if( prop == "WarningForegroundColor" )
+	{
+		warning_format.setForeground( QColor( propVal.c_str() ) );
+	}
+	else if( prop == "WarningBackgroundColor" )
+	{
+		warning_format.setBackground( QColor( propVal.c_str() ) );
+	}
+	else if( prop == "WarningFontWeight" )
+	{
+		if( propVal == "Normal" )
+		{
+			warning_format.setFontWeight( QFont::Normal );
+		}
+		else if( propVal == "Bold" )
+		{
+			warning_format.setFontWeight( QFont::Bold );
+		}
+		else
+		{
+			BOOST_ASSERT_MSG( false , "Unknown font weight passed as argument" );
+		}
+	}
+	//
+	else if( prop == "ErrorFont" )
+	{
+		error_format.setFont( QFont( propVal.c_str() ) );
+	}
+	else if( prop == "ErrorFontSize" )
+	{
+		error_format.setFontPointSize( QString( propVal.c_str() ).toInt() );
+	}
+	else if( prop == "ErrorForegroundColor" )
+	{
+		error_format.setForeground( QColor( propVal.c_str() ) );
+	}
+	else if( prop == "ErrorBackgroundColor" )
+	{
+		error_format.setBackground( QColor( propVal.c_str() ) );
+	}
+	else if( prop == "ErrorFontWeight" )
+	{
+		if( propVal == "Normal" )
+		{
+			error_format.setFontWeight( QFont::Normal );
+		}
+		else if( propVal == "Bold" )
+		{
+			error_format.setFontWeight( QFont::Bold );
+		}
+		else
+		{
+			BOOST_ASSERT_MSG( false , "Unknown font weight passed as argument");
+		}
+	}
+	//
+	else if( prop == "CommandFont" )
+	{
+		command_format.setFont( QFont( propVal.c_str() ) );
+	}
+	else if( prop == "CommandFontSize" )
+	{
+		command_format.setFontPointSize( QString( propVal.c_str() ).toInt() );
+	}
+	else if( prop == "CommandForegroundColor" )
+	{
+		command_format.setForeground( QColor( propVal.c_str() ) );
+	}
+	else if( prop == "CommandBackgroundColor" )
+	{
+		command_format.setBackground( QColor( propVal.c_str() ) );
+	}
+	else if( prop == "CommandFontWeight" )
+	{
+		if( propVal == "Normal" )
+		{
+			command_format.setFontWeight( QFont::Normal );
+		}
+		else if( propVal == "Bold" )
+		{
+			command_format.setFontWeight( QFont::Bold );
+		}
+		else
+		{
+			BOOST_ASSERT_MSG( false , "Unknown font weight passed as argument");
+		}
+	}
+	//
+	else if( prop == "IdeFont" )
+	{
+		ide_command_format.setFont( QFont( propVal.c_str() ) );
+	}
+	else if( prop == "IdeFontSize" )
+	{
+		ide_command_format.setFontPointSize( QString( propVal.c_str() ).toInt() );
+	}
+	else if( prop == "IdeForegroundColor" )
+	{
+		ide_command_format.setForeground( QColor( propVal.c_str() ) );
+	}
+	else if( prop == "IdeBackgroundColor" )
+	{
+		ide_command_format.setBackground( QColor( propVal.c_str() ) );
+	}
+	else if( prop == "IdeFontWeight" )
+	{
+		if( propVal == "Normal" )
+		{
+			ide_command_format.setFontWeight( QFont::Normal );
+		}
+		else if( propVal == "Bold" )
+		{
+			ide_command_format.setFontWeight( QFont::Bold );
+		}
+		else
+		{
+			BOOST_ASSERT_MSG( false , "Unknown font weight passed as argument");
+		}
+	}
+	//
+	else
+	{
+		BOOST_ASSERT_MSG( false , "Unknown property was passed." );
+	}
 }
 
 void Terminal::init_regular_expresions()
