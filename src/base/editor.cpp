@@ -1088,7 +1088,6 @@ void Editor::connectTabSignals( int tabindex )
 	NumberedTextView *tab = static_cast< NumberedTextView * >( tabWidget->widget( tabindex ) );
 
 	connect( tab			 , SIGNAL( textModified()								 ) , this , SLOT( textModified()								) );
-	connect( tab			 , SIGNAL( toggleBreakpoint( int )                       ) , this , SLOT( toggleBreakpoint( int )                       ) );
 	connect( tab->textEdit() , SIGNAL( dynamic_help_required( const QString & )		 ) , this , SLOT( emit_dynamic_help_required( const QString & ) ) );
 	connect( tab->textEdit() , SIGNAL( customContextMenuRequested ( const QPoint & ) ) , this , SLOT( customContextMenuPopUp( const QPoint & )      ) );
 }
@@ -1105,7 +1104,6 @@ void Editor::disconnectTabSignals( int tabindex )
 	NumberedTextView *tab = static_cast< NumberedTextView * >( tabWidget->widget( tabindex ) );
 
 	disconnect( tab				, SIGNAL( textModified()								) , this , SLOT( textModified()								   ) );
-	disconnect( tab				, SIGNAL( toggleBreakpoint( int )                       ) , this , SLOT( toggleBreakpoint( int )                       ) );
 	disconnect( tab->textEdit() , SIGNAL( dynamic_help_required( const QString & )		) , this , SLOT( emit_dynamic_help_required( const QString & ) ) );
 	disconnect( tab->textEdit() , SIGNAL( customContextMenuRequested ( const QPoint & ) ) , this , SLOT( customContextMenuPopUp( const QPoint & )      ) );
 }
