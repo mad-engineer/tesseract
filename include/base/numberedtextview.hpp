@@ -26,6 +26,7 @@
 #include <QLabel>
 #include <QFrame>
 #include <QPixmap>
+#include <QWidget>
 #include <QTextCursor>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -46,34 +47,35 @@ class NumberBar : public QWidget
 {
     Q_OBJECT
 
+	int bugLine;
+	QRect bugRect;
+	QRect stopRect;
+	int currentLine;
+	QRect currentRect;
+	QPixmap bugMarker;
 	SimpleEditor *edit;
 	QPixmap stopMarker;
 	QPixmap currentMarker;
-	QPixmap bugMarker;
 	QList<int> breakpoints;
-	int currentLine;
-	int bugLine;
-	QRect stopRect;
-	QRect currentRect;
-	QRect bugRect;
 
 
 	protected:
 
 		bool event( QEvent *ev );
-
+		void mouseReleaseEvent( QMouseEvent *mousePos );
 
 	public:
 
 		NumberBar( QWidget *parent );
 
-		void setCurrentLine( int lineno );
-		void setBugLine( int lineno );
-		void toggleBreakpoint( int lineno );
 		QList<int> *getBreakpoints();
 
-		void setTextEdit( SimpleEditor *edit );
+		void setBugLine( int lineno );
+		void setCurrentLine( int lineno );
 		void paintEvent( QPaintEvent *ev );
+		void toggleBreakpoint( int lineno );
+		void setTextEdit( SimpleEditor *edit );
+
 };
 
 /**

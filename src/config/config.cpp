@@ -379,9 +379,9 @@ static QMap<QString, QString> config;
 static QMap<QString, QString> load_config( const QString &file )
 {
 	QMap<QString, QString> config;
-	
+
 	FILE *in = fopen( file.toLocal8Bit().data() , "r" );
-	
+
 	if( in == NULL ) 
 	{
 		std::cout << "The config file :" << file.toStdString() 
@@ -389,11 +389,11 @@ static QMap<QString, QString> load_config( const QString &file )
 
 		return config;
 	}
-	
+
 	char buf[1024];
 	char *p, *parameter;
 	char *value;
-		
+
 	while( ! feof( in ) )
 	{
 		if( fgets( buf , 1024 , in ) == NULL ) 
@@ -433,9 +433,9 @@ static QMap<QString, QString> load_config( const QString &file )
 			}
 		}
 	}
-	
+
 	fclose( in );
-	
+
 	return config;
 }
 
