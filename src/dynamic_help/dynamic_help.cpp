@@ -1,13 +1,20 @@
 #include <QIcon>
 #include <QFile>
+#include <QCheckBox>
+#include <QTextEdit>
+#include <QLineEdit>
 #include <QVBoxLayout>
 #include <QTextStream>
 #include <QTextCursor>
 #include <QApplication>
 
 #include "dynamic_help.hpp"
+#include "octave_connection.hpp"
 
-DynamicHelp::DynamicHelp(QString octave_path, QWidget *parent):BaseWidget(parent)
+DynamicHelp::DynamicHelp( const QString &octave_path , QWidget *parent) : 
+BaseWidget( parent ),
+stop_help( new QCheckBox( tr( "Stop dynamic help" ) , this ) ),
+octave( std::unique_ptr<OctaveConnection>( new OctaveConnection( this ) ) )
 {
 	widget_type = DYNAMIC_HELP;
 	this->octave_path = octave_path;
@@ -21,15 +28,13 @@ DynamicHelp::DynamicHelp(QString octave_path, QWidget *parent):BaseWidget(parent
 	textEdit->setPlainText("Dynamic help...");
 	textEdit->setLineWrapMode (QTextEdit::NoWrap);
 	
-	stop_help = new QCheckBox( tr( "Stop dynamic help" ) , this );
-	
 	QVBoxLayout *layout = new QVBoxLayout;
 	
-	layout->addWidget(textEdit);
-	layout->addWidget(stop_help);
-	centralWidget()->setLayout(layout);
+	layout->addWidget( textEdit );
+	layout->addWidget( stop_help );
+	centralWidget()->setLayout( layout );
 	
-	octave = new OctaveConnection( this );
+
 	octave->setOctavePath( octave_path );
 	octave->startOctave( true );
 
@@ -69,10 +74,11 @@ DynamicHelp::DynamicHelp(QString octave_path, QWidget *parent):BaseWidget(parent
 			<< "	printf(\"\\n\");\n"
 			<< "	help(s);\n"
 			<< "end\n";
-	octave->command_enter(command.toLocal8Bit());
+
+	octave->command_enter( command.toLocal8Bit() );
 	//textEdit->setPlainText(command);
 	
-	connect(octave,SIGNAL(output_ready (QString )),this,SLOT(readyReadStandardOutput (QString)));
+	connect(octave.get(),SIGNAL(output_ready (QString )),this,SLOT(readyReadStandardOutput (QString)));
 	
 	time.start();
 	timer.setSingleShot(true);
@@ -150,7 +156,6 @@ DynamicHelp::~DynamicHelp()
 	octave->command_enter(QString("quit\n").toLocal8Bit());
 	octave->kill();
 	//while( octave->state()!=QProcess::NotRunning ) ;
-	delete octave;
 	delete stop_help;
 	delete textEdit;
 }
