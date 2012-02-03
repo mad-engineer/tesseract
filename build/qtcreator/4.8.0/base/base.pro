@@ -49,7 +49,6 @@ HEADERS = $$PROJECT_INCLUDE_PATH/autocomplete.hpp \
            $$PROJECT_INCLUDE_PATH/navigator.hpp \
            $$PROJECT_INCLUDE_PATH/numberedtextview.hpp \
            $$PROJECT_INCLUDE_PATH/octave_connection.hpp \
-           $$PROJECT_INCLUDE_PATH/operations.hpp \
 		   $$PROJECT_INCLUDE_PATH/pkg_bind.hpp \
            $$PROJECT_INCLUDE_PATH/search_dialog.hpp \
            $$PROJECT_INCLUDE_PATH/session.hpp \

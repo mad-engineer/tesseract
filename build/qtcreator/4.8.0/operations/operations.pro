@@ -15,8 +15,9 @@ INCLUDEPATH += $$SOLUTION_INCLUDE_PATH/base \
 			   $$SOLUTION_INCLUDE_PATH/config
 
 # Own includes
-HEADERS += $$PROJECT_INCLUDE_PATH/general_menu.hpp \
-           $$PROJECT_INCLUDE_PATH/table_plot.hpp
+HEADERS +=  $$PROJECT_INCLUDE_PATH/operations.hpp \
+			$$PROJECT_INCLUDE_PATH/general_menu.hpp \
+			$$PROJECT_INCLUDE_PATH/table_plot.hpp
 # Forms
 PROJECT_FORMS_PATH = $$SOLUTION_FORMS_PATH/$$PROJECT_NAME	   
 FORMS  = $$PROJECT_FORMS_PATH/general_menu.ui
